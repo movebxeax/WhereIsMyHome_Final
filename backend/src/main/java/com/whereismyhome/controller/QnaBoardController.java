@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.whereismyhome.model.dto.QnaInfo;
 import com.whereismyhome.model.service.QnaService;
+import com.whereismyhome.util.ResponseManager;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,7 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "qna", description = "QnA Board APIs")
 @RequestMapping("/api/qna")
 @RestController
-public class QnaBoardController {
+public class QnaBoardController extends ResponseManager {
 	@Autowired
 	private QnaService qnaService;
 
@@ -132,22 +133,5 @@ public class QnaBoardController {
 			return createResponse(HttpStatus.OK);
 		else
 			return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error occured while deleting article");
-	}
-
-	protected ResponseEntity<?> createResponse(HttpStatus status, Object response)
-	{
-		if(status == HttpStatus.OK)
-		{
-			return ResponseEntity.ok().body(response);
-		}
-		else
-		{
-			return ResponseEntity.status(status).body(response);
-		}
-	}
-	
-	protected ResponseEntity<?> createResponse(HttpStatus status)
-	{
-		return createResponse(status, null);
 	}
 }

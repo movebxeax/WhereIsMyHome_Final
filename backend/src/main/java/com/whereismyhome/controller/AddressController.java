@@ -1,6 +1,5 @@
 package com.whereismyhome.controller;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.whereismyhome.model.dto.DistrictInfo;
 import com.whereismyhome.model.service.AddressService;
 import com.whereismyhome.util.ResponseManager;
 
