@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whereismyhome.model.service.TradeService;
+import com.whereismyhome.util.ResponseManager;
 
 @RequestMapping("/api/trade")
 @RestController
-public class TradeController {
+public class TradeController extends ResponseManager {
 
 	@Autowired
 	TradeService tradeService;
@@ -30,13 +31,5 @@ public class TradeController {
 		map.put("aptName", aptName);
 		
 		return createResponse(tradeService.getTradeList(map));
-	}
-
-	protected ResponseEntity<?> createResponse(Object param)
-	{
-		if(param != null)
-			return ResponseEntity.ok().body(param);
-		else
-			return ResponseEntity.notFound().build();
 	}
 }
