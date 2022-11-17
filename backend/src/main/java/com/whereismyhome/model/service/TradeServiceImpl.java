@@ -1,13 +1,13 @@
 package com.whereismyhome.model.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.whereismyhome.model.dao.TradeDAO;
-import com.whereismyhome.model.dto.TradeInfo;
+import com.whereismyhome.model.dto.tradeinfo.TradeInfo;
+import com.whereismyhome.model.dto.tradeinfo.TradeInfoSpec;
 
 @Service
 public class TradeServiceImpl implements TradeService {
@@ -18,8 +18,13 @@ public class TradeServiceImpl implements TradeService {
 		this.tradeDao = tradeDao;
 	}
 	
-	public List<TradeInfo> getTradeList(Map<String,Object> map)
+	public List<TradeInfo> getTradeList(String dongCode)
 	{
-		return tradeDao.getTradeInfoList(map);
+		return tradeDao.selectTradeListWithDongCode(dongCode);
+	}
+
+	@Override
+	public TradeInfoSpec getTradeSpecWithAptCode(String aptCode) {
+		return tradeDao.selectTradeListWithAptCode(aptCode);
 	}
 }

@@ -2,10 +2,12 @@ package com.whereismyhome.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whereismyhome.model.service.AddressService;
@@ -23,18 +25,28 @@ public class AddressController extends ResponseManager {
 
 	@GetMapping("/sido")
 	protected ResponseEntity<?> sidoList() {
-		//return createResponse("test");
-		return createResponse(addressService.getSidoList());
+		return response(addressService.getSidoList());
 	}
 	
 	@GetMapping("/gugun/{sidoCode}")
 	protected ResponseEntity<?> gugunList(@PathVariable String sidoCode) {
-		return createResponse(addressService.getGugunList(sidoCode));
-		
+		return response(addressService.getGugunList(sidoCode));		
 	}
 	
 	@GetMapping("/dong/{gugunCode}")
 	protected ResponseEntity<?> dongList(@PathVariable String gugunCode) {
-		return createResponse(addressService.getDongList(gugunCode));
+		return response(addressService.getDongList(gugunCode));
+	}
+	
+	@GetMapping
+	protected ResponseEntity<?> searchBaseAddressListWithKeyword(@RequestParam String keyword) {
+		return response(addressService.searchBaseAddressListWithKeyword(keyword));
+	}
+	
+	private ResponseEntity<?> response(Object res) {
+		if(res != null)
+			return createResponse(HttpStatus.OK, res);
+		else
+			return createResponse(HttpStatus.NOT_FOUND);
 	}
 }
