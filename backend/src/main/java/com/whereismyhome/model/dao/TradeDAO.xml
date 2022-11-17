@@ -3,7 +3,7 @@
 
 <mapper namespace="com.whereismyhome.model.dao.TradeDAO">
 	
-	<select id="getTradeInfoList" parameterType="map" resultType="TradeInfo">
+	<!-- <select id="getTradeInfoList" parameterType="map" resultType="TradeInfo">
 		select dc.sidoName, dc.gugunName, dc.dongName, hi.jibun, hi.aptName,
 		hd.floor, hd.dealYear, hd.dealMonth, trim(hd.dealAmount), hi.lng, hi.lat
 		from houseinfo as hi
@@ -15,6 +15,24 @@
 			</if>
 		</where>
 		order by hd.dealYear asc, hd.dealMonth asc;
+	</select> -->
+	
+	<select id="selectTradeListWithDongCode" parameterType="string" resultType="TradeInfo">
+		select
+			hd.aptcode, hi.aptname, hi.dongcode, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth
+		from housedeal as hd
+		join houseinfo as hi on hd.aptcode = hi.aptcode
+		where hi.dongcode=#{dongcode}
+		order by aptcode, area, dealyear, dealmonth;
+	</select>
+	
+	<select id="selectTradeListWithAptCode" parameterType="string" resultMap="com.whereismyhome.resultmaps.TradeInfoSpecMap">
+		select
+			hi.buildyear, hi.aptcode, hi.aptname, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth
+		from housedeal as hd
+		join houseinfo as hi on hd.aptcode=hi.aptcode
+		where hd.aptcode=#{aptcode}
+		order by area, dealyear, dealmonth; 
 	</select>
 
 </mapper>

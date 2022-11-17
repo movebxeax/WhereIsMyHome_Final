@@ -5,9 +5,11 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.whereismyhome.model.dto.TradeInfo;
+import com.whereismyhome.model.dto.tradeinfo.TradeInfo;
+import com.whereismyhome.model.dto.tradeinfo.TradeInfoSpec;
 
 @Mapper
 public interface TradeDAO {
-	public List<TradeInfo> getTradeInfoList(Map<String,Object> map);
+	public List<TradeInfo> selectTradeListWithDongCode(String dongCode);
+	public TradeInfoSpec selectTradeListWithAptCode(String aptCode);
 }
