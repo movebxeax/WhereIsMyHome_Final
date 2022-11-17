@@ -34,4 +34,15 @@
  	where dongcode
  		like concat(#{gugunCode},'%')
  </select>
+ 
+ <select id="selectAddressListWithKeyword" resultType="AddressInfo" parameterType="string">
+	select
+		concat(sidoname, ' ', gugunname, ' ', dongname) as address, dongcode, lat, lng
+	from baseaddress
+	where
+		sidoname like concat('%', #{query}, '%')
+		or gugunname like concat('%', #{query}, '%')
+		or dongname like concat('%', #{query}, '%')
+	order by dongcode;
+ </select>
 </mapper>
