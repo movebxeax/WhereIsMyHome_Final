@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.whereismyhome.model.dto.InterestInfo;
 import com.whereismyhome.model.service.InterestService;
+import com.whereismyhome.util.ResponseManager;
 
 @RequestMapping("/api/interest")
 @SessionAttributes("userid") // is it right?
 @RestController
-public class InterestController {
+public class InterestController extends ResponseManager {
 	
 	@Autowired
 	InterestService interestService;	
@@ -38,23 +39,5 @@ public class InterestController {
 			return null;
 		
 		return createResponse(interestService.getInterestInfo(userid));
-	}
-	
-	protected ResponseEntity<?> createResponse(Object param) {
-		if(param instanceof Boolean)
-		{
-			if(((Boolean) param).booleanValue())
-				return ResponseEntity.ok().body("Successfully Saved");
-			else
-				return ResponseEntity.badRequest().body("invalid session");
-		}
-		
-		else
-		{
-			if(param != null)
-				return ResponseEntity.ok().body(param);
-			else
-				return ResponseEntity.notFound().build();
-		}
 	}
 }

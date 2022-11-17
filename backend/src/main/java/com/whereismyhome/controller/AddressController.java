@@ -1,6 +1,5 @@
 package com.whereismyhome.controller;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,12 +8,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.whereismyhome.model.dto.DistrictInfo;
 import com.whereismyhome.model.service.AddressService;
+import com.whereismyhome.util.ResponseManager;
 
 @RequestMapping("/api/address")
 @RestController
-public class AddressController {
+public class AddressController extends ResponseManager {
 	
 	// !! todo !!
 	// change urls as restful style
@@ -37,12 +36,5 @@ public class AddressController {
 	@GetMapping("/dong/{gugunCode}")
 	protected ResponseEntity<?> dongList(@PathVariable String gugunCode) {
 		return createResponse(addressService.getDongList(gugunCode));
-	}
-
-	protected ResponseEntity<?> createResponse(List<DistrictInfo> di) {
-		if(di != null)
-			return ResponseEntity.ok().body(di);
-		else
-			return ResponseEntity.notFound().build();
 	}
 }

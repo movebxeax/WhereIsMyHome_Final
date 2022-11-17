@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.whereismyhome.model.dto.NoticeInfo;
 import com.whereismyhome.model.service.NoticeService;
+import com.whereismyhome.util.ResponseManager;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/notice")
 @SessionAttributes("userid")
 @RestController
-public class NoticeController {
+public class NoticeController extends ResponseManager {
 	
 	@Autowired
 	private NoticeService noticeService;
@@ -59,22 +60,5 @@ public class NoticeController {
 		// author check required
 
 		return createResponse(noticeService.deleteNotice(noticeNo));
-	}
-	
-	protected ResponseEntity<?> createResponse(Object param) {
-		if(param instanceof Boolean)
-		{
-			if(((Boolean) param).booleanValue())
-				return ResponseEntity.ok().body("Successfully Saved");
-			else
-				return ResponseEntity.badRequest().body("invalid session");
-		}		
-		else
-		{
-			if(param != null)
-				return ResponseEntity.ok().body(param);
-			else
-				return ResponseEntity.notFound().build();
-		}
 	}
 }

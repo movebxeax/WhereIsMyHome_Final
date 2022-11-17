@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.whereismyhome.model.dto.UserInfo;
 import com.whereismyhome.model.service.UserService;
+import com.whereismyhome.util.ResponseManager;
 
 @RequestMapping("/api/user")
 @RestController
-public class UserController {
+public class UserController extends ResponseManager{
 	
 	@Autowired
 	private UserService userService;
@@ -133,18 +134,6 @@ public class UserController {
 		}
 		else
 			return createResponse(HttpStatus.UNAUTHORIZED);
-	}
-	
-	protected ResponseEntity<?> createResponse(HttpStatus status, Object... response)
-	{
-		if(status == HttpStatus.OK)
-		{
-			return ResponseEntity.ok().body(response);
-		}
-		else
-		{
-			return ResponseEntity.status(status).build();
-		}
 	}
 	
 	private String createPassword(String password)
