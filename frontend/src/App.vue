@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <the-header-navbar></the-header-navbar>
+    <the-header-navbar class="navbar"></the-header-navbar>
     <router-view />
     <the-footer></the-footer>
   </v-app>
@@ -18,7 +18,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -27,16 +27,7 @@ export default {
   color: #2c3e50;
 }
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+.navbar {
+  height: 60px;
 }
 </style>

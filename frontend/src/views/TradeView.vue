@@ -1,13 +1,16 @@
 <template>
-  <div>
-    <h1>Trade</h1>
+  <div id>
+    <trade-map></trade-map>
   </div>
 </template>
 
 <script>
+import TradeMap from "@/components/trade/TradeMap.vue";
+
 export default {
+  components: { TradeMap },
   name: "TradeView",
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped></style>
