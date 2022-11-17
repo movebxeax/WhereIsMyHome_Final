@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <v-container>
     <h1>Q&A</h1>
     <router-view></router-view>
-  </div>
+  </v-container>
 </template>
 
 <script>

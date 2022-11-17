@@ -1,6 +1,6 @@
 <template>
   <header>
-    <v-toolbar elevation="4">
+    <v-toolbar class="toolbar" elevation="4">
       <v-toolbar-title>
         <router-link to="/" tag="span" style="cursor: pointer">
           {{ appTitle }}
@@ -72,9 +72,7 @@ export default {
   computed: {
     ...mapGetters(userStore, ["userInfo"]),
   },
-  created() {
-    console.log(this.userInfo);
-  },
+  created() {},
 };
 </script>
 
