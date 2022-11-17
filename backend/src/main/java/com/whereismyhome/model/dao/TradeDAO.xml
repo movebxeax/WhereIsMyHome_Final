@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whereismyhome.model.dao.TradeDAO">
+	
+	<select id="getTradeInfoList" parameterType="map" resultType="TradeInfo">
+		select dc.sidoName, dc.gugunName, dc.dongName, hi.jibun, hi.aptName,
+		hd.floor, hd.dealYear, hd.dealMonth, trim(hd.dealAmount), hi.lng, hi.lat
+		from houseinfo as hi
+		join housedeal hd on hi.aptCode=hd.aptCode join dongcode dc on hi.dongcode = dc.dongcode
+		<where>
+			hi.dongCode = #{dongCode} and dealYear >= #{dealYear}
+			<if test="aptName != null and aptName != ''">
+				and hi.aptName like concat('%',#{aptName},'%') 
+			</if>
+		</where>
+		order by hd.dealYear asc, hd.dealMonth asc;
+	</select>
+
+</mapper>

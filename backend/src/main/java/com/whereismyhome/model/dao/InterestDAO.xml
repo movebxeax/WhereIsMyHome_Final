@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whereismyhome.model.dao.InterestDAO">
+	
+	<insert id="addInterestInfo" parameterType="InterestInfo">
+		insert into interest(userid, sido, gugun, dong)
+		values (#{userid}, #{sido}, #{gugun}, #{dong})
+		on duplicate key update
+		sido = #{sido}, gugun = #{gugun}, dong = #{dong}
+	</insert>
+	
+	<select id="getInterestInfo" parameterType="string" resultMap="com.whereismyhome.resultmaps.InterestInfoResultMap">
+		select sido, gugun, dong
+		from interest
+		where userid = #{userid}
+	</select>
+	
+
+</mapper>
