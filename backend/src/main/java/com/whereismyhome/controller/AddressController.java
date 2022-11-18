@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.whereismyhome.model.service.AddressService;
+import com.whereismyhome.model.service.tradeinfo.AddressService;
 import com.whereismyhome.util.ResponseManager;
 
 @RequestMapping("/api/address")

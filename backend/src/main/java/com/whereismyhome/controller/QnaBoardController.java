@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.whereismyhome.model.dto.QnaInfo;
-import com.whereismyhome.model.service.QnaService;
+import com.whereismyhome.model.dto.qna.QnaInfo;
+import com.whereismyhome.model.service.qna.QnaService;
 import com.whereismyhome.util.ResponseManager;
 
 import io.swagger.v3.oas.annotations.Operation;

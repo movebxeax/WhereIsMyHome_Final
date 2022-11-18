@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.whereismyhome.model.dto.InterestInfo;
-import com.whereismyhome.model.service.InterestService;
+import com.whereismyhome.model.dto.tradeinfo.InterestInfo;
+import com.whereismyhome.model.service.tradeinfo.InterestService;
 import com.whereismyhome.util.ResponseManager;
 
 @RequestMapping("/api/interest")

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.whereismyhome.model.service.TradeService;
+import com.whereismyhome.model.service.tradeinfo.TradeService;
 import com.whereismyhome.util.ResponseManager;
 
 @RequestMapping("/api/trade")

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.whereismyhome.model.dto.NoticeInfo;
-import com.whereismyhome.model.service.NoticeService;
+import com.whereismyhome.model.dto.notice.NoticeInfo;
+import com.whereismyhome.model.service.notice.NoticeService;
 import com.whereismyhome.util.ResponseManager;
 
 import lombok.extern.slf4j.Slf4j;
