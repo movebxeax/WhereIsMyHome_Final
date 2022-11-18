@@ -3,7 +3,7 @@ module.exports = defineConfig({
   transpileDependencies: ["vuetify"],
   css: {
     loaderOptions: {
-      sass: {
+      scss: {
         additionalData: `@import "@/assets/scss/reset.scss";`,
       },
     },
