@@ -7,6 +7,6 @@ import com.whereismyhome.model.dto.tradeinfo.TradeInfo;
 import com.whereismyhome.model.dto.tradeinfo.TradeInfoSpec;
 
 public interface TradeService {
-	public List<TradeInfo> getTradeList(String dongCode);
+	public List<TradeInfo> getTradeList(Map<String, String> map);
 	public TradeInfoSpec getTradeSpecWithAptCode(String aptCode);
 }

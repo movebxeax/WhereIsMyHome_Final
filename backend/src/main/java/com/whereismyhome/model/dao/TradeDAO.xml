@@ -17,12 +17,16 @@
 		order by hd.dealYear asc, hd.dealMonth asc;
 	</select> -->
 	
-	<select id="selectTradeListWithDongCode" parameterType="string" resultType="TradeInfo">
+	<select id="selectTradeListWithDongCode" parameterType="map" resultType="TradeInfo">
 		select
 			hd.aptcode, hi.aptname, hi.dongcode, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth
 		from housedeal as hd
 		join houseinfo as hi on hd.aptcode = hi.aptcode
-		where hi.dongcode=#{dongcode}
+		<where>
+			hi.dongcode=#{dongcode}
+			<if test="startYear != null">and dealyear >= #{startYear}</if>
+			<if test="endYear != null"><![CDATA[and dealyear <= #{endYear}]]></if>
+		</where>
 		order by aptcode, area, dealyear, dealmonth;
 	</select>
 	

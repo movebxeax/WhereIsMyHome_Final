@@ -1,6 +1,7 @@
 package com.whereismyhome.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,8 @@ public class TradeServiceImpl implements TradeService {
 		this.tradeDao = tradeDao;
 	}
 	
-	public List<TradeInfo> getTradeList(String dongCode)
-	{
-		return tradeDao.selectTradeListWithDongCode(dongCode);
+	public List<TradeInfo> getTradeList(Map<String, String> map) {
+		return tradeDao.selectTradeListWithDongCode(map);
 	}
 
 	@Override
