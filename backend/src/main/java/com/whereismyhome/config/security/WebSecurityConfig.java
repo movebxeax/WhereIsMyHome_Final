@@ -3,6 +3,7 @@ package com.whereismyhome.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,32 +19,34 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
-	
+
 	@Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+	public PasswordEncoder passwordEncoder(){
+		return new BCryptPasswordEncoder();
+	}
 
-    @Autowired
-    private AuthenticationEntryPoint jwtAuthenticationEntryPoint;
+	@Autowired
+	private AuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+	@Autowired
+	private JwtRequestFilter jwtRequestFilter;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    	return http
-    	.csrf().disable()
-    	.authorizeRequests().antMatchers("/", "/api/user/login", "/api/user/signup","/api/trade/**").permitAll()
-    	.anyRequest().authenticated()
-    	.and()
-    	.exceptionHandling()
-    	.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-    	.and()
-    	.sessionManagement()
-    	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-    	.and()
-    	.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-    	.build();
-    }
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		return http
+				.csrf().disable()
+				.cors().disable()
+				.authorizeRequests().antMatchers("/", "/api/user/login", "/api/user/signup","/api/trade/**").permitAll()
+				.antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+				.anyRequest().authenticated()
+				.and()
+				.exceptionHandling()
+				.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+				.and()
+				.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.and()
+				.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+				.build();
+	}
 }
