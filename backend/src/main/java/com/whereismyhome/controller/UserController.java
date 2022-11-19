@@ -28,32 +28,32 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 public class UserController extends ResponseManager{
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
-    private JwtTokenUtil jwtTokenUtil;
-	
+	private JwtTokenUtil jwtTokenUtil;
+
 	@Autowired
 	private JwtUserDetailsService jwtUserDetailsService;
-	
+
 	private final PasswordEncoder passwordEncoder;
 
 	@PostMapping("/login")
 	protected ResponseEntity<?> login(@RequestBody UserInfo userInfoFromClient) {
 		if(!StringUtils.hasLength(userInfoFromClient.getUserid()) || !StringUtils.hasLength(userInfoFromClient.getPassword()))
 			return createResponse(HttpStatus.FORBIDDEN);
-		
+
 		final UserInfo userInfo = jwtUserDetailsService.authenticateByUseridAndPassword(userInfoFromClient.getUserid(), userInfoFromClient.getPassword());	
-        return createResponse(createJwtResponse(userInfo.getUserid()));
+		return createResponse(createJwtResponse(userInfo.getUserid()));
 	}
 
 	@PostMapping("/signup")
 	protected ResponseEntity<?> signup(@RequestBody UserInfoDetail userInfo) {
 		userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
 		boolean res = userService.signup(userInfo);
-		
+
 		if(res) {
 			userInfo.setPassword("");
 			return createResponse(HttpStatus.OK, userInfo);
@@ -61,22 +61,22 @@ public class UserController extends ResponseManager{
 		else
 			return createResponse(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@PostMapping("/refresh")
 	protected ResponseEntity<?> refresh(@RequestBody JwtRefreshRequest requestBody) {
 		UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(requestBody.getUserid());
 		boolean res = jwtTokenUtil.validateToken(requestBody.getRefreshToken(), userDetails);
-		
+
 		if(res)
 			return createResponse(createJwtResponse(requestBody.getUserid()));
 		else
 			return createResponse(HttpStatus.UNAUTHORIZED);
 	}
-	
+
 	private JwtResponse createJwtResponse(String userid) {
 		final String accessToken = jwtTokenUtil.generateAccessToken(userid);
 		final String refreshToken = jwtTokenUtil.generateRefreshToken(userid);
-		return new JwtResponse(accessToken, refreshToken);
+		return new JwtResponse(userid, accessToken, refreshToken);
 	}
 }
 
@@ -89,8 +89,9 @@ class JwtRequest {
 @Data
 @AllArgsConstructor
 class JwtResponse {
+	private String userid;
 	private String accessToken;
-    private String refreshToken;
+	private String refreshToken;
 }
 
 @Data
