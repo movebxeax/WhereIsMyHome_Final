@@ -4,6 +4,7 @@ import HomeView from "@/views/HomeView.vue";
 import NoticeView from "@/views/NoticeView.vue";
 import QnaView from "@/views/QnaView.vue";
 import TradeView from "@/views/TradeView.vue";
+import UserView from "@/views/UserView.vue";
 
 Vue.use(VueRouter);
 
@@ -52,6 +53,11 @@ const routes = [
         component: () => import("@/components/qna/QnaRegister.vue"),
       },
     ],
+  },
+  {
+    path: "/user",
+    name: "user",
+    component: UserView,
   },
 ];
 
