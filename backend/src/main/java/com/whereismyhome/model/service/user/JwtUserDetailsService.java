@@ -28,7 +28,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 	@Autowired
 	//private MemberRepository memberRepository;
 	private UserService userService;
-	
+
 	@Autowired
 	public JwtUserDetailsService(UserService userService, @Lazy PasswordEncoder passwordEncoder) {
 		this.userService = userService;
@@ -39,7 +39,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
 		UserInfo userInfo = userService.findUserByUserId(userid);
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-		grantedAuthorities.add(new SimpleGrantedAuthority(Role.USER.getValue()));
+		grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + Role.USER.getValue()));
+		
+		if(userInfo.getRole().equals(Role.ADMIN.getValue())) {
+			grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + Role.ADMIN.getValue()));
+		}
 
 		return new User(userInfo.getUserid(), userInfo.getPassword(), grantedAuthorities);
 	}
@@ -48,7 +52,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 		UserInfo userInfo = userService.findUserByUserId(userid);
 		log.info(userid);
 		log.info(password);
-		
+
 		if(!passwordEncoder.matches(password, userInfo.getPassword())) {
 			throw new BadCredentialsException("Password not matched");
 		}

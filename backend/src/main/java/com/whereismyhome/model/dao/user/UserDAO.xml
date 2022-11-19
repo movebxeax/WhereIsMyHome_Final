@@ -47,7 +47,7 @@
 	</insert>
 	
 	<select id="selectUserByUserId" parameterType="string" resultType="UserInfo">
-		select userid, password, username from user where userid=#{userid}
+		select userid, password, username, role from user where userid=#{userid}
 	</select>
 	
 	<insert id="insertRefreshToken" parameterType="map">

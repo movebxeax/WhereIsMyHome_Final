@@ -3,6 +3,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,37 +26,38 @@ import lombok.extern.slf4j.Slf4j;
 @SessionAttributes("userid")
 @RestController
 public class NoticeController extends ResponseManager {
-	
+
 	@Autowired
 	private NoticeService noticeService;
-	
+
 	@GetMapping
 	protected ResponseEntity<?> getNoticeList() {
 		return createResponse(noticeService.getNotices());
 	}
-	
+
 	@GetMapping("/{noticeNo}")
 	protected ResponseEntity<?> getNoticeDetail(@PathVariable int noticeNo) {		
 		return createResponse(noticeService.getNotice(noticeNo));
 	}
-	
+
 	@PutMapping("/{noticeNo}")
 	protected ResponseEntity<?> modifyNoticeDetail(@RequestBody NoticeInfo noticeInfo, HttpSession session) {
-		
+
 		// !!! todo !!!
 		// author check required
 
 		return createResponse(noticeService.modifyNotice(noticeInfo));
 	}
-	
+
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping
 	protected ResponseEntity<?> registerNotice(@RequestBody NoticeInfo noticeInfo) {		
 		return createResponse(noticeService.writeNotice(noticeInfo));
 	}
-	
+
 	@DeleteMapping("/{noticeNo}")
 	protected ResponseEntity<?> deleteNoticeDetail(@PathVariable int noticeNo) {
-		
+
 		// !!! todo !!!
 		// author check required
 
