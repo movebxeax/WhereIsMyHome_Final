@@ -139,7 +139,12 @@ export default {
             userid: this.loginId,
             password: this.loginPassword,
           })
-          .then(({ data }) => this.$store.dispatch("userStore/" + [Constant.SAVE_TOKENS], { accessToken: data.accessToken, refreshToken: data.refreshToken }))
+          .then(({ data }) => {
+            this.$store.dispatch("userStore/" + [Constant.SAVE_TOKENS], { accessToken: data.accessToken, refreshToken: data.refreshToken });
+            this.$store.dispatch("userStore/" + [Constant.SET_LOGIN_STATE], true);
+            this.$store.dispatch("userStore/" + [Constant.SET_USER_INFO], { username: data.userid });
+          })
+          .then(() => this.$router.push("/"))
           .catch(() => console.log("login error!!!!"));
         // submit form to server/API here...
       }

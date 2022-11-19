@@ -8,4 +8,6 @@ export default Object.freeze({
   GET_ACCESS_TOKEN: "getAccessToken",
   SET_REFRESH_TOKEN: "setRefreshToken",
   GET_REFRESH_TOKEN: "getRefreshToken",
+  SET_LOGIN_STATE: "setLoginState",
+  SET_USER_INFO: "setUserInfo",
 });

@@ -14,7 +14,7 @@
         </v-btn>
 
         <!-- 로그인 O -->
-        <v-menu offset-y v-if="userInfo">
+        <v-menu offset-y v-if="isLogin">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on">
               <v-icon left dark>mdi-account-circle</v-icon>
@@ -72,7 +72,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(userStore, ["userInfo"]),
+    ...mapGetters(userStore, ["userInfo", "isLogin"]),
   },
   created() {},
 };
