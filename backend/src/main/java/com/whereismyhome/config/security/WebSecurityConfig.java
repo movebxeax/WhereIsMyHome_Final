@@ -38,6 +38,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 					.antMatchers(HttpMethod.POST, "/api/notice/**").hasRole(Role.ADMIN.getValue())
 					.antMatchers(HttpMethod.PUT, "/api/notice/**").hasRole(Role.ADMIN.getValue())
 					.antMatchers(HttpMethod.DELETE, "/api/notice/**").hasRole(Role.ADMIN.getValue())
+					.antMatchers(HttpMethod.GET, "/api/qna/**").permitAll()
 					.antMatchers(HttpMethod.POST, "/api/qna/**").hasAnyRole(Role.ADMIN.getValue(), Role.USER.getValue())
 					.antMatchers(HttpMethod.DELETE, "/api/qna/**").hasAnyRole(Role.ADMIN.getValue(), Role.USER.getValue())
 					.antMatchers(HttpMethod.OPTIONS).permitAll()
