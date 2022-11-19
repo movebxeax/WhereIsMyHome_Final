@@ -37,7 +37,7 @@ httpQna.interceptors.request.use(
   (config) => {
     if (!config.headers.Authorization) {
       const accessToken = store.getters["userStore/accessToken"];
-      if (!accessToken || accessToken.length > 0) {
+      if (!accessToken && accessToken.length > 0) {
         const accessTokenJwtPayload = parseJwt(accessToken);
 
         if (accessTokenJwtPayload.exp >= Date.now() / 1000) {
