@@ -1,6 +1,6 @@
 <template>
   <header>
-    <v-toolbar class="toolbar" elevation="4">
+    <v-toolbar class="toolbar" color="#DBE2EF" elevation="4">
       <v-toolbar-title>
         <router-link to="/" tag="span" style="cursor: pointer">
           {{ appTitle }}
@@ -14,7 +14,7 @@
         </v-btn>
 
         <!-- 로그인 O -->
-        <v-menu offset-y v-if="userInfo">
+        <v-menu offset-y v-if="isLogin">
           <template v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on">
               <v-icon left dark>mdi-account-circle</v-icon>
@@ -39,10 +39,10 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item link>
+            <v-list-item link :to="signUpItem">
               <v-list-item-title>회원 가입</v-list-item-title>
             </v-list-item>
-            <v-list-item link>
+            <v-list-item link :to="signInItem">
               <v-list-item-title>로그인</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -67,10 +67,12 @@ export default {
         { title: "공지사항", path: "/notice", icon: "mdi-clipboard-alert" },
         { title: "Q&A", path: "/qna", icon: "mdi-help" },
       ],
+      signUpItem: { title: "회원 가입", path: "/user" },
+      signInItem: { title: "로그인", path: "/user" },
     };
   },
   computed: {
-    ...mapGetters(userStore, ["userInfo"]),
+    ...mapGetters(userStore, ["userInfo", "isLogin"]),
   },
   created() {},
 };
