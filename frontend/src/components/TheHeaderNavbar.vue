@@ -78,4 +78,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.navbar {
+  z-index: 1;
+}
+</style>
