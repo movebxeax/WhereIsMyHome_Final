@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+	UserInfo login(UserInfo userInfo);
+	int signup(UserInfo userInfo);	
+	UserInfo getUserInfo(String userid);	
+	int modifyUserInfo(UserInfo userInfo);	
+	int deleteUserInfo(String userid);
+	int setInterestDistrict(Map<String, String> map);
+-->
+
+<mapper namespace="com.whereismyhome.model.dao.user.UserDAO">
+
+	<select id="login" parameterType="UserInfo" resultType="UserInfo">
+		select userid, password, username from user where userid=#{userid} and password=#{password}
+	</select>
+	
+	<select id="getUserInfo" parameterType="String" resultType="UserInfo">
+		select userid, username from user where userid=#{userid}
+	</select>
+	
+	<update id="modifyUserInfo" parameterType="UserInfo">
+		update user set username=#{username}
+		
+		<if test="password != null and password != ''">
+			, password=#{password}
+		</if>
+		
+		where userid=#{userid}
+	</update>
+	
+	<delete id="deleteUserInfo" parameterType="String">
+		delete from user where userid=#{userid}
+	</delete>
+	
+	<update id="setInterestDistrict" parameterType="map">
+		update user set interest=#{dongCode} where userid=#{userid}
+	</update>
+	
+	<!-- ================================= -->
+	
+	<insert id="signup" parameterType="UserInfoDetail">
+		insert into
+			user(userid, password, username, email_id, email_domain, contact, base_address, spec_address)
+			values(#{userid}, #{password}, #{username}, #{emailId}, #{emailDomain}, #{contact}, #{baseAddress}, #{specAddress})
+	</insert>
+	
+	<select id="selectUserByUserId" parameterType="string" resultType="UserInfo">
+		select userid, password, username, role from user where userid=#{userid}
+	</select>
+	
+	<insert id="insertRefreshToken" parameterType="map">
+		insert into refresh_token(userid, token) values(#{userid}, #{token})
+	</insert>
+	
+	<select id="selectUserIdByRefreshToken" parameterType="String" resultType="String">
+		select userid from refresh_token where token=#{token}
+	</select>
+	
+</mapper>

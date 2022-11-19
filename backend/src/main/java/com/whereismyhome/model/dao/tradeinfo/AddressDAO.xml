@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whereismyhome.model.dao.tradeinfo.AddressDAO">
+<!--
+	List<DistrictInfo> selectSidoList();
+	List<DistrictInfo> selectGugunList(String sidoCode);
+	List<DistrictInfo> selectDongList(String gugunCode); 
+ -->
+ 
+ <!-- <resultMap id="DistrictInfoResultMap" type="DistrictInfo" extends="com.whereismyhome.resultmaps.DistrictInfoResultMap"/> -->
+ 
+ <select id="selectSidoList" resultType="DistrictInfo">
+ 	select
+ 		sidocode as code,
+ 		sidoname as name
+ 	from sidocode
+ </select>
+ 
+ <select id="selectGugunList" resultType="DistrictInfo" parameterType="string" >
+ 	select
+ 		guguncode as code,
+ 		gugunname as name
+ 	from guguncode
+ 	where guguncode
+ 		like concat(#{sidoCode},'%')
+ </select>
+  
+ <select id="selectDongList" resultType="DistrictInfo" parameterType="string" >
+ 	select
+ 		dongcode as code,
+ 		dongname as name
+ 	from dongcode
+ 	where dongcode
+ 		like concat(#{gugunCode},'%')
+ </select>
+ 
+ <select id="selectAddressListWithKeyword" resultType="AddressInfo" parameterType="string">
+	select
+		concat(sidoname, ' ', gugunname, ' ', dongname) as address, dongcode, lat, lng
+	from baseaddress
+	where
+		sidoname like concat('%', #{query}, '%')
+		or gugunname like concat('%', #{query}, '%')
+		or dongname like concat('%', #{query}, '%')
+	order by dongcode;
+ </select>
+</mapper>

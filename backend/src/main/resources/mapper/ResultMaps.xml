@@ -39,4 +39,22 @@
 		<result column="username" property="username"/>
 		<result column="password" property="password"/>
 	</resultMap>
+	
+	<resultMap type="TradeInfoSpec" id="TradeInfoSpecMap">
+		<id column="aptCode" property="aptCode"/>
+		<result column="buildYear" property="buildYear"/>
+		<result column="aptName" property="aptName"/>
+		<collection property="details" resultMap="DetailInfoMap" />
+	</resultMap>
+	
+	<resultMap type="DetailInfo" id="DetailInfoMap">
+		<id column="area" property="area"/>
+		<collection property="priceInfoList" resultMap="PriceInfoMap" />
+	</resultMap>
+	
+	<resultMap type="PriceInfo" id="PriceInfoMap">
+		<result column="price" property="price"/>
+		<result column="dealYear" property="dealYear"/>
+		<result column="dealMonth" property="dealMonth"/>
+	</resultMap>
 </mapper>
