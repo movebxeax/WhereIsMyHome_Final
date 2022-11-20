@@ -1,6 +1,7 @@
 package com.whereismyhome.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,13 +39,11 @@ public class TradeController extends ResponseManager{
 //	}
 	
 	@GetMapping("/list/{dongCode}")
-	protected ResponseEntity<?> getTradeList(@PathVariable String dongCode, @RequestParam(required = false) String startYear, @RequestParam(required = false) String endYear) {
-		HashMap<String, String> map = new HashMap<>();
-		if(startYear != null && startYear.length() > 0)
-			map.put("startYear", startYear);
-		if(endYear != null && endYear.length() > 0)
-			map.put("endYear", endYear);
-		
+	protected ResponseEntity<?> getTradeList(@PathVariable String dongCode,
+			@RequestParam(required = false) Map<String,String> params)
+	{
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("params", params);
 		map.put("dongcode", dongCode);
 		
 		log.warn(map.toString());

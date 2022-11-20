@@ -19,19 +19,18 @@
 	</resultMap> -->
 	
 	<resultMap type="TradeInfo" id="TradeInfoResultMap" >
-		<id column="no" property="no"/>
-		<result column="sidoName" property="sidoName"/>
-		<result column="gugunName" property="gugunName"/>
-		<result column="dongName" property="dongName"/>
-		<result column="jibun" property="jibun"/>
+		<id column="aptCode" property="aptCode"/>
 		<result column="aptName" property="aptName"/>
 		<result column="dongCode" property="dongCode"/>
-		<result column="floor" property="floor"/>
+		<result column="buildYear" property="buildYear"/>
+		<collection property="details" resultMap="PriceInfoWithAreaMap"></collection>
+	</resultMap>
+	
+	<resultMap type="PriceInfoWithArea" id="PriceInfoWithAreaMap">
+		<result column="area" property="area"/>
+		<result column="price" property="price"/>
 		<result column="dealYear" property="dealYear"/>
 		<result column="dealMonth" property="dealMonth"/>
-		<result column="dealAmount" property="dealAmount"/>
-		<result column="lng" property="lng"/>
-		<result column="lat" property="lat"/>
 	</resultMap>
 	
 	<resultMap type="UserInfo" id="UserInfoResultMap">

@@ -17,15 +17,20 @@
 		order by hd.dealYear asc, hd.dealMonth asc;
 	</select> -->
 	
-	<select id="selectTradeListWithDongCode" parameterType="map" resultType="TradeInfo">
+	<select id="selectTradeListWithDongCode" parameterType="map" resultMap="com.whereismyhome.resultmaps.TradeInfoResultMap">
 		select
-			hd.aptcode, hi.aptname, hi.dongcode, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth
+			hd.aptcode, hi.aptname, hi.dongcode, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth, hi.buildyear
 		from housedeal as hd
 		join houseinfo as hi on hd.aptcode = hi.aptcode
 		<where>
 			hi.dongcode=#{dongcode}
-			<if test="startYear != null">and dealyear >= #{startYear}</if>
-			<if test="endYear != null"><![CDATA[and dealyear <= #{endYear}]]></if>
+			<if test="params.startYear != null">and dealyear >= #{params.startYear}</if>
+			<if test="params.endYear != null"><![CDATA[and dealyear <= #{params.endYear}]]></if>
+			<if test="params.startArea != null">and area >= #{params.startArea}</if>
+			<if test="params.endArea != null"><![CDATA[and area <= #{params.endArea}]]></if>
+			<if test="params.startPrice != null">and area >= #{params.startPrice}</if>
+			<if test="params.endPrice != null"><![CDATA[and area <= #{params.endPrice}]]></if>
+			<if test="params.buildYear != null">and buildyear >= #{params.buildYear}</if>
 		</where>
 		order by aptcode, area, dealyear, dealmonth;
 	</select>

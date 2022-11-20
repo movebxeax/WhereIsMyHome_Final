@@ -19,7 +19,7 @@ public class TradeServiceImpl implements TradeService {
 		this.tradeDao = tradeDao;
 	}
 	
-	public List<TradeInfo> getTradeList(Map<String, String> map) {
+	public List<TradeInfo> getTradeList(Map<String, Object> map) {
 		return tradeDao.selectTradeListWithDongCode(map);
 	}
 

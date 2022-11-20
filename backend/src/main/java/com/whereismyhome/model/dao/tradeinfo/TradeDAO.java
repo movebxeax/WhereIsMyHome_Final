@@ -10,6 +10,6 @@ import com.whereismyhome.model.dto.tradeinfo.TradeInfoSpec;
 
 @Mapper
 public interface TradeDAO {
-	public List<TradeInfo> selectTradeListWithDongCode(Map<String, String> map);
+	public List<TradeInfo> selectTradeListWithDongCode(Map<String, Object> map);
 	public TradeInfoSpec selectTradeListWithAptCode(String aptCode);
 }
