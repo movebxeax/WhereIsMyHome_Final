@@ -11,7 +11,7 @@ import com.whereismyhome.model.dto.qna.QnaInfo;
 public interface QnaDAO {
 	int insertArticleInfo(QnaInfo qnaInfo);
 	int insertArticleContent(QnaInfo qnaInfo);
-	List<QnaInfo> selectArticles(Map map);
+	List<QnaInfo> selectArticles(Map<String, Object> map);
 	QnaInfo selectArticle(int articleNo);
 	int deleteArticle(int articleNo);
 	int updateArticle(QnaInfo qnaInfo);

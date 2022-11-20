@@ -23,7 +23,7 @@ public class QnaServiceImpl implements QnaService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<QnaInfo> getQnaArticleList(Map map) {
+	public List<QnaInfo> getQnaArticleList(Map<String, Object> map) {
 		return qnaDao.selectArticles(map);
 	}
 

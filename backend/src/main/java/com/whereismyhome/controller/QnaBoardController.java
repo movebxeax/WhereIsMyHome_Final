@@ -41,13 +41,18 @@ public class QnaBoardController extends ResponseManager {
 					@ApiResponse(responseCode = "500", description = "Fail")
 			})
 	@GetMapping
-	protected ResponseEntity<?> getQnaArticleList(@RequestParam(required = false)String title, @RequestParam(required = false)String author) {
-		Map map = new HashMap<String, String>();
+	protected ResponseEntity<?> getQnaArticleList(@RequestParam(required = false)String title,
+			@RequestParam(required = false)String author,
+			@RequestParam(required = false)Integer limit) {
+		Map<String, Object> map = new HashMap<String, Object>();
 
 		if(title != null && title.length() > 0)
 			map.put("title", title);
 		else if(author != null && author.length() > 0)
 			map.put("author", author);
+		
+		if(limit != null)
+			map.put("limit", limit);
 
 		List<QnaInfo> res = qnaService.getQnaArticleList(map);
 		if(res != null)
