@@ -28,8 +28,8 @@
 			<if test="params.endYear != null"><![CDATA[and dealyear <= #{params.endYear}]]></if>
 			<if test="params.startArea != null">and area >= #{params.startArea}</if>
 			<if test="params.endArea != null"><![CDATA[and area <= #{params.endArea}]]></if>
-			<if test="params.startPrice != null">and area >= #{params.startPrice}</if>
-			<if test="params.endPrice != null"><![CDATA[and area <= #{params.endPrice}]]></if>
+			<if test="params.startPrice != null">and dealamount >= #{params.startPrice}</if>
+			<if test="params.endPrice != null"><![CDATA[and dealamount <= #{params.endPrice}]]></if>
 			<if test="params.buildYear != null">and buildyear >= #{params.buildYear}</if>
 		</where>
 		order by aptcode, area, dealyear, dealmonth;
