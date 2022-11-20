@@ -13,8 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TradeInfoSpec {
 	//hd.aptcode, hi.aptname, hi.dongcode, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth
-	private String buildYear;
 	private String aptCode;
 	private String aptName;
+	private String buildYear;
+	private String dongCode;
+	private Double lat;
+	private Double lng;
 	private List<DetailInfo> details;
 }

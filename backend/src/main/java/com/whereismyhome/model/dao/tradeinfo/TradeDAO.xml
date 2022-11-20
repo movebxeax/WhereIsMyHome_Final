@@ -17,9 +17,9 @@
 		order by hd.dealYear asc, hd.dealMonth asc;
 	</select> -->
 	
-	<select id="selectTradeListWithDongCode" parameterType="map" resultMap="com.whereismyhome.resultmaps.TradeInfoResultMap">
+	<select id="selectTradeListWithDongCode" parameterType="map" resultMap="com.whereismyhome.resultmaps.TradeInfoSpecMap">
 		select
-			hd.aptcode, hi.aptname, hi.dongcode, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth, hi.buildyear
+			hd.aptcode, hi.aptname, hi.dongcode, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth, hi.buildyear, hi.lat, hi.lng
 		from housedeal as hd
 		join houseinfo as hi on hd.aptcode = hi.aptcode
 		<where>
@@ -37,7 +37,7 @@
 	
 	<select id="selectTradeListWithAptCode" parameterType="string" resultMap="com.whereismyhome.resultmaps.TradeInfoSpecMap">
 		select
-			hi.buildyear, hi.aptcode, hi.aptname, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth
+			hi.buildyear, hi.aptcode, hi.dongcode, hi.aptname, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth, hi.lat, hi.lng
 		from housedeal as hd
 		join houseinfo as hi on hd.aptcode=hi.aptcode
 		where hd.aptcode=#{aptcode}

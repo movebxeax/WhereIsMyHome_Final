@@ -16,6 +16,8 @@ public class TradeInfo {
 	private String aptName;
 	private String dongCode;
 	private String buildYear;
+	private Double lat;
+	private Double lng;
 	private List<PriceInfo> details;
 	
 }

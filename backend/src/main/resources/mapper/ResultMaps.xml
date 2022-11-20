@@ -23,6 +23,8 @@
 		<result column="aptName" property="aptName"/>
 		<result column="dongCode" property="dongCode"/>
 		<result column="buildYear" property="buildYear"/>
+		<result column="lat" property="lat"/>
+		<result column="lng" property="lng"/>
 		<collection property="details" resultMap="PriceInfoWithAreaMap"></collection>
 	</resultMap>
 	
@@ -43,6 +45,9 @@
 		<id column="aptCode" property="aptCode"/>
 		<result column="buildYear" property="buildYear"/>
 		<result column="aptName" property="aptName"/>
+		<result column="dongCode" property="dongCode"/>
+		<result column="lat" property="lat"/>
+		<result column="lng" property="lng"/>
 		<collection property="details" resultMap="DetailInfoMap" />
 	</resultMap>
 	
