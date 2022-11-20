@@ -25,7 +25,7 @@ export default {
     };
   },
   created() {
-    httpQna.get("").then(({ data }) => (this.qnaList = data));
+    httpQna.get("?limit=5").then(({ data }) => (this.qnaList = data));
   },
   methods: {
     loadQnaArticle(articleno) {
