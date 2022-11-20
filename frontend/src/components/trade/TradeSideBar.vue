@@ -3,6 +3,9 @@
     <template v-if="isShow">
       <div class="side-bar">
         <trade-side-bar-filter></trade-side-bar-filter>
+        <h1>hello</h1>
+        <h1 v-if="apt != null" v-text="apt.aptCode"></h1>
+        <h1>{{ isShow }}</h1>
       </div>
     </template>
     <button id="trade-side-bar-active-btn" @click="showSide">
@@ -25,6 +28,7 @@ export default {
       isShow: true,
     };
   },
+  props: ["apt"],
   methods: {
     showSide() {
       this.isShow = !this.isShow;

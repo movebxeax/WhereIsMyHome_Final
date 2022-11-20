@@ -16,4 +16,8 @@ function aptListWithCds(params, success, fail) {
   return tradeApi.get(`/apt`, { params: params }).then(success).catch(fail);
 }
 
-export { searchOptionList, aptList, aptListWithCds };
+function aptInfo(aptcode, success, fail) {
+  return tradeApi.get(`/info/${aptcode}`).then(success).catch(fail);
+}
+
+export { searchOptionList, aptList, aptListWithCds, aptInfo };

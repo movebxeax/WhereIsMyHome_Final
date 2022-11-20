@@ -1,13 +1,14 @@
 <template>
   <div>
     <div id="map"></div>
-    <trade-side-bar class="side-bar"></trade-side-bar>
+    <trade-side-bar class="side-bar" v-bind="apt"></trade-side-bar>
   </div>
 </template>
 
 <script>
 import TradeSideBar from "@/components/trade/TradeSideBar.vue";
 import { mapState, mapActions } from "vuex";
+import { aptInfo } from "@/api/trade";
 const tradeStore = "tradeStore";
 
 export default {
@@ -15,6 +16,7 @@ export default {
   data() {
     return {
       map: null,
+      apt: {},
       markers: [],
       imgHouse: require("@/assets/img/house.png"),
     };
@@ -38,15 +40,15 @@ export default {
   watch: {
     apts() {
       // 지도 표시
-      this.updateMap(this.apts);
-      // console.log(this.apts);
+      this.updateMap();
     },
     dong() {
       this.changeCenterMap();
     },
   },
   methods: {
-    ...mapActions(tradeStore, ["getAptListWithCds"]),
+    ...mapActions(tradeStore, ["getAptListWithCds", "getApt"]),
+
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -71,23 +73,11 @@ export default {
       let base = this;
 
       kakao.maps.event.addListener(base.map, "dragend", function () {
-        // 지도 중심좌표를 얻어옵니다
-        // var latlng = base.map.getCenter();
         var bounds = base.map.getBounds();
         var swLatlng = bounds.getSouthWest();
-
-        // 영역정보의 북동쪽 정보를 얻어옵니다
         var neLatlng = bounds.getNorthEast();
 
-        let minLat = swLatlng.Ma;
-        let minLng = swLatlng.La;
-        let maxLat = neLatlng.Ma;
-        let maxLng = neLatlng.La;
-        console.log(minLat);
-        console.log(minLng);
-        console.log(maxLat);
-        console.log(maxLng);
-        const params = { minLat: minLat, maxLat: maxLat, minLng: minLng, maxLng: maxLng };
+        const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
         base.getAptListWithCds(params);
       });
     },
@@ -95,7 +85,8 @@ export default {
       let moveLatLon = new kakao.maps.LatLng(this.dong.lat, this.dong.lng);
       this.map.panTo(moveLatLon);
     },
-    updateMap(apts) {
+    updateMap() {
+      // 초기화
       this.markers.forEach((marker) => {
         marker.setMap(null);
       });
@@ -104,7 +95,7 @@ export default {
       var imageSize = new kakao.maps.Size(25, 29);
       // 마커 이미지를 생성합니다
 
-      apts.forEach((apt) => {
+      this.apts.forEach((apt) => {
         var markerImage = new kakao.maps.MarkerImage(this.imgHouse, imageSize);
         var marker = new kakao.maps.Marker({
           map: this.map, // 마커를 표시할 지도
@@ -112,25 +103,38 @@ export default {
           title: apt.aptName, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
           image: markerImage, // 마커 이미지
         });
-        this.markers.push(marker);
 
-        // 커스텀 오버레이
-        // let cnt = 0;
-        // apt.details.forEach((obj) => {
-        //   cnt += obj.priceInfoList.length;
-        // });
+        // // 오버레이
+        // var content = `<div class="label" style="background:white"><span class="center">${apt.aptName}</span></div>`;
 
-        // var content = `<div class ="label" style="background:white">
-        //                 <div class="left">${cnt}</div>
-        //                 <div class="center">${apt.aptName}</div>
-        //               </div>`;
-        // var customOverlay = new kakao.maps.CustomOverlay({
-        //   position: new kakao.maps.LatLng(apt.lat, apt.lng),
+        // // 커스텀 오버레이를 생성합니다
+        // let customOverlay = new kakao.maps.CustomOverlay({
+        //   position: marker.getPosition(),
         //   content: content,
+        //   yAnchor: -0.2,
+        //   map: this.map,
         // });
 
-        // customOverlay.setMap(this.map);
-        // this.markers.push(customOverlay);
+        // kakao.maps.event.addListener(marker, "mouseover", function () {
+        //   customOverlay.setMap(this.map);
+        // });
+
+        kakao.maps.event.addListener(marker, "click", function () {
+          console.log(apt.aptName);
+          aptInfo(
+            apt.aptCode,
+            ({ data }) => {
+              console.log(data);
+              this.apt = data;
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+          // this.getApt(this.markers);
+        });
+
+        this.markers.push(marker);
       });
     },
   },
