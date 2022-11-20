@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { httpQna } from "@/utils/api";
+import { apiQna } from "@/api/index";
 
 export default {
   name: "QnaList",
@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     getQnas(params) {
-      httpQna.get("", { params: params }).then(({ data }) => {
+      apiQna.get("", { params: params }).then(({ data }) => {
         this.qnas = data;
       });
     },

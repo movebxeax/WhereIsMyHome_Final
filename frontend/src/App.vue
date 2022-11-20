@@ -25,6 +25,7 @@ export default {
   font-family: "NanumSquareNeo";
   font-style: normal;
   font-display: swap;
+  text-align: center;
 }
 
 .navbar {

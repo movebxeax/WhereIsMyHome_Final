@@ -1,6 +1,6 @@
 <template>
-  <div id>
-    <trade-map></trade-map>
+  <div>
+    <trade-map id="trade-map"></trade-map>
   </div>
 </template>
 

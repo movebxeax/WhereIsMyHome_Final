@@ -3,11 +3,14 @@ import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 
 import userStore from "@/store/modules/userStore";
+import tradeStore from "@/store/modules/tradeStore";
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
     userStore,
+    tradeStore,
   },
   plugins: [
     createPersistedState({

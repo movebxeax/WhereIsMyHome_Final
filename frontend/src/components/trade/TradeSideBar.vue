@@ -1,22 +1,28 @@
 <template>
   <div class="side-bar-wrapper">
     <template v-if="isShow">
-      <div class="side-bar"></div>
+      <div class="side-bar">
+        <trade-side-bar-filter></trade-side-bar-filter>
+      </div>
     </template>
     <button id="trade-side-bar-active-btn" @click="showSide">
-      <v-icon v-if="isShow">mdi-chevron-left</v-icon>
-      <v-icon v-else>mdi-chevron-right</v-icon>
-      <!-- {{ isShow ? "<" : ">" }} -->
+      <v-icon center v-if="isShow">mdi-chevron-left</v-icon>
+      <v-icon center v-else>mdi-chevron-right</v-icon>
     </button>
   </div>
 </template>
 
 <script>
+import TradeSideBarFilter from "@/components/trade/TradeSideBarFilter.vue";
+
 export default {
   name: "TradeSideBar",
+  components: {
+    TradeSideBarFilter,
+  },
   data() {
     return {
-      isShow: false,
+      isShow: true,
     };
   },
   methods: {
@@ -29,14 +35,13 @@ export default {
 
 <style lang="scss" scoped>
 .side-bar-wrapper {
-  background-color: yellow;
+  background-color: white;
   .side-bar {
     opacity: 90%;
-    width: 500px;
+    width: 400px;
     // position: relative;
     // height: 100%;
     // display: flex;
-    // justify-content: center;
   }
 }
 
@@ -45,9 +50,9 @@ export default {
   top: 350px;
   padding: 0 0 0 0;
   background-color: white;
-  width: 25px;
-  height: 40px;
-  right: -25px;
+  width: 30px;
+  height: 50px;
+  right: -30px;
   // height: 30px;
   // border: 1px solid aliceblue;
   border-bottom: 1px solid grey;

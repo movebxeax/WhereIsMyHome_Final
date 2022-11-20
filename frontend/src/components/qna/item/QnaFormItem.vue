@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { httpQna } from "@/utils/api";
+import { apiQna } from "@/api/index";
 
 export default {
   name: "QnaFormItem",
@@ -72,7 +72,7 @@ export default {
   created() {
     if (this.type === "modify") {
       this.isUserid = true;
-      httpQna.get(`/${this.no}`).then(({ data }) => {
+      apiQna.get(`/${this.no}`).then(({ data }) => {
         this.qna = data;
       });
     }
@@ -102,7 +102,7 @@ export default {
         author: "testuser",
       };
 
-      httpQna.post("", body).then(({ status }) => {
+      apiQna.post("", body).then(({ status }) => {
         let msg = "등록 처리시 문제가 발생했습니다.";
         if (status == 200) {
           msg = "등록이 완료되었습니다.";
@@ -119,7 +119,7 @@ export default {
         author: "testuser",
       };
 
-      httpQna.post(`/${this.qna.no}`, body).then(({ status, data }) => {
+      apiQna.post(`/${this.qna.no}`, body).then(({ status, data }) => {
         console.log(data.no);
         let msg = "수정 처리시 문제가 발생했습니다.";
         if (status == 200) {

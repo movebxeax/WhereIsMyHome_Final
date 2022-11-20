@@ -41,7 +41,8 @@
 </template>
 
 <script>
-import { httpQna } from "@/utils/api";
+import { apiQna } from "@/api/index";
+
 export default {
   name: "QnaDetail",
   props: ["no"],
@@ -61,7 +62,7 @@ export default {
   },
   methods: {
     getQna() {
-      httpQna.get(`/${this.no}`).then(({ data }) => {
+      apiQna.get(`/${this.no}`).then(({ data }) => {
         this.qna = data;
       });
     },
@@ -73,7 +74,7 @@ export default {
     },
     deleteQna() {
       if (confirm("삭제하시겠습니까?")) {
-        httpQna.delete(`/${this.qna.no}`).then(({ status }) => {
+        apiQna.delete(`/${this.qna.no}`).then(({ status }) => {
           let msg = "삭제 처리시 문제가 발생했습니다.";
           if (status == 200) {
             msg = "삭제가 완료되었습니다.";

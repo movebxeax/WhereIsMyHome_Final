@@ -7,9 +7,18 @@
 
 <script>
 import TradeSideBar from "@/components/trade/TradeSideBar.vue";
+import { mapState, mapActions } from "vuex";
+const tradeStore = "tradeStore";
 
 export default {
   name: "TradeMap",
+  data() {
+    return {
+      map: null,
+      markers: [],
+      imgHouse: require("@/assets/img/house.png"),
+    };
+  },
   components: { TradeSideBar },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -23,16 +32,106 @@ export default {
       document.head.appendChild(script);
     }
   },
+  computed: {
+    ...mapState(tradeStore, ["apts", "dong"]),
+  },
+  watch: {
+    apts() {
+      // 지도 표시
+      this.updateMap(this.apts);
+      // console.log(this.apts);
+    },
+    dong() {
+      this.changeCenterMap();
+    },
+  },
   methods: {
+    ...mapActions(tradeStore, ["getAptListWithCds"]),
     initMap() {
       const container = document.getElementById("map");
       const options = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667),
-        level: 5,
+        center: new kakao.maps.LatLng(37.501929614341925, 127.03899430413212),
+        level: 4,
       };
       //지도 객체를 등록합니다.
       //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
       this.map = new kakao.maps.Map(container, options);
+
+      // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+      let mapTypeControl = new kakao.maps.MapTypeControl();
+
+      // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+      // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+      this.map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+      // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+      let zoomControl = new kakao.maps.ZoomControl();
+      this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+      let base = this;
+
+      kakao.maps.event.addListener(base.map, "dragend", function () {
+        // 지도 중심좌표를 얻어옵니다
+        // var latlng = base.map.getCenter();
+        var bounds = base.map.getBounds();
+        var swLatlng = bounds.getSouthWest();
+
+        // 영역정보의 북동쪽 정보를 얻어옵니다
+        var neLatlng = bounds.getNorthEast();
+
+        let minLat = swLatlng.Ma;
+        let minLng = swLatlng.La;
+        let maxLat = neLatlng.Ma;
+        let maxLng = neLatlng.La;
+        console.log(minLat);
+        console.log(minLng);
+        console.log(maxLat);
+        console.log(maxLng);
+        const params = { minLat: minLat, maxLat: maxLat, minLng: minLng, maxLng: maxLng };
+        base.getAptListWithCds(params);
+      });
+    },
+    changeCenterMap() {
+      let moveLatLon = new kakao.maps.LatLng(this.dong.lat, this.dong.lng);
+      this.map.panTo(moveLatLon);
+    },
+    updateMap(apts) {
+      this.markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      this.markers = [];
+
+      var imageSize = new kakao.maps.Size(25, 29);
+      // 마커 이미지를 생성합니다
+
+      apts.forEach((apt) => {
+        var markerImage = new kakao.maps.MarkerImage(this.imgHouse, imageSize);
+        var marker = new kakao.maps.Marker({
+          map: this.map, // 마커를 표시할 지도
+          position: new kakao.maps.LatLng(apt.lat, apt.lng), // 마커를 표시할 위치
+          title: apt.aptName, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+          image: markerImage, // 마커 이미지
+        });
+        this.markers.push(marker);
+
+        // 커스텀 오버레이
+        // let cnt = 0;
+        // apt.details.forEach((obj) => {
+        //   cnt += obj.priceInfoList.length;
+        // });
+
+        // var content = `<div class ="label" style="background:white">
+        //                 <div class="left">${cnt}</div>
+        //                 <div class="center">${apt.aptName}</div>
+        //               </div>`;
+        // var customOverlay = new kakao.maps.CustomOverlay({
+        //   position: new kakao.maps.LatLng(apt.lat, apt.lng),
+        //   content: content,
+        // });
+
+        // customOverlay.setMap(this.map);
+        // this.markers.push(customOverlay);
+      });
     },
   },
 };
