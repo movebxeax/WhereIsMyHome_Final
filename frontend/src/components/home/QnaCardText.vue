@@ -12,6 +12,14 @@
         </div>
       </div>
     </v-card-text>
+    <v-card-text class="pa-2 ma-1 text-left" v-for="i in 5 - Object.keys(qnaList).length" :key="i">
+      <div class="d-flex">
+        <div>
+          <v-btn text disabled color="#3F72AF"> </v-btn>
+        </div>
+        <div class="pr-4 ml-auto"></div>
+      </div>
+    </v-card-text>
   </div>
 </template>
 
