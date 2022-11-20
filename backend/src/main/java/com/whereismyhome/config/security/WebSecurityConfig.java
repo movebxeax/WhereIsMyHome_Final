@@ -34,7 +34,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 				.csrf().disable()
 				.cors().disable()
 				.authorizeRequests()
-					.antMatchers("/", "/api/user/**","/api/trade/**").permitAll()
+					.antMatchers("/", "/api/address", "/api/user/**","/api/trade/**").permitAll()
 					.antMatchers(HttpMethod.POST, "/api/notice/**").hasRole(Role.ADMIN.getValue())
 					.antMatchers(HttpMethod.PUT, "/api/notice/**").hasRole(Role.ADMIN.getValue())
 					.antMatchers(HttpMethod.DELETE, "/api/notice/**").hasRole(Role.ADMIN.getValue())
