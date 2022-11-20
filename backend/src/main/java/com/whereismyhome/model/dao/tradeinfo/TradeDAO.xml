@@ -35,6 +35,16 @@
 		order by aptcode, area, dealyear, dealmonth;
 	</select>
 	
+	<select id="selectAptListWithCoord" parameterType="map" resultType="AptInfo">
+		select
+			aptCode, aptName, dongCode, lat, lng
+		from houseinfo
+		where
+			lat between #{minLat} and #{maxLat}
+			and
+			lng between #{minLng} and #{maxLng}
+	</select>
+	
 	<select id="selectTradeListWithAptCode" parameterType="string" resultMap="com.whereismyhome.resultmaps.TradeInfoSpecMap">
 		select
 			hi.buildyear, hi.aptcode, hi.dongcode, hi.aptname, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth, hi.lat, hi.lng

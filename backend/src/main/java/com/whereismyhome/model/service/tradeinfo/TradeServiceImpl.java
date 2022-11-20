@@ -19,8 +19,14 @@ public class TradeServiceImpl implements TradeService {
 		this.tradeDao = tradeDao;
 	}
 	
+	@Override
 	public List<TradeInfo> getTradeList(Map<String, Object> map) {
 		return tradeDao.selectTradeListWithDongCode(map);
+	}
+	
+	@Override
+	public List<TradeInfo> getAptListWithCoord(Map<String, Object> map) {
+		return tradeDao.selectAptListWithCoord(map);
 	}
 
 	@Override

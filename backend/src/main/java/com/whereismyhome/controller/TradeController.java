@@ -38,6 +38,12 @@ public class TradeController extends ResponseManager{
 //		return createResponse(tradeService.getTradeList(map));
 //	}
 	
+	@GetMapping("/apt")
+	protected ResponseEntity<?> getAptListWithCoord(@RequestParam Map<String, Object> params) {
+		log.warn(params.toString());
+		return createResponse(HttpStatus.OK, tradeService.getAptListWithCoord(params));
+	}
+	
 	@GetMapping("/list/{dongCode}")
 	protected ResponseEntity<?> getTradeList(@PathVariable String dongCode,
 			@RequestParam(required = false) Map<String,String> params)
