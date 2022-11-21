@@ -2,11 +2,7 @@
   <v-main>
     <div style="z-index: 0">
       <backgroud-video></backgroud-video>
-      <div style="height: 30vh">
-        <div class="align-center">
-          <h1>아파트 거래 검색창이 여기 들어갑니다.</h1>
-        </div>
-      </div>
+      <search-text-field></search-text-field>
       <card-sections></card-sections>
     </div>
   </v-main>
@@ -15,10 +11,14 @@
 <script>
 import BackgroudVideo from "@/components/home/Background.vue";
 import CardSections from "@/components/home/CardSections.vue";
+import SearchTextField from "@/components/home/SearchTextField.vue";
 export default {
   name: "HomeView",
-  components: { BackgroudVideo, CardSections },
+  components: { BackgroudVideo, SearchTextField, CardSections },
 };
 </script>
 
-<style scoped></style>
+<style ,
+    SearchTextFieldscoped>
+    
+    </style>

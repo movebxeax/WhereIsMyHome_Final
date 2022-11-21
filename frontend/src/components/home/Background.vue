@@ -17,10 +17,11 @@ video.bg-video {
   transition: 1s opacity;
   opacity: 0.2;
   position: fixed;
-  clip-path: polygon(0 0, 100vw 0, 100vw 100vh, 0 100vh);
+  /* clip-path: polygon(0 0, 100vw 0, 100vw 100vh, 0 100vh); */
   overflow: hidden;
   z-index: 0;
   top: 0;
   left: 0;
+  width: 100vw;
 }
 </style>

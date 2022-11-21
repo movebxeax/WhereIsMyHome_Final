@@ -28,6 +28,10 @@ export default {
   text-align: center;
 }
 
+html {
+  overflow: hidden;
+}
+
 .navbar {
   height: 60px;
 }
