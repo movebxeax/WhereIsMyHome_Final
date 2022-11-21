@@ -45,7 +45,6 @@ export default {
         // 지도 표시
         if (this.apts.length > 0) {
           console.log("apt handler call");
-          console.log(this.apts.length);
           this.updateMap();
         }
       },
@@ -89,27 +88,29 @@ export default {
       let zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
-      let base = this;
-
       // 드래그 이벤트
-      kakao.maps.event.addListener(base.map, "dragend", function () {
-        var bounds = base.map.getBounds();
-        var swLatlng = bounds.getSouthWest();
-        var neLatlng = bounds.getNorthEast();
-
-        const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
-        base.getAptListWithCds(params);
-      });
-
-      // 확대, 축소 이벤트
-      kakao.maps.event.addListener(base.map, "zoom_changed", () => {
-        // 지도의 현재 레벨을 얻어옵니다
-        let level = base.map.getLevel();
-        // 6이상 이면 클러스터링 마커 아니면, 기존 마커
+      kakao.maps.event.addListener(this.map, "dragend", () => {
+        let level = this.map.getLevel();
         if (level >= 6) {
           this.getDongMarkers();
         } else {
-          var bounds = base.map.getBounds();
+          var bounds = this.map.getBounds();
+          var swLatlng = bounds.getSouthWest();
+          var neLatlng = bounds.getNorthEast();
+
+          const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+          this.getAptListWithCds(params);
+        }
+      });
+
+      // 확대, 축소 이벤트
+      kakao.maps.event.addListener(this.map, "zoom_changed", () => {
+        let level = this.map.getLevel();
+
+        if (level >= 6) {
+          this.getDongMarkers();
+        } else {
+          var bounds = this.map.getBounds();
           var swLatlng = bounds.getSouthWest();
           var neLatlng = bounds.getNorthEast();
 
@@ -126,6 +127,9 @@ export default {
       // 레벨이 6이상이면 아파트 마커 사용 X
       let level = this.map.getLevel();
       if (level >= 6) {
+        if (this.apts.length > 0) {
+          this.clearAptList();
+        }
         this.getDongMarkers();
         return;
       }

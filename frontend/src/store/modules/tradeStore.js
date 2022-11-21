@@ -10,7 +10,7 @@ const tradeStore = {
     filterOptions: {
       area: { min: 0, max: 200, range: [0, 200] },
       price: { min: 0, max: 3000000000, range: [0, 3000000000] },
-      buildyear: "all",
+      buildyear: 1922,
     },
   },
   getters: {
@@ -19,7 +19,7 @@ const tradeStore = {
     },
     apts(state) {
       let limitBuildyear = new Date().getFullYear() - state.filterOptions.buildyear;
-      // console.log(limitBuildyear);
+      console.log(limitBuildyear);
       const filters = state.apts.filter((apt) => apt.buildYear >= limitBuildyear);
       // console.log(filters);
       // console.log(state.apts);
