@@ -1,39 +1,31 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col>
-        <v-data-table
-          class="qna-item"
-          :items="qnas"
-          :headers="headers"
-          cursor="pointer"
-          @click:row="viewQna"
-        ></v-data-table>
-      </v-col>
-    </v-row>
+  <v-card>
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-data-table class="qna-item ma-3" :items="qnas" :headers="headers" cursor="pointer" @click:row="viewQna">
+          </v-data-table>
+        </v-col>
+      </v-row>
 
-    <v-row align="center" justify="space-around">
-      <v-spacer></v-spacer>
-      <v-col cols="2">
-        <v-select
-          v-model="qnaSelectedType"
-          :items="qnaSearchKeywords"
-          item-text="text"
-          item-value="value"
-          persistent-hint
-          return-object
-        ></v-select>
-      </v-col>
-      <v-col cols="3">
-        <v-text-field v-model="qnaSearchInput" ref="search" id="qna-search" label="검색어"></v-text-field>
-      </v-col>
-      <v-btn icon color="primary" @click="onSearch">
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" @click="moveRegister">글쓰기</v-btn>
-    </v-row>
-  </v-container>
+      <v-row class="justify-end ma-3">
+        <v-spacer></v-spacer>
+        <v-col cols="2">
+          <v-select v-model="qnaSelectedType" :items="qnaSearchKeywords" item-text="text" item-value="value"
+            persistent-hint return-object style="text-align:center"></v-select>
+        </v-col>
+        <v-col cols="3">
+          <v-text-field v-model="qnaSearchInput" ref="search" id="qna-search" label="검색어" append-icon="mdi-magnify"
+            @click:append="onSearch">
+          </v-text-field>
+        </v-col>
+        <v-col class="d-flex align-center justify-row-reverse">
+          <v-spacer></v-spacer>
+          <v-btn color="primary" @click="moveRegister">글쓰기</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-card>
 </template>
 
 <script>
@@ -103,5 +95,22 @@ export default {
 <style scoped>
 .qna-item {
   cursor: pointer;
+}
+
+.v-data-table>>>thead>tr>th {
+  font-size: 1rem !important;
+  vertical-align: middle;
+  text-align: center !important;
+  justify-content: space-between;
+}
+
+.v-data-table>>>tbody>tr>td {
+  font-size: 1rem !important;
+  vertical-align: middle;
+  text-align: center !important;
+}
+
+.v-select__selection {
+  justify-content: center;
 }
 </style>
