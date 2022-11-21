@@ -3,9 +3,7 @@
     <template v-if="isShow">
       <div class="side-bar">
         <trade-side-bar-filter></trade-side-bar-filter>
-        <h1>hello</h1>
-        <h1 v-if="apt != null" v-text="apt.aptCode"></h1>
-        <h1>{{ isShow }}</h1>
+        <h1 v-if="apt != null" v-text="apt.aptName"></h1>
       </div>
     </template>
     <button id="trade-side-bar-active-btn" @click="showSide">
@@ -17,6 +15,8 @@
 
 <script>
 import TradeSideBarFilter from "@/components/trade/TradeSideBarFilter.vue";
+import { mapState } from "vuex";
+const tradeStore = "tradeStore";
 
 export default {
   name: "TradeSideBar",
@@ -28,10 +28,17 @@ export default {
       isShow: true,
     };
   },
-  props: ["apt"],
+  computed: {
+    ...mapState(tradeStore, ["apt"]),
+  },
   methods: {
     showSide() {
       this.isShow = !this.isShow;
+    },
+  },
+  watch: {
+    apt() {
+      console.log(this.apt);
     },
   },
 };

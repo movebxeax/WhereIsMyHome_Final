@@ -50,11 +50,6 @@
 
     <!--필터 아이템-->
     <v-tabs-items v-model="filterTab">
-      <!-- <v-tab-item v-for="(item, index) in filterTabItems" :key="index">
-        <v-card flat>
-          <v-card-text>{{ item.value }}</v-card-text>
-        </v-card>
-      </v-tab-item> -->
       <v-tab-item>
         <v-card flat>
           <v-card-text>가격 (억 원)</v-card-text>

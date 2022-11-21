@@ -1,14 +1,13 @@
 <template>
   <div>
     <div id="map"></div>
-    <trade-side-bar class="side-bar" v-bind="apt"></trade-side-bar>
+    <trade-side-bar class="side-bar"></trade-side-bar>
   </div>
 </template>
 
 <script>
 import TradeSideBar from "@/components/trade/TradeSideBar.vue";
 import { mapState, mapActions } from "vuex";
-import { aptInfo } from "@/api/trade";
 const tradeStore = "tradeStore";
 
 export default {
@@ -16,8 +15,8 @@ export default {
   data() {
     return {
       map: null,
-      apt: {},
       markers: [],
+      clusterer: null,
       imgHouse: require("@/assets/img/house.png"),
     };
   },
@@ -29,13 +28,14 @@ export default {
       const script = document.createElement("script");
       /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
-      //   script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=" + process.env.VUE_APP_KAKAO_MAP_KEY;
-      script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=980bea8bcd07009e77637df27e1433d7";
+      //   script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=" + process.env.VUE_APP_KAKAO_MAP_KEY +"&libraries=services,clusterer";
+      script.src =
+        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=980bea8bcd07009e77637df27e1433d7&libraries=services,clusterer";
       document.head.appendChild(script);
     }
   },
   computed: {
-    ...mapState(tradeStore, ["apts", "dong"]),
+    ...mapState(tradeStore, ["apts", "dong", "apt"]),
   },
   watch: {
     apts() {
@@ -45,10 +45,12 @@ export default {
     dong() {
       this.changeCenterMap();
     },
+    markers() {
+      // this.clusterer.addMarkers(this.markers);
+    },
   },
   methods: {
     ...mapActions(tradeStore, ["getAptListWithCds", "getApt"]),
-
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -104,34 +106,8 @@ export default {
           image: markerImage, // 마커 이미지
         });
 
-        // // 오버레이
-        // var content = `<div class="label" style="background:white"><span class="center">${apt.aptName}</span></div>`;
-
-        // // 커스텀 오버레이를 생성합니다
-        // let customOverlay = new kakao.maps.CustomOverlay({
-        //   position: marker.getPosition(),
-        //   content: content,
-        //   yAnchor: -0.2,
-        //   map: this.map,
-        // });
-
-        // kakao.maps.event.addListener(marker, "mouseover", function () {
-        //   customOverlay.setMap(this.map);
-        // });
-
-        kakao.maps.event.addListener(marker, "click", function () {
-          console.log(apt.aptName);
-          aptInfo(
-            apt.aptCode,
-            ({ data }) => {
-              console.log(data);
-              this.apt = data;
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
-          // this.getApt(this.markers);
+        kakao.maps.event.addListener(marker, "click", () => {
+          this.getApt(apt.aptCode);
         });
 
         this.markers.push(marker);
