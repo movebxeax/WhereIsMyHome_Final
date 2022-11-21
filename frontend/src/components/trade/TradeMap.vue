@@ -44,8 +44,7 @@ export default {
     apts: {
       deep: true,
       handler() {
-        // 지도 표시
-        if (this.apts.length > 0) {
+        if (this.apts.length >= 0) {
           console.log("apts handler call");
           this.updateMap();
         }
@@ -53,18 +52,6 @@ export default {
     },
     dong() {
       this.changeCenterMap();
-    },
-    filterOptions: {
-      deep: true,
-      handler() {
-        console.log("tradeMap filterOptions");
-        var bounds = this.map.getBounds();
-        var swLatlng = bounds.getSouthWest();
-        var neLatlng = bounds.getNorthEast();
-
-        const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
-        this.getAptListWithCds(params);
-      },
     },
   },
   methods: {

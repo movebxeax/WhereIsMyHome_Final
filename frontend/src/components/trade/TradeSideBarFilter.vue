@@ -131,7 +131,7 @@
             <v-container fluid>
               <v-row>
                 <v-col cols="4" sm="6" md="6">
-                  <v-radio-group v-model="curFilterOptions.buildyear" column mandatory>
+                  <v-radio-group v-model="curFilterOptions.buildYear" column>
                     <v-radio
                       v-for="(item, index) in buildyearItems"
                       :key="index"
@@ -165,9 +165,8 @@ export default {
         // { title: "거래연도", value: "dealyear" },
         { title: "가격", value: "price" },
         { title: "면적", value: "area" },
-        { title: "준공년도", value: "buildyear" },
+        { title: "준공년도", value: "buildYear" },
       ],
-      dealyear: { min: 2010, max: 2022, range: [2010, 2022] },
 
       buildyearItems: [
         { label: "전체", color: "primary", value: 100 },
@@ -182,8 +181,8 @@ export default {
       searchSelectedDongcode: null,
       curFilterOptions: {
         area: { min: 0, max: 200, range: [0, 200] },
-        price: { min: 0, max: 3000000000, range: [0, 3000000000] },
-        buildyear: 2022,
+        price: { min: 0, max: 5000000000, range: [0, 5000000000] },
+        buildYear: 100,
       },
     };
   },
@@ -216,6 +215,8 @@ export default {
     curFilterOptions: {
       deep: true,
       handler() {
+        console.log(this.curFilterOptions.buildYear);
+        console.log("setFilter Call");
         this.setFilterOptions(this.curFilterOptions);
       },
     },
@@ -224,7 +225,13 @@ export default {
     ...mapActions(tradeStore, ["getSearchOptionList", "getAptList", "clearAptList", "setDong", "setFilterOptions"]),
   },
   created() {
-    // this.searchSelectedDongcode = "1168010100";
+    // if (this.curFilterOptions == null) {
+    //   this.curFilterOptions = {
+    //     area: { min: 0, max: 200, range: [0, 200] },
+    //     price: { min: 0, max: 5000000000, range: [0, 5000000000] },
+    //     buildYear: 100,
+    //   };
+    // }
   },
 };
 </script>
