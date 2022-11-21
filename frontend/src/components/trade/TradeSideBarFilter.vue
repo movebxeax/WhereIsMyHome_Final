@@ -139,12 +139,6 @@
                       :color="item.color"
                       :value="item.value"
                     ></v-radio>
-                    <!-- <v-radio label="red" color="red" value="red"></v-radio>
-                    <v-radio label="red darken-3" color="red darken-3" value="red darken-3"></v-radio>
-                    <v-radio label="indigo" color="indigo" value="indigo"></v-radio>
-                    <v-radio label="indigo darken-3" color="indigo darken-3" value="indigo darken-3"></v-radio>
-                    <v-radio label="orange" color="orange" value="orange"></v-radio>
-                    <v-radio label="orange darken-3" color="orange darken-3" value="orange darken-3"></v-radio> -->
                   </v-radio-group>
                 </v-col>
               </v-row>
@@ -180,6 +174,8 @@ export default {
         { label: "1년 이내", color: "success", value: 1 },
         { label: "5년 이내", color: "info", value: 5 },
         { label: "10년 이내", color: "warning", value: 10 },
+        { label: "20년 이내", color: "secondary", value: 20 },
+        { label: "30년 이내", color: "error", value: 30 },
       ],
       isLoading: false,
       searchKeyword: null,
