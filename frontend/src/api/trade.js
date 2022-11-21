@@ -24,4 +24,8 @@ function dongMarkerInfo(params, success, fail) {
   return tradeApi.get(`/dong`, { params: params }).then(success).catch(fail);
 }
 
-export { searchOptionList, aptList, aptListWithCds, aptInfo, dongMarkerInfo };
+function gugunMarkerInfo(params, success, fail) {
+  return tradeApi.get(`/gugun`, { params: params }).then(success).catch(fail);
+}
+
+export { searchOptionList, aptList, aptListWithCds, aptInfo, dongMarkerInfo, gugunMarkerInfo };

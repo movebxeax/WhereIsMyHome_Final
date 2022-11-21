@@ -8,10 +8,10 @@
 <script>
 import TradeSideBar from "@/components/trade/TradeSideBar.vue";
 import { mapActions, mapGetters } from "vuex";
-import { dongMarkerInfo } from "@/api/trade";
+import { dongMarkerInfo, gugunMarkerInfo } from "@/api/trade";
 const tradeStore = "tradeStore";
 const DEALYEAR_DONG_LIMIT = 5;
-// const DEALYEAR_GUGUN_LIMIT = 7;
+const DEALYEAR_GUGUN_LIMIT = 7;
 
 export default {
   name: "TradeMap",
@@ -80,7 +80,10 @@ export default {
       // 드래그 이벤트
       kakao.maps.event.addListener(this.map, "dragend", () => {
         let level = this.map.getLevel();
-        if (level >= DEALYEAR_DONG_LIMIT) {
+
+        if (level >= DEALYEAR_GUGUN_LIMIT) {
+          this.getGugunMarkers();
+        } else if (level >= DEALYEAR_DONG_LIMIT) {
           this.getDongMarkers();
         } else {
           var bounds = this.map.getBounds();
@@ -96,7 +99,9 @@ export default {
       kakao.maps.event.addListener(this.map, "zoom_changed", () => {
         let level = this.map.getLevel();
 
-        if (level >= DEALYEAR_DONG_LIMIT) {
+        if (level >= DEALYEAR_GUGUN_LIMIT) {
+          this.getGugunMarkers();
+        } else if (level >= DEALYEAR_DONG_LIMIT) {
           this.getDongMarkers();
         } else {
           var bounds = this.map.getBounds();
@@ -115,7 +120,22 @@ export default {
     updateMap() {
       // 레벨이 6이상이면 아파트 마커 사용 X
       let level = this.map.getLevel();
-      if (level >= DEALYEAR_DONG_LIMIT) {
+
+      // if (level >= DEALYEAR_DONG_LIMIT) {
+      //   if (this.apts.length > 0) {
+      //     this.clearAptList();
+      //   }
+      //   this.getDongMarkers();
+      //   return;
+      // }
+
+      if (level >= DEALYEAR_GUGUN_LIMIT) {
+        if (this.apts.length > 0) {
+          this.clearAptList();
+        }
+        this.getGugunMarkers();
+        return;
+      } else if (level >= DEALYEAR_DONG_LIMIT) {
         if (this.apts.length > 0) {
           this.clearAptList();
         }
@@ -181,6 +201,52 @@ export default {
               this.map.panTo(moveLatLon);
               this.map.setLevel(3);
             };
+            this.markers.push(customOverlay);
+          });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    getGugunMarkers() {
+      // 마커 데이터 갱신
+      this.clearMarkers();
+      let bounds = this.map.getBounds();
+      let swLatlng = bounds.getSouthWest();
+      let neLatlng = bounds.getNorthEast();
+
+      const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+      gugunMarkerInfo(
+        params,
+        ({ data }) => {
+          // 커스텀 오버레이 생성
+          console.log(data);
+          data.forEach((gugun) => {
+            let content =
+              `<div class="customoverlay" id="${gugun.gugunCode}" style="background:white; cursor:pointer">` +
+              `    <span class="title">${gugun.gugunName}</span>` +
+              "</div>";
+
+            // 커스텀 오버레이가 표시될 위치입니다
+            let position = new kakao.maps.LatLng(gugun.lat, gugun.lng);
+
+            // 커스텀 오버레이를 생성합니다
+            let customOverlay = new kakao.maps.CustomOverlay({
+              map: this.map,
+              position: position,
+              content: content,
+              yAnchor: 1,
+            });
+
+            // 커스텀 오버레이 클릭 이벤트 설정
+            const close = document.getElementById(gugun.gugunCode);
+            close.onclick = () => {
+              let moveLatLon = new kakao.maps.LatLng(gugun.lat, gugun.lng);
+              this.map.panTo(moveLatLon);
+              this.map.setLevel(DEALYEAR_DONG_LIMIT);
+            };
+
             this.markers.push(customOverlay);
           });
         },
