@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.whereismyhome.model.dao.tradeinfo.TradeDAO;
+import com.whereismyhome.model.dto.tradeinfo.DongInfo;
 import com.whereismyhome.model.dto.tradeinfo.TradeInfo;
 import com.whereismyhome.model.dto.tradeinfo.TradeInfoSpec;
 
@@ -32,5 +33,10 @@ public class TradeServiceImpl implements TradeService {
 	@Override
 	public TradeInfoSpec getTradeSpecWithAptCode(String aptCode) {
 		return tradeDao.selectTradeListWithAptCode(aptCode);
+	}
+
+	@Override
+	public List<DongInfo> getDongInfoListWithCoord(Map<String, Object> map) {
+		return tradeDao.selectDongInfoListWithCoord(map);
 	}
 }

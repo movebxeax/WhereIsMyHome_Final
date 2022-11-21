@@ -53,5 +53,17 @@
 		where hd.aptcode=#{aptcode}
 		order by area, dealyear, dealmonth; 
 	</select>
+	
+	<select id="selectDongInfoListWithCoord" parameterType="map" resultType="DongInfo">
+		select
+			ba.dongName, ba.dongCode, ba.lat, ba.lng, count(hi.dongcode) as aptCount
+		from baseaddress as ba
+		join houseinfo as hi on hi.dongcode=ba.dongcode
+		where
+			ba.lat between #{minLat} and #{maxLat}
+    		and
+    		ba.lng between #{minLng} and #{maxLng} 
+		group by hi.dongcode;
+	</select>
 
 </mapper>
