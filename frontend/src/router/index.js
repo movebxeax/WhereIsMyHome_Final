@@ -22,7 +22,15 @@ const routes = [
   {
     path: "/notice",
     name: "notice",
+    redirect: "/notice/list",
     component: NoticeView,
+    children: [
+      {
+        path: "list",
+        name: "noticeList",
+        component: () => import("@/components/notice/NoticeList.vue"),
+      },
+    ],
   },
   {
     path: "/qna",

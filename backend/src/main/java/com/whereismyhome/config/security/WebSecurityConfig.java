@@ -35,6 +35,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 				.cors().disable()
 				.authorizeRequests()
 					.antMatchers("/", "/api/address", "/api/user/**","/api/trade/**").permitAll()
+					.antMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
 					.antMatchers(HttpMethod.POST, "/api/notice/**").hasRole(Role.ADMIN.getValue())
 					.antMatchers(HttpMethod.PUT, "/api/notice/**").hasRole(Role.ADMIN.getValue())
 					.antMatchers(HttpMethod.DELETE, "/api/notice/**").hasRole(Role.ADMIN.getValue())

@@ -2,7 +2,11 @@
   <v-main>
     <div style="z-index: 0">
       <backgroud-video></backgroud-video>
-      <h1>아파트 거래 검색창이 여기 들어갑니다.</h1>
+      <div style="height: 30vh">
+        <div class="align-center">
+          <h1>아파트 거래 검색창이 여기 들어갑니다.</h1>
+        </div>
+      </div>
       <card-sections></card-sections>
     </div>
   </v-main>

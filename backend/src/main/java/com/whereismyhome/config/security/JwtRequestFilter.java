@@ -35,7 +35,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 							"/api/user/signup",
 							"/api/user/login",
 							"/api/user/refresh",
-							"/api/trade/**"
+							"/api/trade/**",
+							"/api/notice/**"
 							));
 
 	@Override

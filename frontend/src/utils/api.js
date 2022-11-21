@@ -7,6 +7,9 @@ const base = "http://localhost:8080";
 const httpQna = axios.create({
   baseURL: base + "/api/qna",
 });
+const httpNotice = axios.create({
+  baseURL: base + "/api/notice",
+});
 const httpUser = axios.create({
   baseURL: base + "/api/user",
 });
@@ -87,4 +90,4 @@ httpQna.interceptors.request.use(
   }
 );
 
-export { httpQna, httpUser };
+export { httpQna, httpNotice, httpUser };
