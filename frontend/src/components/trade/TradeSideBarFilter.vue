@@ -60,7 +60,7 @@
                 class="mt-0 pt-0"
                 single-line
                 type="number"
-                @change="$set(range, 0, $event)"
+                @change="$set(curFilterOptions.price.range, 0, $event)"
                 step="0.1"
               ></v-text-field
             ></v-col>
@@ -71,13 +71,19 @@
                 single-line
                 type="number"
                 step="0.1"
-                @change="$set(range, 0, $event)"
+                @change="$set(curFilterOptions.price.range, 0, $event)"
               ></v-text-field
             ></v-col>
           </v-row>
           <v-row>
             <v-col class="px-4">
-              <v-range-slider v-model="price.range" :min="price.min" :max="price.max" step="10000000"> </v-range-slider>
+              <v-range-slider
+                v-model="curFilterOptions.price.range"
+                :min="curFilterOptions.price.min"
+                :max="curFilterOptions.price.max"
+                step="10000000"
+              >
+              </v-range-slider>
             </v-col>
           </v-row>
         </v-card>
@@ -86,27 +92,32 @@
         <v-card flat>
           <v-card-text>면적(m2)</v-card-text>
           <v-col class="px-4">
-            <v-range-slider v-model="area.range" :min="area.min" :max="area.max" step="10">
+            <v-range-slider
+              v-model="curFilterOptions.area.range"
+              :min="curFilterOptions.area.min"
+              :max="curFilterOptions.area.max"
+              step="10"
+            >
               <template v-slot:prepend>
                 <v-text-field
-                  :value="area.range[0]"
+                  :value="curFilterOptions.area.range[0]"
                   class="mt-0 pt-0"
                   hide-details
                   single-line
                   type="number"
                   style="width: 60px"
-                  @change="$set(range, 0, $event)"
+                  @change="$set(curFilterOptions.area.range, 0, $event)"
                 ></v-text-field>
               </template>
               <template v-slot:append>
                 <v-text-field
-                  :value="area.range[1]"
+                  :value="curFilterOptions.area.range[1]"
                   class="mt-0 pt-0"
                   hide-details
                   single-line
                   type="number"
                   style="width: 60px"
-                  @change="$set(range, 0, $event)"
+                  @change="$set(curFilterOptions.area.range, 0, $event)"
                 ></v-text-field>
               </template>
             </v-range-slider>
@@ -115,7 +126,30 @@
       </v-tab-item>
       <v-tab-item>
         <v-card flat>
-          <v-card-text>준공연도</v-card-text>
+          <v-card-text
+            >준공연도
+            <v-container fluid>
+              <v-row>
+                <v-col cols="4" sm="6" md="6">
+                  <v-radio-group v-model="curFilterOptions.buildyear" column mandatory>
+                    <v-radio
+                      v-for="(item, index) in buildyearItems"
+                      :key="index"
+                      :label="item.label"
+                      :color="item.color"
+                      :value="item.value"
+                    ></v-radio>
+                    <!-- <v-radio label="red" color="red" value="red"></v-radio>
+                    <v-radio label="red darken-3" color="red darken-3" value="red darken-3"></v-radio>
+                    <v-radio label="indigo" color="indigo" value="indigo"></v-radio>
+                    <v-radio label="indigo darken-3" color="indigo darken-3" value="indigo darken-3"></v-radio>
+                    <v-radio label="orange" color="orange" value="orange"></v-radio>
+                    <v-radio label="orange darken-3" color="orange darken-3" value="orange darken-3"></v-radio> -->
+                  </v-radio-group>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
         </v-card>
       </v-tab-item>
     </v-tabs-items>
@@ -124,7 +158,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 const tradeStore = "tradeStore";
 
@@ -140,21 +174,30 @@ export default {
         { title: "준공년도", value: "buildyear" },
       ],
       dealyear: { min: 2010, max: 2022, range: [2010, 2022] },
-      area: { min: 0, max: 200, range: [50, 100] },
-      price: { min: 0, max: 3000000000, range: [100_000_000, 1500000000] },
 
+      buildyearItems: [
+        { label: "전체", color: "primary", value: 100 },
+        { label: "1년 이내", color: "success", value: 1 },
+        { label: "5년 이내", color: "info", value: 5 },
+        { label: "10년 이내", color: "warning", value: 10 },
+      ],
       isLoading: false,
       searchKeyword: null,
       searchSelectedDongcode: null,
+      curFilterOptions: {
+        area: { min: 0, max: 200, range: [0, 200] },
+        price: { min: 0, max: 3000000000, range: [0, 3000000000] },
+        buildyear: 2022,
+      },
     };
   },
   computed: {
-    ...mapState(tradeStore, ["searchOptions", "apts"]),
+    ...mapGetters(tradeStore, ["searchOptions", "apts"]),
     minPrice() {
-      return this.price.range[0] / 100000000;
+      return this.curFilterOptions.price.range[0] / 100000000;
     },
     maxPrice() {
-      return this.price.range[1] / 100000000;
+      return this.curFilterOptions.price.range[1] / 100000000;
     },
   },
   watch: {
@@ -174,12 +217,18 @@ export default {
       this.setDong(this.searchOptions.find((dong) => dong.dongcode === this.searchSelectedDongcode));
       this.getAptList(this.searchSelectedDongcode);
     },
+    curFilterOptions: {
+      deep: true,
+      handler() {
+        this.setFilterOptions(this.curFilterOptions);
+      },
+    },
   },
   methods: {
-    ...mapActions(tradeStore, ["getSearchOptionList", "getAptList", "clearAptList", "setDong"]),
+    ...mapActions(tradeStore, ["getSearchOptionList", "getAptList", "clearAptList", "setDong", "setFilterOptions"]),
   },
   created() {
-    // this.getAptList("1168010100");
+    // this.searchSelectedDongcode = "1168010100";
   },
 };
 </script>

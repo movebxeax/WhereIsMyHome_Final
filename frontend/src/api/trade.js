@@ -13,11 +13,15 @@ function aptList(dongcode, success, fail) {
 }
 
 function aptListWithCds(params, success, fail) {
-  return tradeApi.get(`/apt`, { params: params }).then(success).catch(fail);
+  return tradeApi.get(`/list`, { params: params }).then(success).catch(fail);
 }
 
 function aptInfo(aptcode, success, fail) {
   return tradeApi.get(`/info/${aptcode}`).then(success).catch(fail);
 }
 
-export { searchOptionList, aptList, aptListWithCds, aptInfo };
+function dongMarkerInfo(params, success, fail) {
+  return tradeApi.get(`/dong`, { params: params }).then(success).catch(fail);
+}
+
+export { searchOptionList, aptList, aptListWithCds, aptInfo, dongMarkerInfo };

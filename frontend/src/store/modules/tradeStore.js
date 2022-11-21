@@ -3,12 +3,45 @@ import { aptList, aptListWithCds, searchOptionList, aptInfo } from "@/api/trade"
 const tradeStore = {
   namespaced: true,
   state: {
+    apt: {},
+    apts: [],
     dong: {},
     searchOptions: [],
-    apts: [],
-    apt: {},
+    filterOptions: {
+      area: { min: 0, max: 200, range: [0, 200] },
+      price: { min: 0, max: 3000000000, range: [0, 3000000000] },
+      buildyear: "all",
+    },
   },
-  getters: {},
+  getters: {
+    apt(state) {
+      return state.apt;
+    },
+    apts(state) {
+      let limitBuildyear = new Date().getFullYear() - state.filterOptions.buildyear;
+      // console.log(limitBuildyear);
+      const filters = state.apts.filter((apt) => apt.buildYear >= limitBuildyear);
+      // console.log(filters);
+      // console.log(state.apts);
+      return filters;
+
+      // // console.log(state.apts);
+      // // console.log(limitBuildyear);
+      // // return state.apts;
+      // // console.log(state.apts.length);
+
+      // });
+    },
+    dong(state) {
+      return state.dong;
+    },
+    searchOptions(state) {
+      return state.searchOptions;
+    },
+    filterOptions(state) {
+      return state.filterOptions;
+    },
+  },
   mutations: {
     SET_SEARCH_OPTION_LIST(state, searchOptions) {
       state.searchOptions = searchOptions;
@@ -25,8 +58,17 @@ const tradeStore = {
     SET_APT(state, apt) {
       state.apt = apt;
     },
+    CLEAR_APT(state) {
+      state.apt = {};
+    },
+    SET_FILTER_OPTIONS(state, filterOptions) {
+      state.filterOptions = filterOptions;
+    },
   },
   actions: {
+    setFilterOptions: ({ commit }, filterOptions) => {
+      return commit("SET_FILTER_OPTIONS", filterOptions);
+    },
     setDong: ({ commit }, dong) => {
       commit("SET_DONG", dong);
     },
@@ -79,6 +121,9 @@ const tradeStore = {
     },
     clearAptList: ({ commit }) => {
       commit("CLEAT_APT_LIST");
+    },
+    clearApt: ({ commit }) => {
+      commit("CLEAR_APT");
     },
   },
 };

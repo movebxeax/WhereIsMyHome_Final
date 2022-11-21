@@ -7,7 +7,8 @@
 
 <script>
 import TradeSideBar from "@/components/trade/TradeSideBar.vue";
-import { mapState, mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import { dongMarkerInfo } from "@/api/trade";
 const tradeStore = "tradeStore";
 
 export default {
@@ -35,22 +36,38 @@ export default {
     }
   },
   computed: {
-    ...mapState(tradeStore, ["apts", "dong", "apt"]),
+    ...mapGetters(tradeStore, ["apts", "dong", "apt", "searchOptions", "filterOptions", "aptsByFilter"]),
   },
   watch: {
-    apts() {
-      // 지도 표시
-      this.updateMap();
+    apts: {
+      deep: true,
+      handler() {
+        // 지도 표시
+        if (this.apts.length > 0) {
+          console.log("apt handler call");
+          console.log(this.apts.length);
+          this.updateMap();
+        }
+      },
     },
     dong() {
       this.changeCenterMap();
     },
-    markers() {
-      // this.clusterer.addMarkers(this.markers);
+    filterOptions: {
+      deep: true,
+      handler() {
+        console.log("tradeMap filterOptions");
+        var bounds = this.map.getBounds();
+        var swLatlng = bounds.getSouthWest();
+        var neLatlng = bounds.getNorthEast();
+
+        const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+        this.getAptListWithCds(params);
+      },
     },
   },
   methods: {
-    ...mapActions(tradeStore, ["getAptListWithCds", "getApt"]),
+    ...mapActions(tradeStore, ["getAptListWithCds", "getApt", "getAptList", "clearAptList", "setDong"]),
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -74,6 +91,7 @@ export default {
 
       let base = this;
 
+      // 드래그 이벤트
       kakao.maps.event.addListener(base.map, "dragend", function () {
         var bounds = base.map.getBounds();
         var swLatlng = bounds.getSouthWest();
@@ -82,17 +100,37 @@ export default {
         const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
         base.getAptListWithCds(params);
       });
+
+      // 확대, 축소 이벤트
+      kakao.maps.event.addListener(base.map, "zoom_changed", () => {
+        // 지도의 현재 레벨을 얻어옵니다
+        let level = base.map.getLevel();
+        // 6이상 이면 클러스터링 마커 아니면, 기존 마커
+        if (level >= 6) {
+          this.getDongMarkers();
+        } else {
+          var bounds = base.map.getBounds();
+          var swLatlng = bounds.getSouthWest();
+          var neLatlng = bounds.getNorthEast();
+
+          const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+          this.getAptListWithCds(params);
+        }
+      });
     },
     changeCenterMap() {
       let moveLatLon = new kakao.maps.LatLng(this.dong.lat, this.dong.lng);
       this.map.panTo(moveLatLon);
     },
     updateMap() {
+      // 레벨이 6이상이면 아파트 마커 사용 X
+      let level = this.map.getLevel();
+      if (level >= 6) {
+        this.getDongMarkers();
+        return;
+      }
       // 초기화
-      this.markers.forEach((marker) => {
-        marker.setMap(null);
-      });
-      this.markers = [];
+      this.clearMarkers();
 
       var imageSize = new kakao.maps.Size(25, 29);
       // 마커 이미지를 생성합니다
@@ -106,12 +144,63 @@ export default {
           image: markerImage, // 마커 이미지
         });
 
+        // 클릭 이벤트
         kakao.maps.event.addListener(marker, "click", () => {
           this.getApt(apt.aptCode);
         });
 
         this.markers.push(marker);
       });
+    },
+    getDongMarkers() {
+      // 마커 데이터 갱신
+      this.clearMarkers();
+      let bounds = this.map.getBounds();
+      let swLatlng = bounds.getSouthWest();
+      let neLatlng = bounds.getNorthEast();
+
+      const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+      dongMarkerInfo(
+        params,
+        ({ data }) => {
+          // 커스텀 오버레이 생성
+          data.forEach((dong) => {
+            let content =
+              `<div class="customoverlay" id="${dong.dongCode}" style="background:white; cursor:pointer">` +
+              `    <span class="title">${dong.aptCount}|${dong.dongName}</span>` +
+              "</div>";
+
+            // 커스텀 오버레이가 표시될 위치입니다
+            let position = new kakao.maps.LatLng(dong.lat, dong.lng);
+
+            // 커스텀 오버레이를 생성합니다
+            let customOverlay = new kakao.maps.CustomOverlay({
+              map: this.map,
+              position: position,
+              content: content,
+              yAnchor: 1,
+            });
+
+            // 커스텀 오버레이 클릭 이벤트 설정
+            const close = document.getElementById(dong.dongCode);
+            close.onclick = () => {
+              let moveLatLon = new kakao.maps.LatLng(dong.lat, dong.lng);
+              this.map.panTo(moveLatLon);
+              this.map.setLevel(5);
+            };
+            this.markers.push(customOverlay);
+          });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    clearMarkers() {
+      this.markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      this.markers = [];
     },
   },
 };
