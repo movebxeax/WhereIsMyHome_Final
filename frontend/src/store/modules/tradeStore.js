@@ -19,18 +19,44 @@ const tradeStore = {
     },
     apts(state) {
       let limitBuildyear = new Date().getFullYear() - state.filterOptions.buildyear;
-      console.log(limitBuildyear);
-      const filters = state.apts.filter((apt) => apt.buildYear >= limitBuildyear);
+      // const filters = state.apts.filter((apt) => apt.buildYear >= limitBuildyear);
       // console.log(filters);
-      // console.log(state.apts);
-      return filters;
 
-      // // console.log(state.apts);
-      // // console.log(limitBuildyear);
-      // // return state.apts;
-      // // console.log(state.apts.length);
+      let results = [];
+      state.apts.forEach((apt) => {
+        let isBuildYearOkay = false;
+        let isAreaOkay = false;
+        let isPriceOkay = false;
 
-      // });
+        if (apt.buildYear >= limitBuildyear) {
+          isBuildYearOkay = true;
+        }
+
+        apt.details.forEach((detail) => {
+          if (detail.area >= state.filterOptions.area.range[0] && detail.area <= state.filterOptions.area.range[1]) {
+            isAreaOkay = true;
+          }
+
+          if (detail.priceInfoList.length > 0) {
+            detail.priceInfoList.forEach((deal) => {
+              if (
+                deal.price >= state.filterOptions.price.range[0] / 1000 &&
+                deal.price <= state.filterOptions.price.range[1] / 1000
+              ) {
+                console.log(deal.price);
+                isPriceOkay = true;
+              }
+            });
+          }
+
+          // console.log(apt);
+          if (isAreaOkay && isPriceOkay && isBuildYearOkay) {
+            console.log("hello");
+            results.push(apt);
+          }
+        });
+      });
+      return results;
     },
     dong(state) {
       return state.dong;
