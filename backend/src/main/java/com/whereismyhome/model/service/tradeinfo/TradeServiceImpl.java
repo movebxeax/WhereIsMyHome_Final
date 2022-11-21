@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.whereismyhome.model.dao.tradeinfo.TradeDAO;
 import com.whereismyhome.model.dto.tradeinfo.DongInfo;
+import com.whereismyhome.model.dto.tradeinfo.GugunInfo;
 import com.whereismyhome.model.dto.tradeinfo.TradeInfo;
 import com.whereismyhome.model.dto.tradeinfo.TradeInfoSpec;
 
@@ -38,5 +39,10 @@ public class TradeServiceImpl implements TradeService {
 	@Override
 	public List<DongInfo> getDongInfoListWithCoord(Map<String, Object> map) {
 		return tradeDao.selectDongInfoListWithCoord(map);
+	}
+
+	@Override
+	public List<GugunInfo> getGugunInfoListWithCoord(Map<String, Object> map) {
+		return tradeDao.selectGugunInfoListWithCoord(map);
 	}
 }

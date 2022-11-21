@@ -65,5 +65,17 @@
     		ba.lng between #{minLng} and #{maxLng} 
 		group by hi.dongcode;
 	</select>
-
+	
+	<select id="selectGugunInfoListWithCoord" parameterType="map" resultType="GugunInfo">
+		select gc.gugunCode, ba.sidoName, gc.gugunName, gc.lat, gc.lng
+		from guguninfo as gc
+		join
+			baseaddress as ba
+		    on ba.dongCode like concat(gc.gugunCode, '%')
+		where
+		    gc.lat between #{minLat} and #{maxLat}
+		    and
+		    gc.lng between #{minLng} and #{maxLng}
+		group by gugunCode;
+	</select>
 </mapper>
