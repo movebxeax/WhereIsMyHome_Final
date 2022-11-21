@@ -78,4 +78,16 @@
 		    gc.lng between #{minLng} and #{maxLng}
 		group by gugunCode;
 	</select>
+	
+	<select id="selectTradeListWithCoord" parameterType="map" resultMap="com.whereismyhome.resultmaps.TradeInfoSpecMap">
+		select
+			hd.aptcode, hi.aptname, hi.dongcode, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth, hi.buildyear, hi.lat, hi.lng
+		from housedeal as hd
+		join houseinfo as hi on hd.aptcode = hi.aptcode
+		where
+		    hi.lat between #{minLat} and #{maxLat}
+		    and
+		    hi.lng between #{minLng} and #{maxLng}
+		order by aptcode, area, dealyear, dealmonth;
+	</select>
 </mapper>

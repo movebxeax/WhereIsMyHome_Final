@@ -56,6 +56,12 @@ public class TradeController extends ResponseManager{
 		return createResponse(HttpStatus.OK, tradeService.getGugunInfoListWithCoord(params));
 	}
 	
+	@GetMapping("/list")
+	protected ResponseEntity<?> getTradeListWithCoord(@RequestParam Map<String, Object> params) {
+		log.warn(params.toString());
+		return createResponse(HttpStatus.OK, tradeService.getTradeListWithCoord(params));
+	}
+	
 	@GetMapping("/list/{dongCode}")
 	protected ResponseEntity<?> getTradeList(@PathVariable String dongCode,
 			@RequestParam(required = false) Map<String,String> params)

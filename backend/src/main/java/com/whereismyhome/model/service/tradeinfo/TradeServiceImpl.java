@@ -45,4 +45,9 @@ public class TradeServiceImpl implements TradeService {
 	public List<GugunInfo> getGugunInfoListWithCoord(Map<String, Object> map) {
 		return tradeDao.selectGugunInfoListWithCoord(map);
 	}
+
+	@Override
+	public List<TradeInfo> getTradeListWithCoord(Map<String, Object> map) {
+		return tradeDao.selectTradeListWithCoord(map);
+	}
 }

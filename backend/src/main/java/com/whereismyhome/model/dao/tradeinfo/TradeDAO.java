@@ -17,4 +17,5 @@ public interface TradeDAO {
 	public List<TradeInfo> selectAptListWithCoord(Map<String, Object> map);
 	public List<DongInfo> selectDongInfoListWithCoord(Map<String, Object> map);
 	public List<GugunInfo> selectGugunInfoListWithCoord(Map<String, Object> map);
+	public List<TradeInfo> selectTradeListWithCoord(Map<String, Object> map);
 }

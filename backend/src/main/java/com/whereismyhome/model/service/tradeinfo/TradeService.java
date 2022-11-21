@@ -14,4 +14,5 @@ public interface TradeService {
 	public List<DongInfo> getDongInfoListWithCoord(Map<String, Object> map);	
 	public List<GugunInfo> getGugunInfoListWithCoord(Map<String, Object> params);
 	public TradeInfoSpec getTradeSpecWithAptCode(String aptCode);
+	public List<TradeInfo> getTradeListWithCoord(Map<String, Object> params);
 }
