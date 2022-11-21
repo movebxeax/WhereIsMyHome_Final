@@ -186,12 +186,12 @@ export default {
             });
 
             // 커스텀 오버레이 클릭 이벤트 설정
-            const close = document.getElementById(dong.dongCode);
-            close.onclick = () => {
-              let moveLatLon = new kakao.maps.LatLng(dong.lat, dong.lng);
-              this.map.panTo(moveLatLon);
-              this.map.setLevel(5);
-            };
+            // const close = document.getElementById(dong.dongCode);
+            // close.onclick = () => {
+            //   let moveLatLon = new kakao.maps.LatLng(dong.lat, dong.lng);
+            //   this.map.panTo(moveLatLon);
+            //   this.map.setLevel(5);
+            // };
             this.markers.push(customOverlay);
           });
         },
