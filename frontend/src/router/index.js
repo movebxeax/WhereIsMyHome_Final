@@ -66,6 +66,19 @@ const routes = [
     path: "/user",
     name: "user",
     component: UserView,
+    children: [
+      {
+        path: "modify",
+        name: "modify",
+        component: () => import("@/components/user/UserInfoTab.vue"),
+      },
+      {
+        path: ":selected",
+        name: "selected",
+        props: (route) => ({ selected: String(route.params.selected) }),
+        component: () => import("@/components/user/SignTab.vue"),
+      },
+    ],
   },
 ];
 

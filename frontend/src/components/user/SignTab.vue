@@ -5,11 +5,10 @@
   https://colorhunt.co/palette/f9f7f7dbe2ef3f72af112d4e
 
   -->
-  <!-- <v-dialog v-model="dialog" persistent max-width="600px" min-width="360px"> -->
   <v-row class="pa-4 ma-4" align="center" justify="center" dense>
     <v-card persistent justify-center max-width="600px" min-width="360px">
-      <div>
-        <v-tabs v-model="tab" show-arrows background-color="#3F72AF" icons-and-text dark grow>
+      <div class="d-flex align-center">
+        <v-tabs v-model="active_tab" show-arrows background-color="#3F72AF" icons-and-text dark grow>
           <v-tabs-slider color="#DBE2EF"></v-tabs-slider>
           <v-tab v-for="tab in tabs" :key="tab.name">
             <v-icon large>{{ tab.icon }}</v-icon>
@@ -24,16 +23,7 @@
                       <v-text-field v-model.lazy="loginId" :rules="loginIdRules" label="User ID" color="#112D4E" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <v-text-field
-                        v-model.lazy="loginPassword"
-                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="[rules.required, rules.min]"
-                        :type="showPassword ? 'text' : 'password'"
-                        name="input-10-1"
-                        label="Password"
-                        hint="At least 8 characters"
-                        color="#112D4E"
-                        @click:append="showPassword = !showPassword"></v-text-field>
+                      <v-text-field v-model.lazy="loginPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.min]" :type="showPassword ? 'text' : 'password'" name="input-10-1" label="Password" hint="At least 8 characters" color="#112D4E" @click:append="showPassword = !showPassword"></v-text-field>
                     </v-col>
                     <v-col class="d-flex" cols="12" sm="6" xsm="12"> </v-col>
                     <v-spacer></v-spacer>
@@ -57,26 +47,10 @@
                       <v-text-field v-model="signupName" :rules="[rules.required]" label="이름" maxlength="20" required></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
-                      <v-text-field
-                        v-model.lazy="signupPassword"
-                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="[rules.required, rules.min]"
-                        :type="showPassword ? 'text' : 'password'"
-                        name="input-10-1"
-                        label="비밀번호"
-                        hint="비밀번호는 8글자 이상이여야 합니다."
-                        @click:append="showPassword = !showPassword"></v-text-field>
+                      <v-text-field v-model.lazy="signupPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, rules.min]" :type="showPassword ? 'text' : 'password'" name="input-10-1" label="비밀번호" hint="비밀번호는 8글자 이상이여야 합니다." @click:append="showPassword = !showPassword"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
-                      <v-text-field
-                        block
-                        v-model.lazy="signupPasswordVerify"
-                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="[rules.required, passwordMatch]"
-                        :type="showPassword ? 'text' : 'password'"
-                        name="input-10-1"
-                        label="비밀번호 확인"
-                        @click:append="showPassword = !showPassword"></v-text-field>
+                      <v-text-field block v-model.lazy="signupPasswordVerify" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.required, passwordMatch]" :type="showPassword ? 'text' : 'password'" name="input-10-1" label="비밀번호 확인" @click:append="showPassword = !showPassword"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
                       <v-text-field v-model.lazy="signupEmailId" label="E-mail" required></v-text-field>
@@ -96,7 +70,7 @@
                           <div>
                             <v-tooltip bottom>
                               <template v-slot:activator="{ on }">
-                                <a target="_blank" href="https://example.com/" @click.stop v-on="on"> 개인정보 처리 방침 </a>
+                                <a target="_blank" @click.stop v-on="on"> 개인정보 처리 방침 </a>
                               </template>
                               이거 href 대신 모달로 변경해야해요!!!!
                             </v-tooltip>
@@ -118,7 +92,6 @@
       </div>
     </v-card>
   </v-row>
-  <!-- </v-dialog> -->
 </template>
 
 <script>
@@ -130,6 +103,21 @@ export default {
     passwordMatch() {
       return () => this.password === this.verify || "비밀번호가 일치하지 않습니다.";
     },
+    selected() {
+      console.log(this.$route.params.selected);
+      return this.$route.params.selected;
+    },
+  },
+  watch: {
+    selected(path) {
+      if (path === "signin") this.active_tab = 0;
+      else if (path === "signup") this.active_tab = 1;
+    },
+  },
+  created() {
+    const path = this.$route.params.selected;
+    if (path === "signin") this.active_tab = 0;
+    else if (path === "signup") this.active_tab = 1;
   },
   methods: {
     login() {
@@ -140,9 +128,14 @@ export default {
             password: this.loginPassword,
           })
           .then(({ data }) => {
-            this.$store.dispatch("userStore/" + [Constant.SAVE_TOKENS], { accessToken: data.accessToken, refreshToken: data.refreshToken });
+            this.$store.dispatch("userStore/" + [Constant.SAVE_TOKENS], {
+              accessToken: data.accessToken,
+              refreshToken: data.refreshToken,
+            });
             this.$store.dispatch("userStore/" + [Constant.SET_LOGIN_STATE], true);
-            this.$store.dispatch("userStore/" + [Constant.SET_USER_INFO], { username: data.userid });
+            this.$store.dispatch("userStore/" + [Constant.SET_USER_INFO], {
+              username: data.userid,
+            });
           })
           .then(() => this.$router.push("/"))
           .catch(() => console.log("login error!!!!"));
@@ -174,10 +167,10 @@ export default {
   },
   data: () => ({
     dialog: true,
-    tab: 1,
+    active_tab: -1,
     tabs: [
-      { name: "Login", icon: "mdi-account" },
-      { name: "Register", icon: "mdi-account-outline" },
+      { id: "signin", name: "Login", icon: "mdi-account" },
+      { id: "signup", name: "Register", icon: "mdi-account-outline" },
     ],
     valid: true,
 

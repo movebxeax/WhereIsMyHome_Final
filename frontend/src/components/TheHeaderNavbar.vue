@@ -67,8 +67,8 @@ export default {
         { title: "공지사항", path: "/notice", icon: "mdi-clipboard-alert" },
         { title: "Q&A", path: "/qna", icon: "mdi-help" },
       ],
-      signUpItem: { title: "회원 가입", path: "/user" },
-      signInItem: { title: "로그인", path: "/user" },
+      signUpItem: { title: "회원 가입", path: "/user/signup" },
+      signInItem: { title: "로그인", path: "/user/signin" },
     };
   },
   computed: {
