@@ -23,7 +23,7 @@
         <v-col>
           <v-card color="primary" dark>
             <v-card-title> 면적별 거래 정보 </v-card-title>
-            <v-tabs v-model="tab" dark>
+            <v-tabs v-model="tab" dark show-arrows>
               <v-tab v-for="detail in apt.details" :key="detail.area">
                 {{ detail.area }}
               </v-tab>
@@ -43,7 +43,17 @@
                   <v-col>
                     <v-card>
                       <v-card-subtitle class="text-left h6 font-weight-bold"> 거래내역 </v-card-subtitle>
-                      {{ detail.area }}
+                      <v-data-table
+                        dense
+                        items-per-page="10"
+                        multi-sort
+                        :footer-props="{
+                          showFirstLastPage: true,
+                          itemsPerPageOptions: [],
+                        }"
+                        :headers="priceInfoHeaders"
+                        :items="detail.priceInfoList"
+                      ></v-data-table>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -74,6 +84,11 @@ export default {
       tab: null,
       address: "",
       geocoder: null,
+      priceInfoHeaders: [
+        { text: "연도", value: "dealYear" },
+        { text: "월", value: "dealMonth" },
+        { text: "금액 (만원)", value: "price" },
+      ],
     };
   },
   methods: {
@@ -89,7 +104,8 @@ export default {
         }
         // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
         this.roadviewClient.getNearestPanoId(this.position, 200, (panoId) => {
-          this.roadview.setPanoId(panoId, this.position); //panoId와 중심좌표를 통해 로드뷰 실행
+          this.roadview.setPanoId(panoId, this.position);
+          this.roadview.setViewpoint({ pan: 90, tilt: 0, zoom: 0 }); //panoId와 중심좌표를 통해 로드뷰 실행
         });
       }
     },
@@ -98,6 +114,7 @@ export default {
       // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
       this.roadviewClient.getNearestPanoId(this.position, 200, (panoId) => {
         this.roadview.setPanoId(panoId, this.position); //panoId와 중심좌표를 통해 로드뷰 실행
+        this.roadview.setViewpoint({ pan: 90, tilt: 0, zoom: 0 });
       });
     },
     setAddress(lat, lng) {

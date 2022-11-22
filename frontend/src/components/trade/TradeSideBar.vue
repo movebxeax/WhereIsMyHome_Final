@@ -53,6 +53,8 @@ export default {
 <style lang="scss" scoped>
 .side-bar-wrapper {
   background-color: white;
+  overflow-y: auto;
+  overflow-x: hidden;
   .side-bar {
     opacity: 90%;
     width: 400px;
@@ -63,7 +65,7 @@ export default {
 }
 
 #trade-side-bar-active-btn {
-  position: absolute;
+  position: sticky;
   top: 350px;
   padding: 0 0 0 0;
   background-color: white;
