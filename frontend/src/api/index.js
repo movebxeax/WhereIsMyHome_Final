@@ -1,7 +1,9 @@
 import axios from "axios";
+import store from "@/store/index.js";
+import Constant from "@/utils/constant";
 
 // local vue api axios instance
-const BASE_URL = "http://localhost:8080";
+//const BASE_URL = "http://localhost:8080";
 
 function parseJwt(token) {
   var base64Url = token.split(".")[1];
@@ -48,7 +50,11 @@ function attachInterceptor(instance) {
                 };
                 console.log(refreshData);
                 config.headers.Authorization = `Bearer ${refreshToken}`;
-                httpUser
+                let _axios = axios.create({
+                  //baseURL: BASE_URL + "/api/qna",
+                  baseURL: "http://localhost:8080" + "/api/qna",
+                });
+                _axios
                   .post("/refresh", refreshData)
                   .then(({ data }) => {
                     console.log("JwtToken refreshed");
