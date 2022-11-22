@@ -3,7 +3,7 @@
     <v-container>
       <v-row dense>
         <v-col>
-          <v-card dark>
+          <v-card color="primary" dark>
             <v-card-title>{{ this.apt.aptName }}</v-card-title>
             <v-card-subtitle class="text-left subtitle-2 pb-0">| {{ this.apt.buildYear }}년 준공</v-card-subtitle>
             <v-card-text class="text-left subtitle-2">| {{ this.address }} </v-card-text>
@@ -21,9 +21,9 @@
 
       <v-row dense>
         <v-col>
-          <v-card color="primary" dark>
-            <v-card-title> 면적별 거래 정보 </v-card-title>
-            <v-tabs v-model="tab" dark show-arrows>
+          <v-card color="primary">
+            <v-card-title class="white--text"> 면적별 거래 정보 </v-card-title>
+            <v-tabs v-model="tab" show-arrows>
               <v-tab v-for="detail in apt.details" :key="detail.area">
                 {{ detail.area }}
               </v-tab>
