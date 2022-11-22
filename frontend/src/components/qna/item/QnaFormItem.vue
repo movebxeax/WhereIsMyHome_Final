@@ -6,16 +6,14 @@
 
         <v-text-field id="title" v-model="qna.title" ref="title" label="제목" placeholder="제목을 입력하세요."></v-text-field>
 
-        <v-textarea id="content" v-model="qna.content" ref="content" label="내용" placeholder="내용을 입력하세요." rows="10"
-          max-rows="15"></v-textarea>
+        <v-textarea id="content" v-model="qna.content" ref="content" label="내용" placeholder="내용을 입력하세요." rows="10" max-rows="15"></v-textarea>
 
         <v-row>
           <v-col class="text-left">
             <v-btn depressed @click="moveList">목록</v-btn>
           </v-col>
           <v-col class="text-right">
-            <v-btn class="mr-4" type="submit" color="primary" depressed @click="onSubmit"
-              v-if="this.type === 'register'">작성</v-btn>
+            <v-btn class="mr-4" type="submit" color="primary" depressed @click="onSubmit" v-if="this.type === 'register'">작성</v-btn>
             <v-btn class="mr-4" type="submit" color="primary" depressed @click="onSubmit" v-else>수정</v-btn>
             <v-btn class="mr-4" type="reset" color="error" depressed @click="onReset">초기화</v-btn>
           </v-col>
@@ -61,6 +59,11 @@ export default {
       apiQnaFunc.get(`/${this.no}`).then(({ data }) => {
         this.qna = data;
       });
+
+      if (this.userInfo.userid !== this.qna.author) {
+        alert("잘못된 접근입니다.");
+        this.$router.push("/qna/list");
+      }
     }
   },
   methods: {
@@ -125,6 +128,4 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>

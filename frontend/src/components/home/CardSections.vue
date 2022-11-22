@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row class="pa-5 ma-10" align="center" justify="center" dense>
+    <v-row class="pa-5 ma-10" align="end" justify="center" dense>
       <v-col class="ma-3">
         <v-card elevation="10" outlined>
           <v-card-title class="pb-0 mb-0">

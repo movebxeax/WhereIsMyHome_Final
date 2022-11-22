@@ -2,7 +2,7 @@
   <v-container class="detail-container">
     <v-row class="mb-1">
       <v-col>
-        <v-card class="mt-1" outlined>
+        <v-card outlined>
           <div>
             <v-card-title class="d-flex justify-content ml-1">
               {{ qna.title }}
@@ -29,10 +29,32 @@
             </v-card-text>
           </div>
         </v-card>
+
+        <div v-if="qna.comments[0].date">
+          <v-card class="mt-2" v-for="(comment, index) in qna.comments" :key="index" outlined>
+            <div class="ml-3">
+              <v-card-subtitle>
+                <v-row>
+                  <v-col class="pl-1" cols="2"> </v-col>
+                  <v-col cols="2"></v-col>
+                  <v-col cols="8" class="">
+                    <h1 style="text-align: end">작성일: {{ comment.date }}</h1>
+                    <h1 style="text-align: end">작성자: {{ comment.author }}</h1>
+                  </v-col>
+                </v-row>
+              </v-card-subtitle>
+              <v-card-text>
+                <v-row>
+                  <v-textarea v-html="comment.content" disabled rows="10" max-rows="30" class="article-content ml-2 mb-4 pb-4"> </v-textarea>
+                </v-row>
+              </v-card-text>
+            </div>
+          </v-card>
+        </div>
       </v-col>
     </v-row>
 
-    <qna-comment-item></qna-comment-item>
+    <qna-comment-item :no="this.no"></qna-comment-item>
 
     <v-row class="ml-0 mr-0">
       <v-col class="text-left">
@@ -60,7 +82,13 @@ export default {
   props: ["no"],
   data() {
     return {
-      qna: {},
+      qna: {
+        comments: [
+          {
+            date: null,
+          },
+        ],
+      },
     };
   },
   computed: {
