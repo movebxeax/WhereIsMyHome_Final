@@ -75,7 +75,6 @@ export default {
   mounted() {
     this.chartLoading = true;
     this.chartData.datasets[0].data = this.priceData;
-    console.log(this.priceData);
     this.chartLoading = false;
   },
   methods: {},

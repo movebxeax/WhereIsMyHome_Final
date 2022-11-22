@@ -18,7 +18,6 @@ const tradeStore = {
       return state.apt;
     },
     apts(state) {
-      console.log(state.apts.length);
       let limitBuildyear = new Date().getFullYear() - state.filterOptions.buildYear;
 
       let results = [];

@@ -1,7 +1,15 @@
 <template>
-  <div>
-    <div id="map"></div>
-    <trade-side-bar class="side-bar"></trade-side-bar>
+  <div class="ma-10" rounded-xl>
+    <v-card outlined color="grey">
+      <v-row no-gutters>
+        <v-col cols="auto">
+          <trade-side-bar class="sideBar" @mapRelayout="mapRelayout"></trade-side-bar>
+        </v-col>
+        <v-col>
+          <div id="map"></div>
+        </v-col>
+      </v-row>
+    </v-card>
   </div>
 </template>
 
@@ -25,6 +33,23 @@ export default {
     };
   },
   components: { TradeSideBar },
+
+  computed: {
+    ...mapGetters(tradeStore, ["apts", "dong", "apt", "searchOptions", "filterOptions", "aptsByFilter"]),
+  },
+  watch: {
+    apts: {
+      deep: true,
+      handler() {
+        if (this.apts.length >= 0) {
+          this.updateMap();
+        }
+      },
+    },
+    dong() {
+      this.changeCenterMap();
+    },
+  },
   mounted() {
     // window.addEventListener("load", () => {
     //   const script = document.createElement("script");
@@ -46,22 +71,6 @@ export default {
         "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=980bea8bcd07009e77637df27e1433d7&libraries=services,clusterer";
       document.body.appendChild(script);
     }
-  },
-  computed: {
-    ...mapGetters(tradeStore, ["apts", "dong", "apt", "searchOptions", "filterOptions", "aptsByFilter"]),
-  },
-  watch: {
-    apts: {
-      deep: true,
-      handler() {
-        if (this.apts.length >= 0) {
-          this.updateMap();
-        }
-      },
-    },
-    dong() {
-      this.changeCenterMap();
-    },
   },
   methods: {
     ...mapActions(tradeStore, ["getAptListWithCds", "getApt", "getAptList", "clearAptList", "setDong", "setApt"]),
@@ -283,28 +292,19 @@ export default {
       });
       this.markers = [];
     },
+    mapRelayout() {
+      setTimeout(() => {
+        this.map.relayout();
+      }, 100);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-#app {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .side-bar {
-    position: absolute;
-    left: 0;
-    top: 60px;
-    height: 800px;
-    bottom: 0;
-    z-index: 1000;
-  }
+.sideBar {
+  width: 100%;
+  height: 800px;
 }
 
 #map {

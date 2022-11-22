@@ -34,8 +34,7 @@
                 <v-row dense>
                   <v-col>
                     <v-card>
-                      <v-card-title class="text-left h6 font-weight-bold"> 그래프 </v-card-title>
-                      <v-spacer></v-spacer>
+                      <v-card-title class="text-left h6 font-weight-bold pb-0 mb-0"> 그래프 </v-card-title>
                       <trade-side-bar-graph :priceInfoList="detail.priceInfoList"></trade-side-bar-graph>
                     </v-card>
                   </v-col>
