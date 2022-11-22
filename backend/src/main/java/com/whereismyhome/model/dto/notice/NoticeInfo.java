@@ -16,7 +16,7 @@ public class NoticeInfo {
 	@NonNull
 	private int no;
 	
-	private String subject;
+	private String title;
 	private String content;
 	private String author;
 }

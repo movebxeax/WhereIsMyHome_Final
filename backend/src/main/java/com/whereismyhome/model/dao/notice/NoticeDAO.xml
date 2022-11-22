@@ -3,16 +3,16 @@
 
 <!--
 	int insertNotice(NoticeInfo notice);
-		insert into notice(subject,content,author) values(?,?,?)
+		insert into notice(title,content,author) values(?,?,?)
 			
 	List<NoticeInfo> selectNotices();
-		select no, subject, author from notice
+		select no, title, author from notice
 		
 	NoticeInfo selectNotice(int no);
-		select no, subject, content, author from notice where no=?
+		select no, title, content, author from notice where no=?
 		
 	int updateNotice(NoticeInfo notice);
-		update notice set subject=?, content=? where no=?
+		update notice set title=?, content=? where no=?
 		
 	int removeNotice(int no);
 		delete from notice where no=?
@@ -21,19 +21,19 @@
 <mapper namespace="com.whereismyhome.model.dao.notice.NoticeDAO">
 
 	<insert id="insertNotice" parameterType="NoticeInfo">
-		insert into notice(subject,content,author) values(#{subject},#{content},#{author})
+		insert into notice(title,content,author) values(#{title},#{content},#{author})
 	</insert>
 	
 	<select id="selectNotice" parameterType="int" resultType="NoticeInfo">
-		select no, subject, content, author from notice where no=#{no}
+		select no, title, content, author from notice where no=#{no}
 	</select>
 	
 	<select id="selectNotices" resultType="NoticeInfo">
-		select no, subject, author from notice
+		select no, title, author from notice
 	</select>
 	
 	<update id="updateNotice" parameterType="NoticeInfo">
-		update notice set subject=#{subject}, content=#{content} where no=#{no}
+		update notice set title=#{title}, content=#{content} where no=#{no}
 	</update>
 	
 	<delete id="removeNotice" parameterType="int">
