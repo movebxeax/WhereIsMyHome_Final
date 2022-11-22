@@ -1,7 +1,10 @@
 package com.whereismyhome.controller;
+import java.security.Principal;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,31 +39,44 @@ public class NoticeController extends ResponseManager {
 	}
 
 	@GetMapping("/{noticeNo}")
-	protected ResponseEntity<?> getNoticeDetail(@PathVariable int noticeNo) {		
+	protected ResponseEntity<?> getNoticeDetail(@PathVariable int noticeNo) {
+		noticeService.updateNoticeArticleViewCount(noticeNo);
+		
 		return createResponse(noticeService.getNotice(noticeNo));
-	}
-
-	@PutMapping("/{noticeNo}")
-	protected ResponseEntity<?> modifyNoticeDetail(@RequestBody NoticeInfo noticeInfo, HttpSession session) {
-
-		// !!! todo !!!
-		// author check required
-
-		return createResponse(noticeService.modifyNotice(noticeInfo));
 	}
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PostMapping
-	protected ResponseEntity<?> registerNotice(@RequestBody NoticeInfo noticeInfo) {		
-		return createResponse(noticeService.writeNotice(noticeInfo));
+	protected ResponseEntity<?> registerNotice(@RequestBody NoticeInfo noticeInfo, Principal principal) {
+		noticeInfo.setAuthor(principal.getName());
+		
+		boolean res = noticeService.writeNotice(noticeInfo);
+		
+		if(res)
+			return createResponse(noticeService.writeNotice(noticeInfo));
+		else
+			return createResponse(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PostMapping("/{noticeNo}")
+	protected ResponseEntity<?> modifyNoticeDetail(@RequestBody NoticeInfo noticeInfo) {
+		boolean res = noticeService.modifyNotice(noticeInfo);
+		
+		if(res)
+			return createResponse(noticeInfo);
+		else
+			return createResponse(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/{noticeNo}")
 	protected ResponseEntity<?> deleteNoticeDetail(@PathVariable int noticeNo) {
-
-		// !!! todo !!!
-		// author check required
-
-		return createResponse(noticeService.deleteNotice(noticeNo));
+		boolean res = noticeService.deleteNotice(noticeNo);
+		
+		if(res)
+			return createResponse(res);
+		else
+			return createResponse(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

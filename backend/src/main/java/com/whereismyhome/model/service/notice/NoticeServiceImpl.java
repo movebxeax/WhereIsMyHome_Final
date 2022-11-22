@@ -41,4 +41,9 @@ public class NoticeServiceImpl implements NoticeService {
 		return noticeDao.removeNotice(no) > 0;
 	}
 
+	@Override
+	public boolean updateNoticeArticleViewCount(int articleNo) {
+		return noticeDao.increaseViewCount(articleNo) > 0;
+	}
+
 }

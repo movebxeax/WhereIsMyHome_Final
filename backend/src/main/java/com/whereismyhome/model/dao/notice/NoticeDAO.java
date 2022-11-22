@@ -14,4 +14,5 @@ public interface NoticeDAO {
 	NoticeInfo selectNotice(int no);	
 	int updateNotice(NoticeInfo notice);	
 	int removeNotice(int no);
+	int increaseViewCount(int articleNo);
 }

@@ -25,11 +25,11 @@
 	</insert>
 	
 	<select id="selectNotice" parameterType="int" resultType="NoticeInfo">
-		select no, title, content, author from notice where no=#{no}
+		select no, title, content, author, date, viewcount from notice where no=#{no}
 	</select>
 	
 	<select id="selectNotices" resultType="NoticeInfo">
-		select no, title, author from notice
+		select no, title, author, date, viewcount from notice
 	</select>
 	
 	<update id="updateNotice" parameterType="NoticeInfo">
@@ -39,5 +39,12 @@
 	<delete id="removeNotice" parameterType="int">
 		delete from notice where no=#{no}
 	</delete>
+	
+	<update id="increaseViewCount" parameterType="int">
+		update
+			notice
+		set viewcount=viewcount+1
+		where no=#{articleNo}
+	</update>
 	
 </mapper>

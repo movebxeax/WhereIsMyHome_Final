@@ -10,4 +10,5 @@ public interface NoticeService {
 	public NoticeInfo getNotice(int no);
 	public boolean modifyNotice(NoticeInfo notice);
 	public boolean deleteNotice(int no);
+	public boolean updateNoticeArticleViewCount(int noticeNo);
 }
