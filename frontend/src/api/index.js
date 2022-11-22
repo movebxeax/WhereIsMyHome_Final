@@ -32,7 +32,7 @@ function attachInterceptor(instance) {
     (config) => {
       if (!config.headers.Authorization) {
         const accessToken = store.getters["userStore/accessToken"];
-        if (!accessToken && accessToken.length > 0) {
+        if (accessToken && accessToken.length > 0) {
           const accessTokenJwtPayload = parseJwt(accessToken);
 
           if (accessTokenJwtPayload.exp >= Date.now() / 1000) {
@@ -48,14 +48,15 @@ function attachInterceptor(instance) {
                   refreshToken: refreshToken,
                   userid: store.getters["userStore/userInfo"].username,
                 };
+                const refreshHeader = {
+                  headers: {
+                    Authorization: `Bearer ${refreshToken}`,
+                  },
+                };
                 console.log(refreshData);
-                config.headers.Authorization = `Bearer ${refreshToken}`;
-                let _axios = axios.create({
-                  //baseURL: BASE_URL + "/api/qna",
-                  baseURL: "http://localhost:8080" + "/api/qna",
-                });
-                _axios
-                  .post("/refresh", refreshData)
+
+                axios
+                  .post("http://localhost:8080/api/user/refresh", refreshData, refreshHeader)
                   .then(({ data }) => {
                     console.log("JwtToken refreshed");
                     store.dispatch("userStore/" + [Constant.SAVE_TOKENS], { accessToken: data.accessToken, refreshToken: data.refreshToken });
