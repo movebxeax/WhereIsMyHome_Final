@@ -23,10 +23,10 @@
           </template>
           <v-list>
             <v-list-item link>
-              <v-list-item-title>마이 페이지</v-list-item-title>
+              <v-list-item-title @click="$router.push('/user/modify')">마이 페이지</v-list-item-title>
             </v-list-item>
             <v-list-item link>
-              <v-list-item-title>로그아웃</v-list-item-title>
+              <v-list-item-title @click="$router.push('/user/signout')">로그아웃</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>

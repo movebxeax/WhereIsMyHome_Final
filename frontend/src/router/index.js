@@ -73,6 +73,11 @@ const routes = [
         component: () => import("@/components/user/UserInfoTab.vue"),
       },
       {
+        path: "signout",
+        name: "signout",
+        component: () => import("@/components/user/SignOut.vue"),
+      },
+      {
         path: ":selected",
         name: "selected",
         props: (route) => ({ selected: String(route.params.selected) }),
