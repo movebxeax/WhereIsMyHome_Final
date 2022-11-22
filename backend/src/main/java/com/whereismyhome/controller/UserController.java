@@ -21,9 +21,7 @@ import com.whereismyhome.util.ResponseManager;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequestMapping("/api/user")
 @RestController
 @RequiredArgsConstructor
@@ -46,7 +44,7 @@ public class UserController extends ResponseManager{
 			return createResponse(HttpStatus.FORBIDDEN);
 
 		final UserInfo userInfo = jwtUserDetailsService.authenticateByUseridAndPassword(userInfoFromClient.getUserid(), userInfoFromClient.getPassword());	
-		return createResponse(createJwtResponse(userInfo.getUserid()));
+		return createResponse(createJwtResponse(userInfo.getUserid(), userInfo.getUsername()));
 	}
 
 	@PostMapping("/signup")
@@ -68,15 +66,15 @@ public class UserController extends ResponseManager{
 		boolean res = jwtTokenUtil.validateToken(requestBody.getRefreshToken(), userDetails);
 
 		if(res)
-			return createResponse(createJwtResponse(requestBody.getUserid()));
+			return createResponse(createJwtResponse(requestBody.getUserid(), userDetails.getUsername()));
 		else
 			return createResponse(HttpStatus.UNAUTHORIZED);
 	}
 
-	private JwtResponse createJwtResponse(String userid) {
+	private JwtResponse createJwtResponse(String userid, String username) {
 		final String accessToken = jwtTokenUtil.generateAccessToken(userid);
 		final String refreshToken = jwtTokenUtil.generateRefreshToken(userid);
-		return new JwtResponse(userid, accessToken, refreshToken);
+		return new JwtResponse(userid, username, accessToken, refreshToken);
 	}
 }
 
@@ -90,6 +88,7 @@ class JwtRequest {
 @AllArgsConstructor
 class JwtResponse {
 	private String userid;
+	private String username;
 	private String accessToken;
 	private String refreshToken;
 }
