@@ -9,8 +9,8 @@ const tradeStore = {
     searchOptions: [],
     filterOptions: {
       area: { min: 0, max: 200, range: [0, 200] },
-      price: { min: 0, max: 3000000000, range: [0, 3000000000] },
-      buildyear: 1922,
+      price: { min: 0, max: 5000000000, range: [0, 5000000000] },
+      buildYear: 100,
     },
   },
   getters: {
@@ -18,9 +18,8 @@ const tradeStore = {
       return state.apt;
     },
     apts(state) {
-      let limitBuildyear = new Date().getFullYear() - state.filterOptions.buildyear;
-      // const filters = state.apts.filter((apt) => apt.buildYear >= limitBuildyear);
-      // console.log(filters);
+      console.log(state.apts.length);
+      let limitBuildyear = new Date().getFullYear() - state.filterOptions.buildYear;
 
       let results = [];
       state.apts.forEach((apt) => {
@@ -33,28 +32,33 @@ const tradeStore = {
         }
 
         apt.details.forEach((detail) => {
-          if (detail.area >= state.filterOptions.area.range[0] && detail.area <= state.filterOptions.area.range[1]) {
-            isAreaOkay = true;
+          if (!isAreaOkay) {
+            if (
+              (detail.area >= state.filterOptions.area.range[0] && detail.area <= state.filterOptions.area.range[1]) ||
+              detail.area >= 200
+            ) {
+              isAreaOkay = true;
+            }
           }
 
-          if (detail.priceInfoList.length > 0) {
-            detail.priceInfoList.forEach((deal) => {
-              if (
-                deal.price >= state.filterOptions.price.range[0] / 1000 &&
-                deal.price <= state.filterOptions.price.range[1] / 1000
-              ) {
-                console.log(deal.price);
-                isPriceOkay = true;
-              }
-            });
-          }
-
-          // console.log(apt);
-          if (isAreaOkay && isPriceOkay && isBuildYearOkay) {
-            console.log("hello");
-            results.push(apt);
+          if (!isPriceOkay) {
+            if (detail.priceInfoList.length > 0) {
+              detail.priceInfoList.forEach((deal) => {
+                if (
+                  (deal.price >= state.filterOptions.price.range[0] / 10000 &&
+                    deal.price <= state.filterOptions.price.range[1] / 10000) ||
+                  deal.price >= 5000000000
+                ) {
+                  // console.log(deal.price);
+                  isPriceOkay = true;
+                }
+              });
+            }
           }
         });
+        if (isAreaOkay && isPriceOkay && isBuildYearOkay) {
+          results.push(apt);
+        }
       });
       return results;
     },
@@ -97,6 +101,9 @@ const tradeStore = {
     },
     setDong: ({ commit }, dong) => {
       commit("SET_DONG", dong);
+    },
+    setApt: ({ commit }, apt) => {
+      commit("SET_APT", apt);
     },
     getApt: ({ commit }, aptcode) => {
       return aptInfo(

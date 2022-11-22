@@ -35,7 +35,7 @@
                   <v-col>
                     <v-card>
                       <v-card-subtitle class="text-left h6 font-weight-bold"> 그래프 </v-card-subtitle>
-                      {{ detail.area }}
+                      <trade-side-bar-graph :priceInfoList="detail.priceInfoList"></trade-side-bar-graph>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -45,7 +45,6 @@
                       <v-card-subtitle class="text-left h6 font-weight-bold"> 거래내역 </v-card-subtitle>
                       <v-data-table
                         dense
-                        items-per-page="10"
                         multi-sort
                         :sort-by="['dealYear', 'dealMonth']"
                         :sort-desc="[true, true]"
@@ -70,10 +69,12 @@
 
 <script>
 import { mapGetters } from "vuex";
+import TradeSideBarGraph from "@/components/trade/TradeSideBarGraph.vue";
 
 const tradeStore = "tradeStore";
 export default {
-  name: "tradeSideBarApt",
+  components: { TradeSideBarGraph },
+  name: "TradeSideBarApt",
   computed: {
     ...mapGetters(tradeStore, ["apt"]),
   },
@@ -89,7 +90,7 @@ export default {
       priceInfoHeaders: [
         { text: "연도", value: "dealYear" },
         { text: "월", value: "dealMonth" },
-        { text: "금액 (만원)", value: "price" },
+        { text: "금액 (만 원)", value: "price" },
       ],
     };
   },
@@ -107,7 +108,7 @@ export default {
         // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
         this.roadviewClient.getNearestPanoId(this.position, 200, (panoId) => {
           this.roadview.setPanoId(panoId, this.position);
-          this.roadview.setViewpoint({ pan: 90, tilt: 0, zoom: 0 }); //panoId와 중심좌표를 통해 로드뷰 실행
+          this.roadview.setViewpoint({ pan: 90, tilt: -15, zoom: -3 }); //panoId와 중심좌표를 통해 로드뷰 실행
         });
       }
     },
@@ -116,7 +117,7 @@ export default {
       // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
       this.roadviewClient.getNearestPanoId(this.position, 200, (panoId) => {
         this.roadview.setPanoId(panoId, this.position); //panoId와 중심좌표를 통해 로드뷰 실행
-        this.roadview.setViewpoint({ pan: 90, tilt: 0, zoom: 0 });
+        this.roadview.setViewpoint({ pan: 90, tilt: -15, zoom: -3 });
       });
     },
     setAddress(lat, lng) {
@@ -125,7 +126,6 @@ export default {
       }
       this.geocoder.coord2Address(lng, lat, (result, status) => {
         if (status == window.kakao.maps.services.Status.OK) {
-          console.log(result);
           const temp = result[0].road_address;
           this.address = temp.address_name;
         }

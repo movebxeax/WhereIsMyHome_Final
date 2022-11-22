@@ -43,7 +43,7 @@ export default {
   },
   watch: {
     apt() {
-      console.log(this.apt);
+      // console.log(this.apt);
       this.showSide();
     },
   },
