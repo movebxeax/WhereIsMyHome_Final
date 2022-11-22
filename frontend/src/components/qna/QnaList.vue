@@ -1,38 +1,42 @@
 <template>
-  <v-card>
-    <v-container>
-      <v-row>
-        <v-col>
-          <v-data-table class="qna-item ma-3" :items="qnas" :headers="headers" cursor="pointer" @click:row="viewQna">
-          </v-data-table>
-        </v-col>
-      </v-row>
+  <v-container class="list-container">
+    <v-row class="qna-item">
+      <v-col>
+        <v-data-table class="ma-3" :items="qnas" :headers="headers" cursor="pointer" @click:row="viewQna">
+        </v-data-table>
+      </v-col>
+    </v-row>
 
-      <v-row class="justify-end ma-3">
+    <v-row class="justify-end ma-3">
+      <v-spacer></v-spacer>
+      <v-col cols="2">
+        <v-select v-model="qnaSelectedType" :items="qnaSearchKeywords" item-text="text" item-value="value"
+          persistent-hint return-object style="text-align:center"></v-select>
+      </v-col>
+      <v-col cols="3">
+        <v-text-field v-model="qnaSearchInput" ref="search" id="qna-search" label="검색어" append-icon="mdi-magnify"
+          @click:append="onSearch">
+        </v-text-field>
+      </v-col>
+      <v-col class="d-flex align-center justify-row-reverse">
         <v-spacer></v-spacer>
-        <v-col cols="2">
-          <v-select v-model="qnaSelectedType" :items="qnaSearchKeywords" item-text="text" item-value="value"
-            persistent-hint return-object style="text-align:center"></v-select>
-        </v-col>
-        <v-col cols="3">
-          <v-text-field v-model="qnaSearchInput" ref="search" id="qna-search" label="검색어" append-icon="mdi-magnify"
-            @click:append="onSearch">
-          </v-text-field>
-        </v-col>
-        <v-col class="d-flex align-center justify-row-reverse">
-          <v-spacer></v-spacer>
-          <v-btn color="primary" @click="moveRegister">글쓰기</v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-card>
+        <v-btn color="primary" @click="moveRegister" v-if="isLogin">글쓰기</v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import { apiQna } from "@/api/index";
+import { mapGetters } from "vuex";
+
 const apiQnaFunc = apiQna();
+
 export default {
   name: "QnaList",
+  computed: {
+    ...mapGetters("userStore", ["isLogin"]),
+  },
   data() {
     return {
       qnas: [],
@@ -98,19 +102,39 @@ export default {
 }
 
 .v-data-table>>>thead>tr>th {
-  font-size: 1rem !important;
+  font-size: 1.1rem !important;
   vertical-align: middle;
   text-align: center !important;
   justify-content: space-between;
 }
 
 .v-data-table>>>tbody>tr>td {
-  font-size: 1rem !important;
+  font-size: 0.9rem !important;
   vertical-align: middle;
   text-align: center !important;
 }
 
 .v-select__selection {
   justify-content: center;
+}
+
+.list-container {
+  max-height: 80vh;
+}
+
+.qna-item {
+  max-height: 70vh;
+  overflow: scroll;
+  overflow-x: hidden
+}
+
+.qna-item::-webkit-scrollbar {
+  width: 3px;
+  height: 8px;
+  /*background-color: #aaa*/
+}
+
+.qna-item::-webkit-scrollbar-thumb {
+  background: #aaa
 }
 </style>

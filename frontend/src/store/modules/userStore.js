@@ -2,12 +2,6 @@ import Constant from "@/utils/constant.js";
 
 const userStore = {
   namespaced: true,
-  state: {
-    isLogin: false,
-    userInfo: null,
-    accessToken: "",
-    refreshToken: "",
-  },
   getters: {
     isLogin(state) {
       return state.isLogin;

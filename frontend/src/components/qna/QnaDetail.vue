@@ -1,40 +1,46 @@
 <template>
-  <v-container>
+  <v-container class="detail-container">
     <v-row class="mb-1">
       <v-col>
-        <v-card>
-          <v-card-title>{{ qna.title }}</v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-divider></v-divider>
-            </v-row>
-            <v-row>
-              <h4>작성자: {{ qna.author }}</h4>
-            </v-row>
-            <v-row>
-              <h4>작성일: {{ qna.date }}</h4>
-            </v-row>
-            <v-row>
-              <h4>조회수: {{ qna.viewCount }}</h4>
-            </v-row>
-            <v-row>
-              <v-divider></v-divider>
-            </v-row>
-            <v-row>
-              <v-textarea v-html="message" disabled rows="10" max-rows="30"></v-textarea>
-            </v-row>
-          </v-card-text>
+        <v-card class="mt-1" outlined>
+          <div>
+            <v-card-title class="d-flex justify-content ml-1">
+              {{ qna.title }}
+            </v-card-title>
+          </div>
+          <div class="ml-3">
+            <v-card-subtitle>
+              <v-row>
+                <v-divider></v-divider>
+              </v-row>
+              <v-row>
+                <v-col class="pl-1" cols="2"> </v-col>
+                <v-col cols="2"></v-col>
+                <v-col cols="8" class="">
+                  <h1 style="text-align: end">작성일: {{ qna.date }}</h1>
+                  <h1 style="text-align: end">작성자: {{ qna.author }} 조회수: {{ qna.viewCount }}</h1>
+                </v-col>
+              </v-row>
+            </v-card-subtitle>
+            <v-card-text>
+              <v-row>
+                <v-textarea v-html="message" disabled rows="10" max-rows="30" class="article-content ml-2 mb-4 pb-4"> </v-textarea>
+              </v-row>
+            </v-card-text>
+          </div>
         </v-card>
       </v-col>
     </v-row>
 
-    <v-row>
+    <qna-comment-item></qna-comment-item>
+
+    <v-row class="ml-0 mr-0">
       <v-col class="text-left">
         <v-btn depressed @click="moveList">목록</v-btn>
       </v-col>
       <v-col class="text-right">
-        <v-btn class="mr-4" color="primary" depressed @click="moveModify">수정</v-btn>
-        <v-btn class="mr-4" color="error" depressed @click="deleteQna">삭제</v-btn>
+        <v-btn class="mr-4" color="primary" depressed @click="moveModify" v-if="isMyArticle()">수정</v-btn>
+        <v-btn color="error" depressed @click="deleteQna" v-if="isMyArticle()">삭제</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -42,9 +48,14 @@
 
 <script>
 import { apiQna } from "@/api/index";
+import { mapGetters } from "vuex";
+import QnaCommentItem from "@/components/qna/item/QnaCommentItem.vue";
 const apiQnaFunc = apiQna();
 
 export default {
+  components: {
+    QnaCommentItem,
+  },
   name: "QnaDetail",
   props: ["no"],
   data() {
@@ -53,6 +64,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("userStore", ["userInfo", "isLogin"]),
     message() {
       if (this.qna.content) return this.qna.content.split("\n").join("<br>");
       return "";
@@ -85,10 +97,33 @@ export default {
         });
       }
     },
+    isMyArticle() {
+      if (this.userInfo && this.userInfo.username) {
+        return this.qna.author === this.userInfo.username || this.userInfo.userid === "admin";
+      } else return false;
+    },
   },
 };
 </script>
 
 <style>
+.detail-container {
+  max-height: 80vh;
+  overflow: scroll;
+  overflow-x: hidden;
+}
 
+.detail-container::-webkit-scrollbar {
+  width: 3px;
+  height: 8px;
+  /*background-color: #aaa*/
+}
+
+.detail-container::-webkit-scrollbar-thumb {
+  background: #aaa;
+}
+
+.article-content {
+  color: #2a2a2a !important;
+}
 </style>

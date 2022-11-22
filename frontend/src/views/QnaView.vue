@@ -1,7 +1,8 @@
 <template>
   <v-container>
-    <h1>Q&A</h1>
-    <router-view></router-view>
+    <v-card class="mt-8 pt-2">
+      <router-view></router-view>
+    </v-card>
   </v-container>
 </template>
 
@@ -11,4 +12,6 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+
+</style>
