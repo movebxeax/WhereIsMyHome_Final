@@ -56,14 +56,19 @@ export default {
   created() {
     if (this.type === "modify") {
       this.isUserid = true;
-      apiNoticeFunc.get(`/${this.no}`).then(({ data }) => {
-        this.notice = data;
-      });
+      apiNoticeFunc
+        .get(`/${this.no}`)
+        .then(({ data }) => {
+          this.notice = data;
+        })
+        .then(() => {
+          console.log(this.notice.author);
 
-      if (this.userInfo.userid !== this.notice.author) {
-        alert("잘못된 접근입니다.");
-        this.$router.push("/notice/list");
-      }
+          if (this.userInfo.userid !== this.notice.author) {
+            alert("잘못된 접근입니다.");
+            this.$router.push("/notice/list");
+          }
+        });
     }
   },
   methods: {

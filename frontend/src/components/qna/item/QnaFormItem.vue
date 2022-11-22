@@ -56,14 +56,18 @@ export default {
   created() {
     if (this.type === "modify") {
       this.isUserid = true;
-      apiQnaFunc.get(`/${this.no}`).then(({ data }) => {
-        this.qna = data;
-      });
-
-      if (this.userInfo.userid !== this.qna.author) {
-        alert("잘못된 접근입니다.");
-        this.$router.push("/qna/list");
-      }
+      apiQnaFunc
+        .get(`/${this.no}`)
+        .then(({ data }) => {
+          this.qna = data;
+        })
+        .then(() => {
+          console.log(this.qna.author);
+          if (this.userInfo.userid !== this.qna.author) {
+            alert("잘못된 접근입니다.");
+            this.$router.push("/qna/list");
+          }
+        });
     }
   },
   methods: {

@@ -4,7 +4,7 @@
       <div class="d-flex">
         <div>
           <v-btn text color="#3F72AF" @click="loadNoticeArticle(noticeItem.no)">
-            {{ noticeItem.subject }}
+            {{ noticeItem.title }}
           </v-btn>
         </div>
         <div class="pr-4 ml-auto">
@@ -12,14 +12,26 @@
         </div>
       </div>
     </v-card-text>
-    <v-card-text class="pa-2 ma-1 text-left" v-for="i in 5 - Object.keys(noticeList).length" :key="i">
-      <div class="d-flex">
-        <div>
-          <v-btn text disabled color="#3F72AF"> </v-btn>
+    <div v-if="Object.keys(noticeList)">
+      <v-card-text class="pa-2 ma-1 text-left" v-for="i in 5 - Object.keys(noticeList).length" :key="i">
+        <div class="d-flex">
+          <div>
+            <v-btn text disabled color="#3F72AF"></v-btn>
+          </div>
+          <div class="pr-4 ml-auto"></div>
         </div>
-        <div class="pr-4 ml-auto"></div>
-      </div>
-    </v-card-text>
+      </v-card-text>
+    </div>
+    <div v-else>
+      <v-card-text class="pa-2 ma-1 text-left" v-for="i in 5" :key="i">
+        <div class="d-flex">
+          <div>
+            <v-btn text disabled color="#3F72AF"> </v-btn>
+          </div>
+          <div class="pr-4 ml-auto"></div>
+        </div>
+      </v-card-text>
+    </div>
   </div>
 </template>
 
