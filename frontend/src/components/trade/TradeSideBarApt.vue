@@ -34,7 +34,8 @@
                 <v-row dense>
                   <v-col>
                     <v-card>
-                      <v-card-subtitle class="text-left h6 font-weight-bold"> 그래프 </v-card-subtitle>
+                      <v-card-title class="text-left h6 font-weight-bold"> 그래프 </v-card-title>
+                      <v-spacer></v-spacer>
                       <trade-side-bar-graph :priceInfoList="detail.priceInfoList"></trade-side-bar-graph>
                     </v-card>
                   </v-col>
@@ -42,7 +43,7 @@
                 <v-row dense>
                   <v-col>
                     <v-card>
-                      <v-card-subtitle class="text-left h6 font-weight-bold"> 거래내역 </v-card-subtitle>
+                      <v-card-title class="text-left h6 font-weight-bold"> 거래내역 </v-card-title>
                       <v-data-table
                         dense
                         multi-sort
