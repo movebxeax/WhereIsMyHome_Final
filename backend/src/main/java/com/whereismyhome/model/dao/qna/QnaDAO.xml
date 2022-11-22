@@ -50,7 +50,7 @@
 		from qna as q
 		join qna_detail qd on q.uuid=qd.uuid
         left join qna_comment qc on q.uuid=qc.qna_uuid
-        left join user u on u.userid = qc.author and u.userid = q.author
+        left join user u on u.userid = qc.author or u.userid = q.author
 	</sql>
 	
 	<insert id="insertArticleInfo" parameterType="QnaInfo">
