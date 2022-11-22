@@ -47,6 +47,8 @@
                         dense
                         items-per-page="10"
                         multi-sort
+                        :sort-by="['dealYear', 'dealMonth']"
+                        :sort-desc="[true, true]"
                         :footer-props="{
                           showFirstLastPage: true,
                           itemsPerPageOptions: [],
