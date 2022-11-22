@@ -124,6 +124,14 @@ export default {
           this.getAptListWithCds(params);
         }
       });
+
+      var bounds = this.map.getBounds();
+      var swLatlng = bounds.getSouthWest();
+      var neLatlng = bounds.getNorthEast();
+
+      const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+      this.clearMarkers();
+      this.getAptListWithCds(params);
     },
     changeCenterMap() {
       let moveLatLon = new kakao.maps.LatLng(this.dong.lat, this.dong.lng);
