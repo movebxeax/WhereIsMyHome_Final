@@ -16,43 +16,41 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	public UserServiceImpl(UserDAO userDao) {
 		this.userDao = userDao;
-	}	
-
-	public UserInfo login(UserInfo userInfo)
-	{
-		return userDao.login(userInfo);
-	}	
-
-	
-
-	public UserInfo getUserInfo(String userid)
-	{
-		return userDao.getUserInfo(userid);
-	}
-
-	public boolean modifyUserInfo(UserInfo userInfo)
-	{
-		return userDao.modifyUserInfo(userInfo) > 0;
-	}
-
-	public boolean deleteUserInfo(String userid)
-	{
-		return userDao.deleteUserInfo(userid) > 0;
 	}
 
 	public boolean setInterestDistrict(Map<String, String> map) {
 		return userDao.setInterestDistrict(map) > 0;
 	}
-	
+
 	//==============
-	
+
 	public boolean signup(UserInfoDetail userInfo)
 	{
 		return userDao.signup(userInfo) > 0;
 	}
 	
+	public UserInfo login(UserInfo userInfo)
+	{
+		return userDao.login(userInfo);
+	}
+
 	public UserInfo findUserByUserId(String userid) {
 		return userDao.selectUserByUserId(userid);
+	}
+	
+	public UserInfoDetail getUserInfo(String userid)
+	{
+		return userDao.selectUserInfoDetails(userid);
+	}
+
+	public boolean modifyUserInfo(UserInfoDetail userInfo)
+	{
+		return userDao.updateUserInfoDetails(userInfo) > 0;
+	}
+	
+	public boolean deleteUserInfo(String userid)
+	{
+		return userDao.deleteUserInfo(userid) > 0;
 	}
 
 	@Override

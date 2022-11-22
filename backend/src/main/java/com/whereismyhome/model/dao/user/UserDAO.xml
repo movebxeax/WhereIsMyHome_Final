@@ -11,28 +11,6 @@
 -->
 
 <mapper namespace="com.whereismyhome.model.dao.user.UserDAO">
-
-	<select id="login" parameterType="UserInfo" resultType="UserInfo">
-		select userid, password, username from user where userid=#{userid} and password=#{password}
-	</select>
-	
-	<select id="getUserInfo" parameterType="String" resultType="UserInfo">
-		select userid, username from user where userid=#{userid}
-	</select>
-	
-	<update id="modifyUserInfo" parameterType="UserInfo">
-		update user set username=#{username}
-		
-		<if test="password != null and password != ''">
-			, password=#{password}
-		</if>
-		
-		where userid=#{userid}
-	</update>
-	
-	<delete id="deleteUserInfo" parameterType="String">
-		delete from user where userid=#{userid}
-	</delete>
 	
 	<update id="setInterestDistrict" parameterType="map">
 		update user set interest=#{dongCode} where userid=#{userid}
@@ -46,9 +24,29 @@
 			values(#{userid}, #{password}, #{username}, #{emailId}, #{emailDomain}, #{contact}, #{baseAddress}, #{specAddress})
 	</insert>
 	
+	<select id="login" parameterType="UserInfo" resultType="UserInfo">
+		select userid, password, username from user where userid=#{userid} and password=#{password}
+	</select>
+	
 	<select id="selectUserByUserId" parameterType="string" resultType="UserInfo">
 		select userid, password, username, role from user where userid=#{userid}
 	</select>
+	
+	<select id="selectUserInfoDetails" parameterType="String" resultType="UserInfoDetail">
+		select userid, username, email_id as emailid, email_domain as emaildomain, contact, base_address as baseaddress, spec_address as specaddress from user where userid=#{userid}
+	</select>
+	
+	<update id="updateUserInfoDetails" parameterType="UserInfoDetail">
+		update user set username=#{username}
+		
+		<if test="password != null and password != ''">
+			, password=#{password}
+		</if>
+		
+		,email_id=#{emailId}, email_domain=#{emailDomain}, contact=#{contact}, base_address=#{baseAddress}, spec_address=#{specAddress}, last_modified_date = now()
+		
+		where userid=#{userid}
+	</update>
 	
 	<insert id="insertRefreshToken" parameterType="map">
 		insert into refresh_token(userid, token) values(#{userid}, #{token})
@@ -57,5 +55,10 @@
 	<select id="selectUserIdByRefreshToken" parameterType="String" resultType="String">
 		select userid from refresh_token where token=#{token}
 	</select>
+	
+	<delete id="deleteUserInfo" parameterType="String">
+		delete from user where userid=#{userid}
+	</delete>
+	
 	
 </mapper>
