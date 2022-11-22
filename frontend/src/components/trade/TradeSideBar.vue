@@ -3,10 +3,10 @@
     <template v-if="isShow">
       <div class="side-bar">
         <trade-side-bar-filter></trade-side-bar-filter>
-        <h1 v-if="apt != null" v-text="apt.aptName"></h1>
+        <trade-side-bar-apt v-if="apt != null"></trade-side-bar-apt>
       </div>
     </template>
-    <button id="trade-side-bar-active-btn" @click="showSide">
+    <button id="trade-side-bar-active-btn" @click="toggleSide">
       <v-icon center v-if="isShow">mdi-chevron-left</v-icon>
       <v-icon center v-else>mdi-chevron-right</v-icon>
     </button>
@@ -15,13 +15,15 @@
 
 <script>
 import TradeSideBarFilter from "@/components/trade/TradeSideBarFilter.vue";
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
+import TradeSideBarApt from "@/components/trade/TradeSideBarApt.vue";
 const tradeStore = "tradeStore";
 
 export default {
   name: "TradeSideBar",
   components: {
     TradeSideBarFilter,
+    TradeSideBarApt,
   },
   data() {
     return {
@@ -29,16 +31,20 @@ export default {
     };
   },
   computed: {
-    ...mapState(tradeStore, ["apt"]),
+    ...mapGetters(tradeStore, ["apt"]),
   },
   methods: {
-    showSide() {
+    toggleSide() {
       this.isShow = !this.isShow;
+    },
+    showSide() {
+      this.isShow = true;
     },
   },
   watch: {
     apt() {
       console.log(this.apt);
+      this.showSide();
     },
   },
 };
@@ -47,6 +53,8 @@ export default {
 <style lang="scss" scoped>
 .side-bar-wrapper {
   background-color: white;
+  overflow-y: auto;
+  overflow-x: auto;
   .side-bar {
     opacity: 90%;
     width: 400px;

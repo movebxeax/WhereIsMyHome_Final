@@ -25,6 +25,15 @@ export default {
   },
   components: { TradeSideBar },
   mounted() {
+    // window.addEventListener("load", () => {
+    //   const script = document.createElement("script");
+    //   /* global kakao */
+    //   script.onload = () => kakao.maps.load(this.initMap);
+    //   //   script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=" + process.env.VUE_APP_KAKAO_MAP_KEY +"&libraries=services,clusterer";
+    //   script.src =
+    //     "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=980bea8bcd07009e77637df27e1433d7&libraries=services,clusterer";
+    //   document.body.appendChild(script);
+    // });
     if (window.kakao && window.kakao.maps) {
       this.initMap();
     } else {
@@ -34,7 +43,7 @@ export default {
       //   script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=" + process.env.VUE_APP_KAKAO_MAP_KEY +"&libraries=services,clusterer";
       script.src =
         "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=980bea8bcd07009e77637df27e1433d7&libraries=services,clusterer";
-      document.head.appendChild(script);
+      document.body.appendChild(script);
     }
   },
   computed: {
