@@ -30,6 +30,23 @@ const routes = [
         name: "noticeList",
         component: () => import("@/components/notice/NoticeList.vue"),
       },
+      {
+        path: "detail/:no",
+        props: true,
+        name: "noticedetail",
+        component: () => import("@/components/notice/NoticeDetail.vue"),
+      },
+      {
+        path: "modify/:no",
+        props: true,
+        name: "noticemodify",
+        component: () => import("@/components/notice/NoticeModify.vue"),
+      },
+      {
+        path: "register",
+        name: "noticeregister",
+        component: () => import("@/components/notice/NoticeRegister.vue"),
+      },
     ],
   },
   {
