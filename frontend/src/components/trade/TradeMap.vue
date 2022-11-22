@@ -10,6 +10,7 @@ import TradeSideBar from "@/components/trade/TradeSideBar.vue";
 import { mapActions, mapGetters } from "vuex";
 import { dongMarkerInfo, gugunMarkerInfo } from "@/api/trade";
 const tradeStore = "tradeStore";
+
 const DEALYEAR_DONG_LIMIT = 5;
 const DEALYEAR_GUGUN_LIMIT = 7;
 
@@ -54,7 +55,6 @@ export default {
       deep: true,
       handler() {
         if (this.apts.length >= 0) {
-          console.log("apts handler call");
           this.updateMap();
         }
       },
@@ -64,11 +64,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(tradeStore, ["getAptListWithCds", "getApt", "getAptList", "clearAptList", "setDong"]),
+    ...mapActions(tradeStore, ["getAptListWithCds", "getApt", "getAptList", "clearAptList", "setDong", "setApt"]),
     initMap() {
       const container = document.getElementById("map");
       const options = {
         center: new kakao.maps.LatLng(37.501929614341925, 127.03899430413212),
+
         level: 3,
       };
       //지도 객체를 등록합니다.
@@ -100,6 +101,7 @@ export default {
           var neLatlng = bounds.getNorthEast();
 
           const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+          this.clearMarkers();
           this.getAptListWithCds(params);
         }
       });
@@ -118,6 +120,7 @@ export default {
           var neLatlng = bounds.getNorthEast();
 
           const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+          this.clearMarkers();
           this.getAptListWithCds(params);
         }
       });
@@ -168,7 +171,8 @@ export default {
 
         // 클릭 이벤트
         kakao.maps.event.addListener(marker, "click", () => {
-          this.getApt(apt.aptCode);
+          // this.getApt(apt.aptCode);
+          this.setApt(apt);
         });
 
         this.markers.push(marker);
@@ -204,12 +208,14 @@ export default {
             });
 
             // 커스텀 오버레이 클릭 이벤트 설정
+
             const close = document.getElementById(dong.dongCode);
             close.onclick = () => {
               let moveLatLon = new kakao.maps.LatLng(dong.lat, dong.lng);
               this.map.panTo(moveLatLon);
               this.map.setLevel(3);
             };
+
             this.markers.push(customOverlay);
           });
         },
@@ -230,7 +236,6 @@ export default {
         params,
         ({ data }) => {
           // 커스텀 오버레이 생성
-          console.log(data);
           data.forEach((gugun) => {
             let content =
               `<div class="customoverlay" id="${gugun.gugunCode}" style="background:white; cursor:pointer">` +

@@ -132,13 +132,15 @@ export default {
       });
     },
   },
-  mounted() {
-    this.initRoadView(this.apt.lat, this.apt.lng);
-    this.setAddress(this.apt.lat, this.apt.lng);
+  updated() {
+    if (this.roadview === null && this.apt !== null) {
+      this.initRoadView(this.apt.lat, this.apt.lng);
+      this.setAddress(this.apt.lat, this.apt.lng);
+    }
   },
   watch: {
     apt() {
-      if (this.apt != null) {
+      if (this.apt !== null) {
         this.setRoadView(this.apt.lat, this.apt.lng);
         this.setAddress(this.apt.lat, this.apt.lng);
       }
