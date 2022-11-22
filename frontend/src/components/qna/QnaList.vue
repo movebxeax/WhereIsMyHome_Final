@@ -30,7 +30,7 @@
 
 <script>
 import { apiQna } from "@/api/index";
-
+const apiQnaFunc = apiQna();
 export default {
   name: "QnaList",
   data() {
@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     getQnas(params) {
-      apiQna.get("", { params: params }).then(({ data }) => {
+      apiQnaFunc.get("", { params: params }).then(({ data }) => {
         this.qnas = data;
       });
     },
