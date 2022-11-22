@@ -16,4 +16,5 @@ public interface QnaDAO {
 	int deleteArticle(int articleNo);
 	int updateArticle(QnaInfo qnaInfo);
 	int increaseViewCount(int articleNo);
+	int insertQnaComment(Map<String, Object> map);
 }

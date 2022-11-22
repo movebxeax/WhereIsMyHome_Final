@@ -1,5 +1,6 @@
 package com.whereismyhome.controller;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.whereismyhome.model.dto.qna.QnaInfo;
 import com.whereismyhome.model.service.qna.QnaService;
+import com.whereismyhome.model.service.user.JwtUserDetailsService;
 import com.whereismyhome.util.ResponseManager;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +29,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jdk.internal.org.jline.utils.Log;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Tag(name = "qna", description = "QnA Board APIs")
 @RequestMapping("/api/qna")
 @RestController
@@ -67,6 +73,7 @@ public class QnaBoardController extends ResponseManager {
 					@ApiResponse(responseCode = "200", description = "Success"),
 					@ApiResponse(responseCode = "500", description = "Fail")
 	})
+	@PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_USER')")
 	@PostMapping
 	protected ResponseEntity<?> writeQnaArticle(@RequestBody QnaInfo qnaInfo) {
 		qnaInfo.setUuid(UUID.randomUUID().toString());
@@ -108,11 +115,15 @@ public class QnaBoardController extends ResponseManager {
 					@ApiResponse(responseCode = "404", description = "Article Not Exists"),
 					@ApiResponse(responseCode = "500", description = "Article Update Fail")
 	})
+	@PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_USER')")
 	@PostMapping("/{articleNo}")
-	protected ResponseEntity<?> updateQnaArticle(@PathVariable int articleNo, @RequestBody QnaInfo qnaInfo) {
+	protected ResponseEntity<?> updateQnaArticle(@PathVariable int articleNo, @RequestBody QnaInfo qnaInfo, Principal principal) {
 		QnaInfo checkExist = qnaService.getQnaArticle(articleNo);
 		if(checkExist != null)
 		{
+			if(!checkExist.getAuthor().equals(principal.getName()))
+				return createResponse(HttpStatus.UNAUTHORIZED);
+			
 			qnaInfo.setNo(articleNo);
 
 			boolean res = qnaService.modifyQnaArticle(qnaInfo);
@@ -131,12 +142,43 @@ public class QnaBoardController extends ResponseManager {
 					@ApiResponse(responseCode = "200", description = "Success"),
 					@ApiResponse(responseCode = "500", description = "Article Delete Fail")
 	})
+	@PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_USER')")
 	@DeleteMapping("/{articleNo}")
-	protected ResponseEntity<?> deleteQnaArticle(@PathVariable int articleNo) {
-		boolean res = qnaService.deleteQnaArticle(articleNo);
-		if(res)
-			return createResponse(HttpStatus.OK);
+	protected ResponseEntity<?> deleteQnaArticle(@PathVariable int articleNo, Principal principal) {
+		QnaInfo checkExist = qnaService.getQnaArticle(articleNo);
+
+		if(checkExist != null)
+		{
+			if(!checkExist.getAuthor().equals(principal.getName()))
+				return createResponse(HttpStatus.UNAUTHORIZED);
+
+			boolean res = qnaService.deleteQnaArticle(articleNo);
+			if(res)
+				return createResponse(HttpStatus.OK);
+			else
+				return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error occured while deleting article");
+		}
 		else
-			return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error occured while deleting article");
+			return createResponse(HttpStatus.NOT_FOUND, "Error occured while updating article detail - Article doesn't exist");
+	}
+	
+	@PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_USER')")
+	@PostMapping("/comment/{articleNo}")
+	protected ResponseEntity<?> writeComment(@PathVariable int articleNo, @RequestBody Map<String, Object> map, Principal principal) {
+		QnaInfo checkExist = qnaService.getQnaArticle(articleNo);
+		if(checkExist != null)
+		{
+			map.put("articleNo", articleNo);
+			map.put("author", principal.getName());
+			
+			boolean res = qnaService.writeQnaComment(map);
+			
+			if(res)
+				return createResponse(HttpStatus.OK);
+			else
+				return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error occured while writing comment");
+		}
+		else
+			return createResponse(HttpStatus.NOT_FOUND, "Error occured while writing comment - Article doesn't exist");
 	}
 }

@@ -12,4 +12,5 @@ public interface QnaService {
 	public boolean modifyQnaArticle(QnaInfo qnaInfo);
 	public boolean deleteQnaArticle(int articleNo);
 	public boolean updateQnaArticleViewCount(int articleNo);
+	public boolean writeQnaComment(Map<String, Object> map);
 }

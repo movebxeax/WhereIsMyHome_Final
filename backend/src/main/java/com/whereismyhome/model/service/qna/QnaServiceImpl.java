@@ -47,4 +47,9 @@ public class QnaServiceImpl implements QnaService {
 	public boolean updateQnaArticleViewCount(int articleNo) {
 		return qnaDao.increaseViewCount(articleNo) > 0;
 	}
+
+	@Override
+	public boolean writeQnaComment(Map<String, Object> map) {
+		return qnaDao.insertQnaComment(map) > 0;
+	}
 }

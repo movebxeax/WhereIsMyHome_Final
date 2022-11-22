@@ -24,17 +24,33 @@
 	
 	<sql id="qnaListSelectBase">
 		select
-			q.no, q.title, u.username as author, q.date, q.viewcount
+			q.no,
+			q.title,
+			ifnull(u.username, '탈퇴한 사용자') as author,
+			q.date,
+			q.viewcount
 		from qna as q
-		join user u on u.userid = q.author
+		left join user u on u.userid = q.author
 	</sql>
 	
 	<sql id="qnaDetailSelectBase">
 		select
-			q.no, q.title, u.username as author, q.date, q.viewcount, q.uuid, qd.content
+			q.no,
+            q.title,
+            ifnull(u.username, '탈퇴한 사용자') as author,
+            q.date,
+            q.viewcount,
+            q.uuid,
+            qd.content,
+            q.likecount,
+            ifnull((select username from user where userid=qc.author), '탈퇴한 사용자') as comment_author,
+            qc.content as comment_content,
+            qc.date as comment_date,
+            qc.likecount as comment_likecount
 		from qna as q
 		join qna_detail qd on q.uuid=qd.uuid
-		join user u on u.userid = q.author
+        left join qna_comment qc on q.uuid=qc.qna_uuid
+        left join user u on u.userid = qc.author and u.userid = q.author
 	</sql>
 	
 	<insert id="insertArticleInfo" parameterType="QnaInfo">
@@ -56,7 +72,7 @@
 		<if test="limit != null">limit #{limit}</if>
 	</select>
 	
-	<select id="selectArticle" parameterType="int" resultType="QnaInfo">		
+	<select id="selectArticle" parameterType="int" resultMap="com.whereismyhome.resultmaps.QnaInfoMap">		
 		<include refid="qnaDetailSelectBase" />
 		where q.no=#{articleNo}
 	</select>
@@ -81,4 +97,10 @@
 		from qna
 		where no=#{articleNo}
 	</delete>
+	
+	<insert id="insertQnaComment" parameterType="map">
+		insert into
+			qna_comment(qna_uuid, author, content)
+			values((select uuid from qna where no=#{articleNo}), #{author}, #{content});
+	</insert>
 </mapper>

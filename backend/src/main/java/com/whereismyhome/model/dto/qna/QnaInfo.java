@@ -1,5 +1,7 @@
 package com.whereismyhome.model.dto.qna;
 
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,4 +40,9 @@ public class QnaInfo {
 	
 	@Schema(title = "Article UUID", example = "0093f9f3-d125-4798-8419-bbbbe33fc1ed")
 	String uuid;
+	
+	@Schema(title = "Article Like Count", example = "0")
+	int likeCount;
+	
+	List<QnaComment> comments;
 }
