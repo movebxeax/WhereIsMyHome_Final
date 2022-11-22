@@ -53,8 +53,6 @@ export default {
 <style lang="scss" scoped>
 .side-bar-wrapper {
   background-color: white;
-  overflow-y: auto;
-  overflow-x: auto;
   .side-bar {
     opacity: 90%;
     width: 400px;

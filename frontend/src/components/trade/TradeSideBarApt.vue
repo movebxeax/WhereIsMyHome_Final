@@ -6,7 +6,7 @@
           <v-card dark>
             <v-card-title>{{ this.apt.aptName }}</v-card-title>
             <v-card-subtitle class="text-left subtitle-2 pb-0">| {{ this.apt.buildYear }}년 준공</v-card-subtitle>
-            <v-card-text class="text-left subtitle-2">| 서울시 어쩌구 </v-card-text>
+            <v-card-text class="text-left subtitle-2">| {{ this.address }} </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -72,6 +72,8 @@ export default {
       roadviewClient: null,
       position: null,
       tab: null,
+      address: "",
+      geocoder: null,
     };
   },
   methods: {
@@ -98,14 +100,28 @@ export default {
         this.roadview.setPanoId(panoId, this.position); //panoId와 중심좌표를 통해 로드뷰 실행
       });
     },
+    setAddress(lat, lng) {
+      if (this.geocoder == null) {
+        this.geocoder = new window.kakao.maps.services.Geocoder();
+      }
+      this.geocoder.coord2Address(lng, lat, (result, status) => {
+        if (status == window.kakao.maps.services.Status.OK) {
+          console.log(result);
+          const temp = result[0].road_address;
+          this.address = temp.address_name;
+        }
+      });
+    },
   },
   mounted() {
     this.initRoadView(this.apt.lat, this.apt.lng);
+    this.setAddress(this.apt.lat, this.apt.lng);
   },
   watch: {
     apt() {
       if (this.apt != null) {
         this.setRoadView(this.apt.lat, this.apt.lng);
+        this.setAddress(this.apt.lat, this.apt.lng);
       }
     },
   },
