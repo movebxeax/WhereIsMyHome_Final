@@ -3,27 +3,16 @@
     <!-- <v-card class="ma-9" elevation="10" color="transparent" outlined> -->
     <v-container fill-height>
       <v-row style="height: 15vh">
-        <v-col class="pa-auto ma-auto" cols="12" sm="6" md="4"> Happy House Logo Here </v-col>
+        <v-col class="pa-auto ma-auto" cols="12" style="font-weight: bolder; font-size: 2rem;"> 당신이 원하는 집은
+          어떤 곳인가요?
+        </v-col>
       </v-row>
-      <v-row style="height: 15vh" justify="center" align="center">
-        <v-col class="pa-0 ma-0" cols="11" sm="8" md="4">
-          <v-autocomplete
-            class="text-field-class"
-            color="grey lighten-43"
-            :value="inputDongcode"
-            @input="setInputDongcode"
-            :items="searchOptions"
-            :loading="isLoading"
-            :search-input.sync="searchKeyword"
-            clearable
-            hide-details
-            hide-selected
-            item-text="address"
-            item-value="dongcode"
-            label="가격이 궁금한 지역을 입력해보세요."
-            solo
-            rounded
-          >
+      <v-row style="height: 15vh" justify="center">
+        <v-col class="pa-0 ma-0" cols="4">
+          <v-autocomplete class="auto-complete-class text-field-class" color="grey lighten-43" :value="inputDongcode"
+            @input="setInputDongcode" :items="searchOptions" :loading="isLoading" :search-input.sync="searchKeyword"
+            clearable hide-details hide-selected item-text="address" item-value="dongcode" label="가격이 궁금한 지역을 입력해보세요."
+            solo rounded>
             <template v-slot:no-data>
               <v-list-item>
                 <v-list-item-title>
@@ -96,11 +85,15 @@ export default {
 </script>
 
 <style scoped>
-.text-field-class >>> input {
+.text-field-class>>>input {
   font-size: 20px;
 }
 
 .v-input {
   width: 80vw;
+}
+
+.auto-complete-class {
+  width: 100vw !important;
 }
 </style>

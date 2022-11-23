@@ -1,6 +1,6 @@
 <template>
   <v-card class="card-main mt-4">
-    <v-tabs class="pl-4 pr-4 pb-4" v-model="tab">
+    <!-- <v-tabs class="pl-4 pr-4 pb-4" v-model="tab">
       <v-tabs-slider color="#000000"></v-tabs-slider>
       <v-tab v-for="interest in interests" :key="interest.aptName">
         <div class="caption py-1">{{ interest.aptName }}</div>
@@ -8,7 +8,14 @@
       <v-tab-item v-for="interest in interests" :key="interest.aptName" class="pt-2">
         <trade-side-bar-apt :apt="interest"></trade-side-bar-apt>
       </v-tab-item>
-    </v-tabs>
+    </v-tabs> -->
+    <div class="interest-card-root d-flex ma-2">
+      <v-card class="ma-2" v-for="interest in interests" :key="interest.aptName">
+        <div class="interest-card-content">
+          <trade-side-bar-apt :apt="interest"></trade-side-bar-apt>
+        </div>
+      </v-card>
+    </div>
 
   </v-card>
 </template>
@@ -47,9 +54,20 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .card-main {
   max-height: 70vh;
-  overflow: scroll;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+
+.interest-card-content {
+  max-height: 65vh;
+  overflow-y: scroll !important;
+}
+
+.interest-card-content::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
 }
 </style>

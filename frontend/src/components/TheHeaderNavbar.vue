@@ -2,7 +2,7 @@
   <header>
     <v-toolbar class="toolbar" color="#DBE2EF" elevation="4">
       <v-toolbar-title>
-        <router-link to="/" tag="span" style="cursor: pointer">
+        <router-link to="/" tag="span" class="home-btn">
           {{ appTitle }}
         </router-link>
       </v-toolbar-title>
@@ -77,12 +77,17 @@ export default {
   computed: {
     ...mapGetters(userStore, ["userInfo", "isLogin"]),
   },
-  created() {},
+  created() { },
 };
 </script>
 
 <style>
 .navbar {
   z-index: 1;
+}
+
+.home-btn {
+  cursor: pointer;
+  font-weight: bolder;
 }
 </style>
