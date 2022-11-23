@@ -94,9 +94,6 @@ const tradeStore = {
     SET_INPUT_DONGCODE(state, dongcode) {
       state.inputDongcode = dongcode;
     },
-    CLEAT_APT_LIST(state) {
-      state.apts = [];
-    },
     CLEAR_APT(state) {
       state.apt = null;
     },
@@ -107,7 +104,7 @@ const tradeStore = {
       state.dong = null;
     },
     CLEART_APTS(state) {
-      state.apts = null;
+      state.apts = [];
     },
   },
   actions: {
@@ -169,9 +166,6 @@ const tradeStore = {
           console.log(error);
         }
       );
-    },
-    clearAptList: ({ commit }) => {
-      commit("CLEAT_APT_LIST");
     },
     clearApt: ({ commit }) => {
       commit("CLEAR_APT");

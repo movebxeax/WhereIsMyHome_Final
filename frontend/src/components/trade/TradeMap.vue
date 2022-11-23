@@ -90,10 +90,10 @@ export default {
       "getAptListWithCds",
       "getApt",
       "getAptList",
-      "clearAptList",
       "setDong",
       "setApt",
       "clearApt",
+      "clearApts",
     ]),
     initMap() {
       const container = document.getElementById("map");
@@ -119,7 +119,7 @@ export default {
       // 드래그 이벤트 등록
       this.addKakaoEvent("dragend");
 
-      // 확대, 축소, 센터 변경 이벤트 등록
+      // 확대, 축소 이벤트 등록
       this.addKakaoEvent("idle");
 
       // 동이 있으면 해당 동 조회 없으면 초기 지역 조회
@@ -129,34 +129,29 @@ export default {
         this.getAptList(INITIAL_DONGCODE);
       }
     },
-    changeCenterMap() {
-      if (window.kakao && window.kakao.maps) {
-        console.log("change center");
-        let moveLatLon = new kakao.maps.LatLng(this.dong.lat, this.dong.lng);
-        this.map.panTo(moveLatLon);
-      }
-    },
+
     updateMap() {
       // 레벨이 6이상이면 아파트 마커 사용 X
       let level = this.map.getLevel();
 
+      // 초기화
+      this.clearMarkers();
+
       if (level >= DEALYEAR_GUGUN_LIMIT) {
         if (this.apts.length > 0) {
-          this.clearAptList();
+          this.clearApts();
         }
         // this.getGugunMarkers();
         this.getMarkers(gugunMarkerInfo, false);
         return;
       } else if (level >= DEALYEAR_DONG_LIMIT) {
         if (this.apts.length > 0) {
-          this.clearAptList();
+          this.clearApts();
         }
         // this.getDongMarkers();
         this.getMarkers(dongMarkerInfo, true);
         return;
       }
-      // 초기화
-      this.clearMarkers();
 
       var imageSize = new kakao.maps.Size(25, 29);
       // 마커 이미지를 생성합니다
@@ -179,13 +174,14 @@ export default {
         this.markers.push(marker);
       });
     },
-
-    clearMarkers() {
-      this.markers.forEach((marker) => {
-        marker.setMap(null);
-      });
-      this.markers = [];
+    changeCenterMap() {
+      if (window.kakao && window.kakao.maps) {
+        console.log("change center");
+        let moveLatLon = new kakao.maps.LatLng(this.dong.lat, this.dong.lng);
+        this.map.panTo(moveLatLon);
+      }
     },
+
     mapRelayout() {
       setTimeout(() => {
         this.map.relayout();
@@ -193,7 +189,6 @@ export default {
     },
     getMarkers(getMarkerInfo, isDong) {
       // 마커 데이터 갱신
-      this.clearMarkers();
       let bounds = this.map.getBounds();
       let swLatlng = bounds.getSouthWest();
       let neLatlng = bounds.getNorthEast();
@@ -203,6 +198,7 @@ export default {
         params,
         ({ data }) => {
           // 커스텀 오버레이 생성
+          console.log(data);
           data.forEach((detail) => {
             let content = "";
             if (isDong) {
@@ -231,12 +227,18 @@ export default {
             }
             close.onclick = () => {
               let moveLatLon = new kakao.maps.LatLng(detail.lat, detail.lng);
-              this.map.panTo(moveLatLon);
               if (isDong) {
+                if (this.map.getLevel > DEALYEAR_DONG_LIMIT) {
+                  this.clearMarkers();
+                }
                 this.map.setLevel(3);
               } else {
+                if (this.map.getLevel > DEALYEAR_GUGUN_LIMIT) {
+                  this.clearMarkers();
+                }
                 this.map.setLevel(DEALYEAR_DONG_LIMIT);
               }
+              this.map.panTo(moveLatLon);
             };
 
             this.markers.push(customOverlay);
@@ -247,15 +249,24 @@ export default {
         }
       );
     },
+    clearMarkers() {
+      this.markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      this.markers = [];
+    },
     addKakaoEvent(type) {
       kakao.maps.event.addListener(this.map, type, () => {
         let level = this.map.getLevel();
+        this.clearMarkers();
 
         if (level >= DEALYEAR_GUGUN_LIMIT) {
           // this.getGugunMarkers();
+          this.clearApts();
           this.getMarkers(gugunMarkerInfo, false);
         } else if (level >= DEALYEAR_DONG_LIMIT) {
           // this.getDongMarkers();
+          this.clearApts();
           this.getMarkers(dongMarkerInfo, true);
         } else {
           var bounds = this.map.getBounds();
