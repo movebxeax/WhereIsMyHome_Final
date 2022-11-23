@@ -55,6 +55,9 @@ export default {
       },
     },
     dong() {
+      if (this.dong) {
+        console.log(this.dong);
+      }
       this.changeCenterMap();
     },
   },
@@ -73,6 +76,9 @@ export default {
   },
   created() {
     this.clearApt();
+    if (this.inputDongcode) {
+      this.setDong(this.searchOptions.find((dong) => dong.dongcode === this.inputDongcode));
+    }
   },
   methods: {
     ...mapActions(tradeStore, [
@@ -125,7 +131,7 @@ export default {
       });
 
       // 확대, 축소 이벤트
-      kakao.maps.event.addListener(this.map, "zoom_changed", () => {
+      kakao.maps.event.addListener(this.map, "idle", () => {
         let level = this.map.getLevel();
 
         if (level >= DEALYEAR_GUGUN_LIMIT) {
@@ -152,6 +158,7 @@ export default {
       this.getAptListWithCds(params);
     },
     changeCenterMap() {
+      console.log("change center");
       let moveLatLon = new kakao.maps.LatLng(this.dong.lat, this.dong.lng);
       this.map.panTo(moveLatLon);
     },

@@ -224,8 +224,6 @@ export default {
     curFilterOptions: {
       deep: true,
       handler() {
-        console.log(this.curFilterOptions.buildYear);
-        console.log("setFilter Call");
         this.setFilterOptions(this.curFilterOptions);
       },
     },
