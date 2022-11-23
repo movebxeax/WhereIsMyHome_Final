@@ -117,6 +117,11 @@ const routes = [
     component: UserView,
     children: [
       {
+        path: "interest",
+        name: "interest",
+        component: () => import("@/components/user/InterestList.vue"),
+      },
+      {
         path: "modify",
         name: "modify",
         component: () => import("@/components/user/UserInfoTab.vue"),

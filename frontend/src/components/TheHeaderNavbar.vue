@@ -26,6 +26,9 @@
               <v-list-item-title @click="$router.push('/user/modify')">마이 페이지</v-list-item-title>
             </v-list-item>
             <v-list-item link>
+              <v-list-item-title @click="$router.push('/user/interest')">즐겨찾기 목록</v-list-item-title>
+            </v-list-item>
+            <v-list-item link>
               <v-list-item-title @click="$router.push('/user/signout')">로그아웃</v-list-item-title>
             </v-list-item>
           </v-list>
