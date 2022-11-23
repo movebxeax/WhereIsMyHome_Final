@@ -35,7 +35,15 @@ export default {
   components: { TradeSideBar },
 
   computed: {
-    ...mapGetters(tradeStore, ["apts", "dong", "apt", "searchOptions", "filterOptions", "aptsByFilter"]),
+    ...mapGetters(tradeStore, [
+      "apts",
+      "dong",
+      "apt",
+      "searchOptions",
+      "filterOptions",
+      "aptsByFilter",
+      "inputDongcode",
+    ]),
   },
   watch: {
     apts: {
@@ -51,15 +59,6 @@ export default {
     },
   },
   mounted() {
-    // window.addEventListener("load", () => {
-    //   const script = document.createElement("script");
-    //   /* global kakao */
-    //   script.onload = () => kakao.maps.load(this.initMap);
-    //   //   script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=" + process.env.VUE_APP_KAKAO_MAP_KEY +"&libraries=services,clusterer";
-    //   script.src =
-    //     "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=980bea8bcd07009e77637df27e1433d7&libraries=services,clusterer";
-    //   document.body.appendChild(script);
-    // });
     if (window.kakao && window.kakao.maps) {
       this.initMap();
     } else {
@@ -72,13 +71,23 @@ export default {
       document.body.appendChild(script);
     }
   },
+  created() {
+    this.clearApt();
+  },
   methods: {
-    ...mapActions(tradeStore, ["getAptListWithCds", "getApt", "getAptList", "clearAptList", "setDong", "setApt"]),
+    ...mapActions(tradeStore, [
+      "getAptListWithCds",
+      "getApt",
+      "getAptList",
+      "clearAptList",
+      "setDong",
+      "setApt",
+      "clearApt",
+    ]),
     initMap() {
       const container = document.getElementById("map");
       const options = {
         center: new kakao.maps.LatLng(37.501929614341925, 127.03899430413212),
-
         level: 3,
       };
       //지도 객체를 등록합니다.

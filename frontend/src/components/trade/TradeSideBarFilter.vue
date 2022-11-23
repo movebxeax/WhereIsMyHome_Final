@@ -4,8 +4,50 @@
     <v-container>
       <v-row dense>
         <v-col>
-          <v-card>
-            <v-autocomplete
+          <v-row justify="center" align="center">
+            <v-col class="pa-0 mr-2" cols="10">
+              <v-autocomplete
+                :value="inputDongcode"
+                @input="setInputDongcode"
+                :items="searchOptions"
+                :loading="isLoading"
+                :search-input.sync="searchKeyword"
+                clearable
+                hide-details
+                hide-selected
+                item-text="address"
+                item-value="dongcode"
+                label="검색어를 입력하세요"
+                solo
+                rounded
+              >
+                <template v-slot:no-data>
+                  <v-list-item>
+                    <v-list-item-title>
+                      검색어를 입력하세요.
+                      <strong> (역삼동, 종로구)</strong>
+                    </v-list-item-title>
+                  </v-list-item>
+                </template>
+                <template v-slot:selection="{ attr, on, item, selected }">
+                  <v-chip v-bind="attr" :input-value="selected" color="blue-grey" class="white--text" v-on="on" justif>
+                    <span v-text="item.address"></span>
+                  </v-chip>
+                </template>
+                <template v-slot:item="{ item }">
+                  <v-list-item-content>
+                    <v-list-item-title v-text="item.address"></v-list-item-title>
+                  </v-list-item-content>
+                </template>
+              </v-autocomplete>
+            </v-col>
+            <v-col cols="1" class="pa-0 ma-0">
+              <v-btn small rounded @click="onSearch">
+                <v-icon color="primary">mdi-magnify</v-icon>
+              </v-btn>
+            </v-col>
+          </v-row>
+          <!-- <v-autocomplete
               :value="inputDongcode"
               @input="setInputDongcode"
               :items="searchOptions"
@@ -43,8 +85,7 @@
                   <v-icon color="primary" @click="onSearch">mdi-magnify</v-icon>
                 </v-slide-x-reverse-transition>
               </template>
-            </v-autocomplete>
-          </v-card>
+            </v-autocomplete> -->
         </v-col>
       </v-row>
 

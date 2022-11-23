@@ -1,14 +1,12 @@
 <template>
   <div class="ma-10">
     <!-- <v-card class="ma-9" elevation="10" color="transparent" outlined> -->
-    <v-container>
+    <v-container fill-height>
       <v-row style="height: 15vh">
         <v-col class="pa-auto ma-auto" cols="12" sm="6" md="4"> Happy House Logo Here </v-col>
       </v-row>
-      <v-row class="d-flex flex-wrap" style="height: 15vh">
-        <v-col class="pa-auto ma-auto" cols="12" sm="8" md="4">
-          <!-- <v-text-field class="text-field-class" color="grey lighten-43" placeholder="가격이 궁금한 지역을 입력해보세요"
-            append-icon="mdi-magnify" solo rounded large></v-text-field> -->
+      <v-row style="height: 15vh" justify="center" align="center">
+        <v-col class="pa-0 ma-0" cols="11" sm="8" md="4">
           <v-autocomplete
             class="text-field-class"
             color="grey lighten-43"
@@ -25,7 +23,6 @@
             label="가격이 궁금한 지역을 입력해보세요."
             solo
             rounded
-            large
           >
             <template v-slot:no-data>
               <v-list-item>
@@ -36,7 +33,7 @@
               </v-list-item>
             </template>
             <template v-slot:selection="{ attr, on, item, selected }">
-              <v-chip v-bind="attr" :input-value="selected" color="blue-grey" class="white--text" v-on="on">
+              <v-chip v-bind="attr" :input-value="selected" color="blue-grey" class="white--text" v-on="on" justif>
                 <span v-text="item.address"></span>
               </v-chip>
             </template>
@@ -45,12 +42,12 @@
                 <v-list-item-title v-text="item.address"></v-list-item-title>
               </v-list-item-content>
             </template>
-            <template v-slot:append>
-              <v-slide-x-reverse-transition mode="out-in">
-                <v-icon color="primary" @click="moveTrade">mdi-magnify</v-icon>
-              </v-slide-x-reverse-transition>
-            </template>
           </v-autocomplete>
+        </v-col>
+        <v-col cols="auto" class="pa-1 ma-1">
+          <v-btn rounded @click="moveTrade">
+            <v-icon color="primary">mdi-magnify</v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -83,9 +80,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions(tradeStore, ["getSearchOptionList", "setInputDongcode"]),
+    ...mapActions(tradeStore, ["getSearchOptionList", "setInputDongcode", "clearApt", "clearInputDongcode"]),
     moveTrade() {
-      console.log(this.inputDongcode);
       if (!this.inputDongcode) {
         alert("검색어를 입력하세요.");
         return;
@@ -93,12 +89,14 @@ export default {
       this.$router.push("/trade");
     },
   },
+  created() {
+    this.clearInputDongcode();
+  },
 };
 </script>
 
 <style scoped>
 .text-field-class >>> input {
-  text-align: center;
   font-size: 20px;
 }
 

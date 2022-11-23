@@ -3,7 +3,7 @@ import { aptList, aptListWithCds, searchOptionList, aptInfo } from "@/api/trade"
 const tradeStore = {
   namespaced: true,
   state: {
-    apt: {},
+    apt: null,
     apts: [],
     dong: {},
     inputDongcode: "",
@@ -82,23 +82,26 @@ const tradeStore = {
     SET_APT_LIST(state, apts) {
       state.apts = apts;
     },
-    CLEAT_APT_LIST(state) {
-      state.apts = [];
-    },
     SET_DONG(state, dong) {
       state.dong = dong;
     },
     SET_APT(state, apt) {
       state.apt = apt;
     },
-    CLEAR_APT(state) {
-      state.apt = {};
-    },
     SET_FILTER_OPTIONS(state, filterOptions) {
       state.filterOptions = filterOptions;
     },
     SET_INPUT_DONGCODE(state, dongcode) {
       state.inputDongcode = dongcode;
+    },
+    CLEAT_APT_LIST(state) {
+      state.apts = [];
+    },
+    CLEAR_APT(state) {
+      state.apt = null;
+    },
+    CLEAT_INPUT_DONGCODE(state) {
+      state.inputDongcode = "";
     },
   },
   actions: {
@@ -166,6 +169,9 @@ const tradeStore = {
     },
     clearApt: ({ commit }) => {
       commit("CLEAR_APT");
+    },
+    clearInputDongcode: ({ commit }) => {
+      commit("CLEAT_INPUT_DONGCODE");
     },
   },
 };

@@ -3,7 +3,7 @@
     <template v-if="isShow">
       <div class="side-bar">
         <trade-side-bar-filter class="ml-2 mr-2 mt-2"></trade-side-bar-filter>
-        <trade-side-bar-apt v-if="apt != null"></trade-side-bar-apt>
+        <trade-side-bar-apt v-if="apt"></trade-side-bar-apt>
       </div>
     </template>
     <button id="trade-side-bar-active-btn" @click="toggleSide">
