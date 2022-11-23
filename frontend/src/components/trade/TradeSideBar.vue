@@ -2,7 +2,7 @@
   <div class="side-bar-wrapper">
     <template v-if="isShow">
       <div class="side-bar">
-        <trade-side-bar-filter></trade-side-bar-filter>
+        <trade-side-bar-filter class="ml-2 mr-2 mt-2"></trade-side-bar-filter>
         <trade-side-bar-apt v-if="apt != null"></trade-side-bar-apt>
       </div>
     </template>
@@ -57,6 +57,7 @@ export default {
 .side-bar-wrapper {
   background-color: white;
   overflow: scroll;
+
   // overflow-x: auto;
   .side-bar {
     opacity: 90%;
@@ -82,5 +83,15 @@ export default {
   border-left: 1px solid gray;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
+}
+
+.side-bar-wrapper::-webkit-scrollbar {
+  width: 3px;
+  height: 8px;
+  /*background-color: #aaa*/
+}
+
+.side-bar-wrapper::-webkit-scrollbar-thumb {
+  background: #aaa
 }
 </style>

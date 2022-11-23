@@ -4,7 +4,24 @@
       <v-row dense>
         <v-col>
           <v-card color="primary" dark>
-            <v-card-title>{{ this.apt.aptName }}</v-card-title>
+            <v-card-title>
+              <div class="interest-btn-container">
+                <div v-if="isLogin">
+                  <v-btn :ripple="false" icon class="interest-btn" id="interest-btn" v-if="!interested"
+                    @click="markInterested(apt.aptCode)">
+                    <v-icon>mdi-heart-outline</v-icon>
+                  </v-btn>
+                  <v-btn :ripple="false" icon color="red" class="interest-btn" id="interest-btn" v-else
+                    @click="unmarkInterested(apt.aptCode)">
+                    <v-icon>mdi-heart</v-icon>
+                  </v-btn>
+                </div>
+
+
+
+              </div>
+              {{ this.apt.aptName }}
+            </v-card-title>
             <v-card-subtitle class="text-left subtitle-2 pb-0">| {{ this.apt.buildYear }}년 준공</v-card-subtitle>
             <v-card-text class="text-left subtitle-2">| {{ this.address }} </v-card-text>
           </v-card>
@@ -28,33 +45,26 @@
                 {{ detail.area }}
               </v-tab>
             </v-tabs>
-
             <v-tabs-items v-model="tab">
               <v-tab-item v-for="detail in apt.details" :key="detail.area">
                 <v-row dense>
                   <v-col>
-                    <v-card>
-                      <v-card-title class="text-left h6 font-weight-bold pb-0 mb-0"> 그래프 </v-card-title>
+                    <v-card flat>
+                      <v-card-title class="text-left h6 font-weight-bold ml-1 pb-0 mb-0">그래프</v-card-title>
                       <trade-side-bar-graph :priceInfoList="detail.priceInfoList"></trade-side-bar-graph>
                     </v-card>
                   </v-col>
                 </v-row>
+                <v-divider></v-divider>
                 <v-row dense>
                   <v-col>
-                    <v-card>
-                      <v-card-title class="text-left h6 font-weight-bold"> 거래내역 </v-card-title>
-                      <v-data-table
-                        dense
-                        multi-sort
-                        :sort-by="['dealYear', 'dealMonth']"
-                        :sort-desc="[true, true]"
+                    <v-card flat>
+                      <v-card-title class="text-left h6 font-weight-bold ml-0">거래내역</v-card-title>
+                      <v-data-table dense multi-sort :sort-by="['dealYear', 'dealMonth']" :sort-desc="[true, true]"
                         :footer-props="{
                           showFirstLastPage: true,
                           itemsPerPageOptions: [],
-                        }"
-                        :headers="priceInfoHeaders"
-                        :items="detail.priceInfoList"
-                      ></v-data-table>
+                        }" :headers="priceInfoHeaders" :items="detail.priceInfoList" class="ml-2 mr-2"></v-data-table>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -70,13 +80,18 @@
 <script>
 import { mapGetters } from "vuex";
 import TradeSideBarGraph from "@/components/trade/TradeSideBarGraph.vue";
+import { apiInterest } from "@/api/index.js"
 
 const tradeStore = "tradeStore";
+const userStore = "userStore";
+const apiInterestFunc = apiInterest();
+
 export default {
   components: { TradeSideBarGraph },
   name: "TradeSideBarApt",
   computed: {
     ...mapGetters(tradeStore, ["apt"]),
+    ...mapGetters(userStore, ["isLogin"]),
   },
   data() {
     return {
@@ -92,6 +107,7 @@ export default {
         { text: "월", value: "dealMonth" },
         { text: "금액 (만 원)", value: "price" },
       ],
+      interested: false,
     };
   },
   methods: {
@@ -131,6 +147,22 @@ export default {
         }
       });
     },
+    isInterested(aptCode) {
+      apiInterestFunc.get(`/${aptCode}`)
+        .then(({ data }) => data.addedDate != null ? this.interested = true : this.interested = false)
+    },
+    markInterested(aptCode) {
+      apiInterestFunc.post(`/${aptCode}`)
+        .then(() => alert("관심지역 등록 성공!"))
+        .then(() => this.isInterested(aptCode))
+        .catch(() => alert("관심지역 등록 실패!"));
+    },
+    unmarkInterested(aptCode) {
+      apiInterestFunc.delete(`/${aptCode}`)
+        .then(() => alert("관심지역 삭제 성공!"))
+        .then(() => this.isInterested(aptCode))
+        .catch(() => alert("관심지역 삭제 실패!"));
+    }
   },
   updated() {
     if (this.roadview === null && this.apt !== null) {
@@ -149,4 +181,19 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.interest-btn-container {
+  position: absolute;
+  right: 4%;
+  top: 13%;
+}
+
+.interest-btn:hover {
+  background-color: transparent !important;
+}
+
+.interest-btn::before {
+  background-color: transparent !important;
+  display: none;
+}
+</style>

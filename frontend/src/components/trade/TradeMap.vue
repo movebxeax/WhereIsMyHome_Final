@@ -1,6 +1,6 @@
 <template>
   <div class="ma-10" rounded-xl>
-    <v-card outlined color="grey">
+    <v-card outlined>
       <v-row no-gutters>
         <v-col cols="auto">
           <trade-side-bar class="sideBar" @mapRelayout="mapRelayout"></trade-side-bar>

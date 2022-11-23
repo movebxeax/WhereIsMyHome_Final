@@ -133,4 +133,13 @@ function apiUser() {
   return instance;
 }
 
-export { apiQna, apiTrade, apiAddress, apiNotice, apiUser };
+function apiInterest() {
+  let instance = axios.create({
+    //baseURL: base + "/api/user",
+    baseURL: "http://localhost:8080" + "/api/interest",
+  });
+  attachInterceptor(instance);
+  return instance;
+}
+
+export { apiQna, apiTrade, apiAddress, apiNotice, apiUser, apiInterest };
