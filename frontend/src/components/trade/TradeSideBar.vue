@@ -92,6 +92,6 @@ export default {
 }
 
 .side-bar-wrapper::-webkit-scrollbar-thumb {
-  background: #aaa
+  background: #aaa;
 }
 </style>

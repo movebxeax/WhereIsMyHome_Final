@@ -7,18 +7,28 @@
             <v-card-title>
               <div class="interest-btn-container">
                 <div v-if="isLogin">
-                  <v-btn :ripple="false" icon class="interest-btn" id="interest-btn" v-if="!interested"
-                    @click="markInterested(apt.aptCode)">
+                  <v-btn
+                    :ripple="false"
+                    icon
+                    class="interest-btn"
+                    id="interest-btn"
+                    v-if="!interested"
+                    @click="markInterested(apt.aptCode)"
+                  >
                     <v-icon>mdi-heart-outline</v-icon>
                   </v-btn>
-                  <v-btn :ripple="false" icon color="red" class="interest-btn" id="interest-btn" v-else
-                    @click="unmarkInterested(apt.aptCode)">
+                  <v-btn
+                    :ripple="false"
+                    icon
+                    color="red"
+                    class="interest-btn"
+                    id="interest-btn"
+                    v-else
+                    @click="unmarkInterested(apt.aptCode)"
+                  >
                     <v-icon>mdi-heart</v-icon>
                   </v-btn>
                 </div>
-
-
-
               </div>
               {{ this.apt.aptName }}
             </v-card-title>
@@ -60,11 +70,19 @@
                   <v-col>
                     <v-card flat>
                       <v-card-title class="text-left h6 font-weight-bold ml-0">거래내역</v-card-title>
-                      <v-data-table dense multi-sort :sort-by="['dealYear', 'dealMonth']" :sort-desc="[true, true]"
+                      <v-data-table
+                        dense
+                        multi-sort
+                        :sort-by="['dealYear', 'dealMonth']"
+                        :sort-desc="[true, true]"
                         :footer-props="{
                           showFirstLastPage: true,
                           itemsPerPageOptions: [],
-                        }" :headers="priceInfoHeaders" :items="detail.priceInfoList" class="ml-2 mr-2">
+                        }"
+                        :headers="priceInfoHeaders"
+                        :items="detail.priceInfoList"
+                        class="ml-2 mr-2"
+                      >
                         <template v-slot:[`item.price`]="{ item }">
                           {{ priceFormatterWrapper(item.price) }}
                         </template>
@@ -153,17 +171,20 @@ export default {
       });
     },
     isInterested(aptCode) {
-      apiInterestFunc.get(`/${aptCode}`)
-        .then(({ data }) => data.addedDate != null ? this.interested = true : this.interested = false)
+      apiInterestFunc
+        .get(`/${aptCode}`)
+        .then(({ data }) => (data.addedDate != null ? (this.interested = true) : (this.interested = false)));
     },
     markInterested(aptCode) {
-      apiInterestFunc.post(`/${aptCode}`)
+      apiInterestFunc
+        .post(`/${aptCode}`)
         .then(() => alert("관심지역 등록 성공!"))
         .then(() => this.isInterested(aptCode))
         .catch(() => alert("관심지역 등록 실패!"));
     },
     unmarkInterested(aptCode) {
-      apiInterestFunc.delete(`/${aptCode}`)
+      apiInterestFunc
+        .delete(`/${aptCode}`)
         .then(() => alert("관심지역 삭제 성공!"))
         .then(() => this.isInterested(aptCode))
         .catch(() => alert("관심지역 삭제 실패!"));
@@ -189,7 +210,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped>
 .interest-btn-container {
   position: absolute;
   right: 4%;
@@ -203,5 +224,18 @@ export default {
 .interest-btn::before {
   background-color: transparent !important;
   display: none;
+}
+
+.v-data-table >>> thead > tr > th {
+  font-size: 1.1rem !important;
+  vertical-align: middle;
+  text-align: center !important;
+  justify-content: space-between;
+}
+
+.v-data-table >>> tbody > tr > td {
+  font-size: 0.9rem !important;
+  vertical-align: middle;
+  text-align: center !important;
 }
 </style>

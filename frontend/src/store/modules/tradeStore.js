@@ -6,6 +6,7 @@ const tradeStore = {
     apt: {},
     apts: [],
     dong: {},
+    inputDongcode: "",
     searchOptions: [],
     filterOptions: {
       area: { min: 0, max: 200, range: [0, 200] },
@@ -16,6 +17,9 @@ const tradeStore = {
   getters: {
     apt(state) {
       return state.apt;
+    },
+    inputDongcode(state) {
+      return state.inputDongcode;
     },
     apts(state) {
       let limitBuildyear = new Date().getFullYear() - state.filterOptions.buildYear;
@@ -93,6 +97,9 @@ const tradeStore = {
     SET_FILTER_OPTIONS(state, filterOptions) {
       state.filterOptions = filterOptions;
     },
+    SET_INPUT_DONGCODE(state, dongcode) {
+      state.inputDongcode = dongcode;
+    },
   },
   actions: {
     setFilterOptions: ({ commit }, filterOptions) => {
@@ -114,6 +121,9 @@ const tradeStore = {
           console.log(error);
         }
       );
+    },
+    setInputDongcode: ({ commit }, dongcode) => {
+      commit("SET_INPUT_DONGCODE", dongcode);
     },
     getSearchOptionList: ({ commit }, keyword) => {
       const params = {

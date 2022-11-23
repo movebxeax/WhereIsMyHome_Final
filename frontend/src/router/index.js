@@ -17,6 +17,7 @@ const routes = [
   {
     path: "/trade",
     name: "trade",
+    props: true,
     component: TradeView,
   },
   {
