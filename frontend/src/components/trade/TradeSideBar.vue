@@ -2,7 +2,10 @@
   <div class="side-bar-wrapper">
     <template v-if="isShow">
       <div class="side-bar">
-        <trade-side-bar-filter class="ml-2 mr-2 mt-2"></trade-side-bar-filter>
+        <trade-side-bar-filter
+          @changeCenterBySearch="changeCenterBySearch"
+          class="ml-2 mr-2 mt-2"
+        ></trade-side-bar-filter>
         <trade-side-bar-apt v-if="apt"></trade-side-bar-apt>
       </div>
     </template>
@@ -43,10 +46,12 @@ export default {
       this.isShow = true;
       this.$emit("mapRelayout");
     },
+    changeCenterBySearch() {
+      this.$emit("changeCenterBySearch");
+    },
   },
   watch: {
     apt() {
-      // console.log(this.apt);
       this.showSide();
     },
   },
@@ -58,13 +63,9 @@ export default {
   background-color: white;
   overflow: scroll;
 
-  // overflow-x: auto;
   .side-bar {
     opacity: 90%;
     width: 400px;
-    // position: relative;
-    // height: 100%;
-    // display: flex;
   }
 }
 

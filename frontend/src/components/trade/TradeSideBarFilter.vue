@@ -196,7 +196,6 @@ export default {
     return {
       filterTab: null,
       filterTabItems: [
-        // { title: "거래연도", value: "dealyear" },
         { title: "가격", value: "price" },
         { title: "면적", value: "area" },
         { title: "준공년도", value: "buildYear" },
@@ -220,7 +219,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(tradeStore, ["searchOptions", "apts", "inputDongcode"]),
+    ...mapGetters(tradeStore, ["searchOptions", "apts", "inputDongcode", "dong"]),
     minPrice() {
       return this.curFilterOptions.price.range[0] / 100000000;
     },
@@ -247,7 +246,6 @@ export default {
   methods: {
     ...mapActions(tradeStore, [
       "getSearchOptionList",
-      "getAptList",
       "clearAptList",
       "setDong",
       "setFilterOptions",
@@ -258,22 +256,11 @@ export default {
         alert("검색어를 입력하세요.");
         return;
       }
-      console.log(this.inputDongcode);
-      if (!this.dong || (this.dong && this.dong.dongcode !== this.inputDongcode)) {
-        console.log("hello");
-        this.setDong(this.searchOptions.find((dong) => dong.dongcode === this.inputDongcode));
-        this.getAptList(this.inputDongcode);
-      }
+
+      // 좌표 이동으로 리스트 조회하도록 함
+      this.setDong(this.searchOptions.find((dong) => dong.dongcode == this.inputDongcode));
+      this.$emit("changeCenterBySearch");
     },
-  },
-  created() {
-    // if (this.curFilterOptions == null) {
-    //   this.curFilterOptions = {
-    //     area: { min: 0, max: 200, range: [0, 200] },
-    //     price: { min: 0, max: 5000000000, range: [0, 5000000000] },
-    //     buildYear: 100,
-    //   };
-    // }
   },
 };
 </script>

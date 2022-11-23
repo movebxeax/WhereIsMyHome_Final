@@ -3,7 +3,11 @@
     <v-card outlined>
       <v-row no-gutters>
         <v-col cols="auto">
-          <trade-side-bar class="sideBar" @mapRelayout="mapRelayout"></trade-side-bar>
+          <trade-side-bar
+            class="sideBar"
+            @mapRelayout="mapRelayout"
+            @changeCenterBySearch="changeCenterMap"
+          ></trade-side-bar>
         </v-col>
         <v-col>
           <div id="map"></div>
@@ -21,6 +25,9 @@ const tradeStore = "tradeStore";
 
 const DEALYEAR_DONG_LIMIT = 5;
 const DEALYEAR_GUGUN_LIMIT = 7;
+const INITIAL_DONGCODE = 1171010500;
+const INITIAL_LAT = 37.503517;
+const INITIAL_LNG = 127.1035697;
 
 export default {
   name: "TradeMap",
@@ -53,17 +60,6 @@ export default {
           this.updateMap();
         }
       },
-    },
-    dong(newValue, oldValue) {
-      // if (this.dong) {
-      //   console.log(this.dong);
-      // }
-      // if (newValue.dongcode != oldValue.dongcode) {
-      //   this.changeCenterMap();
-      // }
-      console.log(newValue);
-      console.log(oldValue);
-      this.changeCenterMap();
     },
   },
   mounted() {
@@ -102,7 +98,7 @@ export default {
     initMap() {
       const container = document.getElementById("map");
       const options = {
-        center: new kakao.maps.LatLng(37.50527532817957, 127.10704684166419),
+        center: new kakao.maps.LatLng(INITIAL_LAT, INITIAL_LNG),
         level: 4,
       };
       //지도 객체를 등록합니다.
@@ -126,17 +122,12 @@ export default {
       // 확대, 축소, 센터 변경 이벤트
       this.addKakaoEvent("idle");
 
-      if (this.dong) {
+      // 동이 있으면 해당 동 조회 없으면 초기 지역 조회
+      if (this.dong && this.dong.dongcode != INITIAL_DONGCODE) {
         this.changeCenterMap();
+      } else {
+        this.getAptList(INITIAL_DONGCODE);
       }
-      // 초기 지역 조회
-      // var bounds = this.map.getBounds();
-      // var swLatlng = bounds.getSouthWest();
-      // var neLatlng = bounds.getNorthEast();
-
-      // const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
-      // this.clearMarkers();
-      // this.getAptListWithCds(params);
     },
     changeCenterMap() {
       if (window.kakao && window.kakao.maps) {
@@ -148,14 +139,6 @@ export default {
     updateMap() {
       // 레벨이 6이상이면 아파트 마커 사용 X
       let level = this.map.getLevel();
-
-      // if (level >= DEALYEAR_DONG_LIMIT) {
-      //   if (this.apts.length > 0) {
-      //     this.clearAptList();
-      //   }
-      //   this.getDongMarkers();
-      //   return;
-      // }
 
       if (level >= DEALYEAR_GUGUN_LIMIT) {
         if (this.apts.length > 0) {
