@@ -235,7 +235,6 @@ export default {
 
       this.getSearchOptionList(this.searchKeyword).finally(() => (this.isLoading = false));
     },
-
     curFilterOptions: {
       deep: true,
       handler() {

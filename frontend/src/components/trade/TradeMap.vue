@@ -116,10 +116,10 @@ export default {
       let zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
-      // 드래그 이벤트
+      // 드래그 이벤트 등록
       this.addKakaoEvent("dragend");
 
-      // 확대, 축소, 센터 변경 이벤트
+      // 확대, 축소, 센터 변경 이벤트 등록
       this.addKakaoEvent("idle");
 
       // 동이 있으면 해당 동 조회 없으면 초기 지역 조회
@@ -144,13 +144,15 @@ export default {
         if (this.apts.length > 0) {
           this.clearAptList();
         }
-        this.getGugunMarkers();
+        // this.getGugunMarkers();
+        this.getMarkers(gugunMarkerInfo, false);
         return;
       } else if (level >= DEALYEAR_DONG_LIMIT) {
         if (this.apts.length > 0) {
           this.clearAptList();
         }
-        this.getDongMarkers();
+        // this.getDongMarkers();
+        this.getMarkers(dongMarkerInfo, true);
         return;
       }
       // 초기화
@@ -177,102 +179,7 @@ export default {
         this.markers.push(marker);
       });
     },
-    getDongMarkers() {
-      // 마커 데이터 갱신
-      this.clearMarkers();
-      let bounds = this.map.getBounds();
-      let swLatlng = bounds.getSouthWest();
-      let neLatlng = bounds.getNorthEast();
 
-      const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
-      dongMarkerInfo(
-        params,
-        ({ data }) => {
-          // 커스텀 오버레이 생성
-          data.forEach((dong) => {
-            let content =
-              `<div class="customoverlay" id="${dong.dongCode}" style="background:white; cursor:pointer;">` +
-              `<div class="customoverlay-dong">` +
-              `        <span class="customoverlay-dong-count">${dong.aptCount}</span>` +
-              `        <span class="customoverlay-dong-name">${dong.dongName}</span>` +
-              `</div>` +
-              "</div>";
-
-            // 커스텀 오버레이가 표시될 위치입니다
-            let position = new kakao.maps.LatLng(dong.lat, dong.lng);
-
-            // 커스텀 오버레이를 생성합니다
-            let customOverlay = new kakao.maps.CustomOverlay({
-              map: this.map,
-              position: position,
-              content: content,
-              yAnchor: 1,
-            });
-
-            // 커스텀 오버레이 클릭 이벤트 설정
-
-            const close = document.getElementById(dong.dongCode);
-            close.onclick = () => {
-              let moveLatLon = new kakao.maps.LatLng(dong.lat, dong.lng);
-              this.map.panTo(moveLatLon);
-              this.map.setLevel(3);
-            };
-
-            this.markers.push(customOverlay);
-          });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
-    getGugunMarkers() {
-      // 마커 데이터 갱신
-      this.clearMarkers();
-      let bounds = this.map.getBounds();
-      let swLatlng = bounds.getSouthWest();
-      let neLatlng = bounds.getNorthEast();
-
-      const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
-      gugunMarkerInfo(
-        params,
-        ({ data }) => {
-          // 커스텀 오버레이 생성
-          data.forEach((gugun) => {
-            let content =
-              `<div class="customoverlay" id="${gugun.gugunCode}" style="background:white; cursor:pointer">` +
-              `<div class="customoverlay-gugun">` +
-              `    <div class="customoverlay-gugun-name">${gugun.gugunName}</div>` +
-              `</div>` +
-              "</div>";
-
-            // 커스텀 오버레이가 표시될 위치입니다
-            let position = new kakao.maps.LatLng(gugun.lat, gugun.lng);
-
-            // 커스텀 오버레이를 생성합니다
-            let customOverlay = new kakao.maps.CustomOverlay({
-              map: this.map,
-              position: position,
-              content: content,
-              yAnchor: 1,
-            });
-
-            // 커스텀 오버레이 클릭 이벤트 설정
-            const close = document.getElementById(gugun.gugunCode);
-            close.onclick = () => {
-              let moveLatLon = new kakao.maps.LatLng(gugun.lat, gugun.lng);
-              this.map.panTo(moveLatLon);
-              this.map.setLevel(DEALYEAR_DONG_LIMIT);
-            };
-
-            this.markers.push(customOverlay);
-          });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    },
     clearMarkers() {
       this.markers.forEach((marker) => {
         marker.setMap(null);
@@ -284,14 +191,72 @@ export default {
         this.map.relayout();
       }, 100);
     },
+    getMarkers(getMarkerInfo, isDong) {
+      // 마커 데이터 갱신
+      this.clearMarkers();
+      let bounds = this.map.getBounds();
+      let swLatlng = bounds.getSouthWest();
+      let neLatlng = bounds.getNorthEast();
+
+      const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+      getMarkerInfo(
+        params,
+        ({ data }) => {
+          // 커스텀 오버레이 생성
+          data.forEach((detail) => {
+            let content = "";
+            if (isDong) {
+              content = this.getDongOverlay(detail);
+            } else {
+              content = this.getGugunOverlay(detail);
+            }
+
+            // 커스텀 오버레이가 표시될 위치입니다
+            let position = new kakao.maps.LatLng(detail.lat, detail.lng);
+
+            // 커스텀 오버레이를 생성합니다
+            let customOverlay = new kakao.maps.CustomOverlay({
+              map: this.map,
+              position: position,
+              content: content,
+              yAnchor: 1,
+            });
+
+            // 커스텀 오버레이 클릭 이벤트 설정
+            let close = null;
+            if (isDong) {
+              close = document.getElementById(detail.dongCode);
+            } else {
+              close = document.getElementById(detail.gugunCode);
+            }
+            close.onclick = () => {
+              let moveLatLon = new kakao.maps.LatLng(detail.lat, detail.lng);
+              this.map.panTo(moveLatLon);
+              if (isDong) {
+                this.map.setLevel(3);
+              } else {
+                this.map.setLevel(DEALYEAR_DONG_LIMIT);
+              }
+            };
+
+            this.markers.push(customOverlay);
+          });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
     addKakaoEvent(type) {
       kakao.maps.event.addListener(this.map, type, () => {
         let level = this.map.getLevel();
 
         if (level >= DEALYEAR_GUGUN_LIMIT) {
-          this.getGugunMarkers();
+          // this.getGugunMarkers();
+          this.getMarkers(gugunMarkerInfo, false);
         } else if (level >= DEALYEAR_DONG_LIMIT) {
-          this.getDongMarkers();
+          // this.getDongMarkers();
+          this.getMarkers(dongMarkerInfo, true);
         } else {
           var bounds = this.map.getBounds();
           var swLatlng = bounds.getSouthWest();
@@ -301,6 +266,25 @@ export default {
           this.getAptListWithCds(params);
         }
       });
+    },
+    getDongOverlay(dong) {
+      const content =
+        `<div class="customoverlay" id="${dong.dongCode}" style="background:white; cursor:pointer;">` +
+        `<div class="customoverlay-dong">` +
+        `        <span class="customoverlay-dong-count">${dong.aptCount}</span>` +
+        `        <span class="customoverlay-dong-name">${dong.dongName}</span>` +
+        `</div>` +
+        "</div>";
+      return content;
+    },
+    getGugunOverlay(gugun) {
+      const content =
+        `<div class="customoverlay" id="${gugun.gugunCode}" style="background:white; cursor:pointer">` +
+        `<div class="customoverlay-gugun">` +
+        `    <div class="customoverlay-gugun-name">${gugun.gugunName}</div>` +
+        `</div>` +
+        "</div>";
+      return content;
     },
   },
 };
