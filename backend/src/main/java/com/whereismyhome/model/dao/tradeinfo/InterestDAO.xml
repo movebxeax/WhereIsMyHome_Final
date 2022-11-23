@@ -12,12 +12,14 @@
 				) limit 1;
 	</insert>
 	
-	<select id="selectInterestInfos" parameterType="string" resultType="InterestInfo">
+	<select id="selectInterestInfos" parameterType="string" resultMap="com.whereismyhome.resultmaps.TradeInfoSpecMap">
 		select
-			aptCode, added_date as addedDate
-		from interest
-		where userid = #{userid}
-		order by added_date
+			hi.buildyear, hi.aptcode, hi.dongcode, hi.aptname, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth, hi.lat, hi.lng
+		from housedeal as hd
+		join houseinfo as hi on hd.aptcode=hi.aptcode
+        join interest as i on i.aptcode = hi.aptcode
+		where i.userid=#{userid}
+		order by area, dealyear, dealmonth; 
 	</select>
 	
 	<delete id="deleteInterestInfo" parameterType="map">
