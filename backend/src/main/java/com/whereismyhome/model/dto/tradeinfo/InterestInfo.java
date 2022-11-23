@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 public class InterestInfo {
 	@NonNull
 	private String userid;
-	private String sido;
-	private String gugun;
-	private String dong;	
+	private String aptCode;
+	private String addedDate;
 }

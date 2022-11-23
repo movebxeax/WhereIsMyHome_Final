@@ -3,18 +3,34 @@
 
 <mapper namespace="com.whereismyhome.model.dao.tradeinfo.InterestDAO">
 	
-	<insert id="addInterestInfo" parameterType="InterestInfo">
-		insert into interest(userid, sido, gugun, dong)
-		values (#{userid}, #{sido}, #{gugun}, #{dong})
-		on duplicate key update
-		sido = #{sido}, gugun = #{gugun}, dong = #{dong}
+	<insert id="insertInterestInfo" parameterType="map">
+		insert into
+			interest (userid, aptcode)
+			select * from (select #{userid}, #{aptCode}) as tmp
+				where not exists (
+					select aptcode from interest where aptcode = #{aptCode}
+				) limit 1;
 	</insert>
 	
-	<select id="getInterestInfo" parameterType="string" resultMap="com.whereismyhome.resultmaps.InterestInfoResultMap">
-		select sido, gugun, dong
+	<select id="selectInterestInfos" parameterType="string" resultType="InterestInfo">
+		select
+			aptCode, added_date as addedDate
 		from interest
 		where userid = #{userid}
+		order by added_date
 	</select>
 	
-
+	<delete id="deleteInterestInfo" parameterType="map">
+		delete from
+			interest
+		where
+			userid=#{userid} and aptcode=#{aptCode}
+	</delete>
+	
+	<select id="selectInterestInfo" parameterType="map" resultType="InterestInfo">
+		select
+			aptCode, added_date as addedDate
+		from interest
+		where userid = #{userid} and aptcode=#{aptCode}
+	</select>
 </mapper>

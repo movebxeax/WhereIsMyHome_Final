@@ -9,11 +9,7 @@
 		<result column="lng" property="lng"/>
 		<result column="lat" property="lat"/>		
 	</resultMap>
-	
-	<resultMap type="InterestInfo" id="InterestInfoResultMap" >
-		<id column="userid" property="userid"/>
-	</resultMap>
-	
+		
 	<resultMap type="QnaInfo" id="QnaInfoMap">
 		<id column="no" property="no"/>
 		<result column="title" property="title"/>

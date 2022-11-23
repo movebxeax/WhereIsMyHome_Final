@@ -1,5 +1,8 @@
 package com.whereismyhome.model.service.tradeinfo;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +18,23 @@ public class InterestServiceImpl implements InterestService{
 		this.interestDao = interestDao;
 	}
 
-	public boolean addInterestInfo(InterestInfo interestInfo)
+	public boolean addInterestInfo(Map<String, Object> map)
 	{
-		return interestDao.addInterestInfo(interestInfo) > 0;
+		return interestDao.insertInterestInfo(map) > 0;
 	}
 	
-	public InterestInfo getInterestInfo(String userid)
+	public List<InterestInfo> getInterestInfoList(String userid)
 	{
-		return interestDao.getInterestInfo(userid);
+		return interestDao.selectInterestInfos(userid);
+	}
+
+	@Override
+	public boolean removeInterestInfo(Map<String, Object> map) {
+		return interestDao.deleteInterestInfo(map) > 0;
+	}
+
+	@Override
+	public InterestInfo getInterestInfo(Map<String, Object> map) {
+		return interestDao.selectInterestInfo(map);
 	}
 }
