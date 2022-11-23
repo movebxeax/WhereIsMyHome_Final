@@ -150,9 +150,10 @@ export default {
               userid: data.userid,
               username: data.username,
             });
+
+            this.$router.push("/");
           })
-          .then(() => this.$router.push("/"))
-          .catch(() => console.log("login error!!!!"));
+          .catch(() => alert("로그인 실패! 아이디와 비밀번호를 확인해주세요."));
         // submit form to server/API here...
       }
     },
