@@ -66,12 +66,16 @@ export default {
       this.initMap();
     } else {
       const script = document.createElement("script");
-      /* global kakao */
-      script.onload = () => kakao.maps.load(this.initMap);
+
       //   script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=" + process.env.VUE_APP_KAKAO_MAP_KEY +"&libraries=services,clusterer";
       script.src =
         "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=980bea8bcd07009e77637df27e1433d7&libraries=services,clusterer";
-      document.body.appendChild(script);
+      /* global kakao */
+      script.addEventListener("load", () => {
+        console.log("loaded", window.kakao);
+        kakao.maps.load(this.initMap);
+      });
+      document.head.appendChild(script);
     }
   },
   created() {
@@ -93,8 +97,8 @@ export default {
     initMap() {
       const container = document.getElementById("map");
       const options = {
-        center: new kakao.maps.LatLng(37.501929614341925, 127.03899430413212),
-        level: 3,
+        center: new kakao.maps.LatLng(37.50527532817957, 127.10704684166419),
+        level: 4,
       };
       //지도 객체를 등록합니다.
       //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
@@ -112,43 +116,12 @@ export default {
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
       // 드래그 이벤트
-      kakao.maps.event.addListener(this.map, "dragend", () => {
-        let level = this.map.getLevel();
+      this.addKakaoEvent("dragend");
 
-        if (level >= DEALYEAR_GUGUN_LIMIT) {
-          this.getGugunMarkers();
-        } else if (level >= DEALYEAR_DONG_LIMIT) {
-          this.getDongMarkers();
-        } else {
-          var bounds = this.map.getBounds();
-          var swLatlng = bounds.getSouthWest();
-          var neLatlng = bounds.getNorthEast();
+      // 확대, 축소, 센터 변경 이벤트
+      this.addKakaoEvent("idle");
 
-          const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
-          this.clearMarkers();
-          this.getAptListWithCds(params);
-        }
-      });
-
-      // 확대, 축소 이벤트
-      kakao.maps.event.addListener(this.map, "idle", () => {
-        let level = this.map.getLevel();
-
-        if (level >= DEALYEAR_GUGUN_LIMIT) {
-          this.getGugunMarkers();
-        } else if (level >= DEALYEAR_DONG_LIMIT) {
-          this.getDongMarkers();
-        } else {
-          var bounds = this.map.getBounds();
-          var swLatlng = bounds.getSouthWest();
-          var neLatlng = bounds.getNorthEast();
-
-          const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
-          this.clearMarkers();
-          this.getAptListWithCds(params);
-        }
-      });
-
+      // 초기 지역 조회
       var bounds = this.map.getBounds();
       var swLatlng = bounds.getSouthWest();
       var neLatlng = bounds.getNorthEast();
@@ -318,6 +291,25 @@ export default {
         this.map.relayout();
       }, 100);
     },
+    addKakaoEvent(type) {
+      kakao.maps.event.addListener(this.map, type, () => {
+        let level = this.map.getLevel();
+
+        if (level >= DEALYEAR_GUGUN_LIMIT) {
+          this.getGugunMarkers();
+        } else if (level >= DEALYEAR_DONG_LIMIT) {
+          this.getDongMarkers();
+        } else {
+          var bounds = this.map.getBounds();
+          var swLatlng = bounds.getSouthWest();
+          var neLatlng = bounds.getNorthEast();
+
+          const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+          this.clearMarkers();
+          this.getAptListWithCds(params);
+        }
+      });
+    },
   },
 };
 </script>
@@ -333,3 +325,5 @@ export default {
   height: 800px;
 }
 </style>
+
+function
