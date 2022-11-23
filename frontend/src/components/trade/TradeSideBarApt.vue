@@ -64,7 +64,11 @@
                         :footer-props="{
                           showFirstLastPage: true,
                           itemsPerPageOptions: [],
-                        }" :headers="priceInfoHeaders" :items="detail.priceInfoList" class="ml-2 mr-2"></v-data-table>
+                        }" :headers="priceInfoHeaders" :items="detail.priceInfoList" class="ml-2 mr-2">
+                        <template v-slot:[`item.price`]="{ item }">
+                          {{ priceFormatterWrapper(item.price) }}
+                        </template>
+                      </v-data-table>
                     </v-card>
                   </v-col>
                 </v-row>
@@ -80,7 +84,8 @@
 <script>
 import { mapGetters } from "vuex";
 import TradeSideBarGraph from "@/components/trade/TradeSideBarGraph.vue";
-import { apiInterest } from "@/api/index.js"
+import { apiInterest } from "@/api/index.js";
+import { priceFormatter } from "@/utils/etc";
 
 const tradeStore = "tradeStore";
 const userStore = "userStore";
@@ -162,7 +167,10 @@ export default {
         .then(() => alert("관심지역 삭제 성공!"))
         .then(() => this.isInterested(aptCode))
         .catch(() => alert("관심지역 삭제 실패!"));
-    }
+    },
+    priceFormatterWrapper(price) {
+      return priceFormatter(price);
+    },
   },
   updated() {
     if (this.roadview === null && this.apt !== null) {

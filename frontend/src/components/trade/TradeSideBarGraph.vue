@@ -3,39 +3,29 @@
     <div class="text-lg-center pa-5" style="width: 100%" v-if="chartLoading">
       <v-progress-circular width="7" size="70" indeterminate color="red"></v-progress-circular>
     </div>
-    <Scatter :chart-data="chartData" id="chart" v-else></Scatter>
+    <div v-else>
+      <apexchart type="scatter" :options="chartOptions" :series="priceData"></apexchart>
+    </div>
   </v-container>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import { Scatter } from "vue-chartjs";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-} from "chart.js";
-
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement);
-
+import VueApexCharts from "vue-apexcharts";
+import { priceFormatter } from "@/utils/etc";
 const tradeStore = "tradeStore";
 
 export default {
   name: "TradeSideBarGraph",
   components: {
-    Scatter,
+    apexchart: VueApexCharts,
   },
   computed: {
     ...mapGetters(tradeStore, ["apt"]),
     priceData() {
       return this.priceInfoList.map((priceInfo) => ({
-        x: new Date(priceInfo.dealYear + "-" + priceInfo.dealMonth) / 1000,
-        y: priceInfo.price,
+        name: `${priceInfo.dealYear}년 ${priceInfo.dealMonth}월`,
+        data: [[new Date(priceInfo.dealYear + "-" + priceInfo.dealMonth).getTime(), priceInfo.price]],
       }));
     },
   },
@@ -47,26 +37,57 @@ export default {
   data() {
     return {
       chartLoading: true,
-      chartData: {
-        // labels: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
-        datasets: [
-          {
-            label: "거래",
-            backgroundColor: "rgb(255,153,204, 0.5)",
-            pointBackgroundColor: "skyblue",
-            borderColor: "skyblue",
-            pointBorderColor: "skyblue",
-            data: [],
+      chartOptions: {
+        chart: {
+          type: "scatter",
+          zoom: {
+            type: "xy",
           },
-        ],
-      },
-      options: {
-        scales: {
-          x: {
-            type: "time",
-            time: {
-              unit: "year",
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        grid: {
+          xaxis: {
+            lines: {
+              show: true,
             },
+          },
+          yaxis: {
+            lines: {
+              show: true,
+            },
+          },
+        },
+        xaxis: {
+          type: "datetime",
+          labels: {
+            format: "yyyy.MM",
+          },
+        },
+        yaxis: {
+          min: 0,
+          max: 0,
+          tickAmount: 6,
+          labels: {
+            minWidth: 45,
+            style: {
+              fontSize: "12px",
+              fontWeight: 400,
+            },
+            formatter: (value) => {
+              return priceFormatter(value);
+            },
+          },
+        },
+        legend: {
+          show: false,
+        },
+        tooltip: {
+          x: {
+            show: false,
+
+            format: "yyyy.MM",
           },
         },
       },
@@ -74,10 +95,10 @@ export default {
   },
   mounted() {
     this.chartLoading = true;
-    this.chartData.datasets[0].data = this.priceData;
+    this.chartOptions.yaxis.min = Math.min(...this.priceData.map((detail) => detail.data[0][1]).map(Number)) - 10000;
+    this.chartOptions.yaxis.max = Math.max(...this.priceData.map((detail) => detail.data[0][1]).map(Number)) + 10000;
     this.chartLoading = false;
   },
-  methods: {},
 };
 </script>
 
