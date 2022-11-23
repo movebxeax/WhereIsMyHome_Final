@@ -122,13 +122,13 @@ export default {
       this.addKakaoEvent("idle");
 
       // 초기 지역 조회
-      var bounds = this.map.getBounds();
-      var swLatlng = bounds.getSouthWest();
-      var neLatlng = bounds.getNorthEast();
+      // var bounds = this.map.getBounds();
+      // var swLatlng = bounds.getSouthWest();
+      // var neLatlng = bounds.getNorthEast();
 
-      const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
-      this.clearMarkers();
-      this.getAptListWithCds(params);
+      // const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+      // this.clearMarkers();
+      // this.getAptListWithCds(params);
     },
     changeCenterMap() {
       console.log("change center");
@@ -305,7 +305,6 @@ export default {
           var neLatlng = bounds.getNorthEast();
 
           const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
-          this.clearMarkers();
           this.getAptListWithCds(params);
         }
       });
