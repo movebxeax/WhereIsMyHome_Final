@@ -56,3 +56,72 @@ table {
 .v-input__prepend-outer {
 	margin-left:10px;
 }
+
+.customoverlay {
+	background-color: transparent !important;
+}
+
+.customoverlay-dong {
+	background-color: #3083D6 !important;
+	border-radius: 20px;
+	color: white;
+	padding-left: 3px;
+	padding-right: 8px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	font-weight: bolder;
+}
+
+.customoverlay-dong-count {
+	background-color: white !important;
+	color: #112D4E;
+	border-radius: 30px;
+	padding-left: 7px;
+	padding-right: 8px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+.customoverlay-dong:hover {
+	.customoverlay-dong-count {
+		background-color: #112D4E !important;
+		color: white;
+		border-radius: 30px;
+		padding-left: 7px;
+		padding-right: 8px;
+		padding-top: 3px;
+		padding-bottom: 3px;
+	}
+}
+
+.customoverlay-gugun {
+	background-color: #3083D6 !important;
+	border-radius: 20px;
+	color: white;
+	padding-left: 3px;
+	padding-right: 3px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+.customoverlay-gugun:hover {
+	.customoverlay-gugun-name {
+			background-color: white !important;
+			color: #3083D6;
+			border-radius: 30px;
+			padding-left: 5px;
+			padding-right: 4px;
+			padding-top: 3px;
+			padding-bottom: 3px;
+			font-weight: bolder;
+		}
+}
+
+.customoverlay-gugun-name {
+	border-radius: 30px;
+	padding-left: 5px;
+	padding-right: 4px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	font-weight: bolder;
+}

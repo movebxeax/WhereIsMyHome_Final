@@ -218,8 +218,11 @@ export default {
           // 커스텀 오버레이 생성
           data.forEach((dong) => {
             let content =
-              `<div class="customoverlay" id="${dong.dongCode}" style="background:white; cursor:pointer">` +
-              `    <span class="title">${dong.aptCount}|${dong.dongName}</span>` +
+              `<div class="customoverlay" id="${dong.dongCode}" style="background:white; cursor:pointer;">` +
+              `<div class="customoverlay-dong">` +
+              `        <span class="customoverlay-dong-count">${dong.aptCount}</span>` +
+              `        <span class="customoverlay-dong-name">${dong.dongName}</span>` +
+              `</div>` +
               "</div>";
 
             // 커스텀 오버레이가 표시될 위치입니다
@@ -265,7 +268,9 @@ export default {
           data.forEach((gugun) => {
             let content =
               `<div class="customoverlay" id="${gugun.gugunCode}" style="background:white; cursor:pointer">` +
-              `    <span class="title">${gugun.gugunName}</span>` +
+              `<div class="customoverlay-gugun">` +
+              `    <div class="customoverlay-gugun-name">${gugun.gugunName}</div>` +
+              `</div>` +
               "</div>";
 
             // 커스텀 오버레이가 표시될 위치입니다
