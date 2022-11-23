@@ -1,6 +1,6 @@
 <template>
   <header>
-    <v-toolbar class="toolbar" color="#DBE2EF" elevation="4">
+    <v-toolbar class="toolbar" color="rgb(63, 114, 175)" elevation="4">
       <v-toolbar-title>
         <router-link to="/" tag="span" class="home-btn">
           {{ appTitle }}
@@ -8,15 +8,15 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-xs-only">
-        <v-btn text v-for="item in menuItems" :key="item.title" :to="item.path">
-          <v-icon left dark>{{ item.icon }}</v-icon>
+        <v-btn text v-for="item in menuItems" :key="item.title" :to="item.path" color="white">
+          <v-icon left color="white">{{ item.icon }}</v-icon>
           {{ item.title }}
         </v-btn>
 
         <!-- 로그인 O -->
-        <v-menu offset-y v-if="isLogin">
+        <v-menu offset-y v-if="isLogin" class="navbar-menu">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on">
+            <v-btn v-bind="attrs" v-on="on" class="navbar-menu">
               <v-icon left dark>mdi-account-circle</v-icon>
               {{ userInfo.username }} 님
             </v-btn>
@@ -77,7 +77,7 @@ export default {
   computed: {
     ...mapGetters(userStore, ["userInfo", "isLogin"]),
   },
-  created() { },
+  created() {},
 };
 </script>
 
@@ -86,7 +86,13 @@ export default {
   z-index: 1;
 }
 
+.navbar-menu {
+  background-color: #112d4e !important;
+  color: white !important;
+}
+
 .home-btn {
+  color: white;
   cursor: pointer;
   font-weight: bolder;
 }
