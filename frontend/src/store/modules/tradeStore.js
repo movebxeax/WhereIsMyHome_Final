@@ -100,8 +100,14 @@ const tradeStore = {
     CLEAR_APT(state) {
       state.apt = null;
     },
-    CLEAT_INPUT_DONGCODE(state) {
+    CLEAR_INPUT_DONGCODE(state) {
       state.inputDongcode = "";
+    },
+    CLEAR_DONG(state) {
+      state.dong = null;
+    },
+    CLEART_APTS(state) {
+      state.apts = null;
     },
   },
   actions: {
@@ -171,7 +177,13 @@ const tradeStore = {
       commit("CLEAR_APT");
     },
     clearInputDongcode: ({ commit }) => {
-      commit("CLEAT_INPUT_DONGCODE");
+      commit("CLEAR_INPUT_DONGCODE");
+    },
+    clearDong: ({ commit }) => {
+      commit("CLEAR_DONG");
+    },
+    clearApts: ({ commit }) => {
+      commit("CLEAR_APTS");
     },
   },
 };

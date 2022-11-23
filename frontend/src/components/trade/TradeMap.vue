@@ -54,10 +54,15 @@ export default {
         }
       },
     },
-    dong() {
-      if (this.dong) {
-        console.log(this.dong);
-      }
+    dong(newValue, oldValue) {
+      // if (this.dong) {
+      //   console.log(this.dong);
+      // }
+      // if (newValue.dongcode != oldValue.dongcode) {
+      //   this.changeCenterMap();
+      // }
+      console.log(newValue);
+      console.log(oldValue);
       this.changeCenterMap();
     },
   },
@@ -121,6 +126,9 @@ export default {
       // 확대, 축소, 센터 변경 이벤트
       this.addKakaoEvent("idle");
 
+      if (this.dong) {
+        this.changeCenterMap();
+      }
       // 초기 지역 조회
       // var bounds = this.map.getBounds();
       // var swLatlng = bounds.getSouthWest();
@@ -131,9 +139,11 @@ export default {
       // this.getAptListWithCds(params);
     },
     changeCenterMap() {
-      console.log("change center");
-      let moveLatLon = new kakao.maps.LatLng(this.dong.lat, this.dong.lng);
-      this.map.panTo(moveLatLon);
+      if (window.kakao && window.kakao.maps) {
+        console.log("change center");
+        let moveLatLon = new kakao.maps.LatLng(this.dong.lat, this.dong.lng);
+        this.map.panTo(moveLatLon);
+      }
     },
     updateMap() {
       // 레벨이 6이상이면 아파트 마커 사용 X
@@ -324,5 +334,3 @@ export default {
   height: 800px;
 }
 </style>
-
-function
