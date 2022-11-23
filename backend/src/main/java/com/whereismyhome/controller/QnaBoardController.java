@@ -21,15 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.whereismyhome.model.dto.qna.QnaInfo;
 import com.whereismyhome.model.service.qna.QnaService;
-import com.whereismyhome.model.service.user.JwtUserDetailsService;
 import com.whereismyhome.util.ResponseManager;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jdk.internal.org.jline.utils.Log;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
