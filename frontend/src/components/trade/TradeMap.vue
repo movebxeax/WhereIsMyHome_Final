@@ -29,7 +29,7 @@ const LEVEL_GUGUN = 7;
 const INITIAL_DONGCODE = 1171010500;
 const INITIAL_LAT = 37.503517;
 const INITIAL_LNG = 127.1035697;
-
+const CATEGORYCODES = ["BK9", "MT1", "PM9", "OL7", "CE7", "CS2"];
 export default {
   name: "TradeMap",
   data() {
@@ -313,34 +313,55 @@ export default {
         if (this.rcvdCategories.includes(i)) {
           if (!this.categories[i]) {
             console.log(i, "미선택 -> 선택");
-            // this.onClickCategory(i, true);
+            this.onClickCategory(i, true);
           } else {
             console.log(i, "선택 -> 선택");
           }
-          this.categories[i] = true;
         } else {
           if (this.categories[i]) {
             console.log(i, "선택 -> 미선택");
-            // this.onClickCategory(i, false);
+            this.onClickCategory(i, false);
           } else {
             console.log(i, "미선택 -> 미선택");
           }
-          this.categories[i] = false;
         }
       }
     },
     // 카테고리를 클릭했을 때 호출되는 함수입니다
-    // onClickCategory(index, isOn) {
-    // if (className === "on") {
-    //   currCategory = "";
-    //   changeCategoryClass();
-    //   removeMarker();
-    // } else {
-    //   currCategory = id;
-    //   changeCategoryClass(this);
-    //   searchPlaces();
-    // }
-    // },
+    onClickCategory(index, isOn) {
+      let currCategory = CATEGORYCODES[index];
+      if (isOn) {
+        // 미선택 -> 선택
+        this.categories[index] = true;
+        this.searchPlaces(currCategory);
+      } else {
+        // 선택 -> 미선택
+        this.categories[index] = false;
+        this.removeMarker(currCategory);
+      }
+    },
+    searchPlaces(currCategory) {
+      console.log(currCategory);
+      // 카테고리 코드, 콜백, 옵션
+      this.ps.categorySearch(currCategory, this.placesSearchCB, { useMapBounds: true });
+    },
+    removeMarker(currCategory) {
+      console.log(currCategory);
+    },
+    placesSearchCB(data, status) {
+      if (status === kakao.maps.services.Status.OK) {
+        // 정상적으로 검색이 완료됐으면 지도에 마커를 표출합니다
+        this.displayPlaces(data);
+      } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+        // 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
+      } else if (status === kakao.maps.services.Status.ERROR) {
+        // 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
+      }
+    },
+    displayPlaces(data) {
+      console.log(data);
+      // 마커 표시
+    },
   },
 };
 </script>
