@@ -81,7 +81,7 @@
                     </v-col>
                     <!-- <v-spacer></v-spacer> -->
                     <v-col class="mt-1 mr-6" cols="12" sm="3" xsm="12">
-                      <v-btn class="d-flex align-center" x-large block :disabled="!valid" @click.stop="signup" color="#DBE2EF">Register</v-btn>
+                      <v-btn class="d-flex align-center" x-large block :disabled="!valid" @click="signup" color="#DBE2EF">Register</v-btn>
                     </v-col>
                   </v-row>
                 </v-form>
@@ -161,7 +161,8 @@ export default {
             baseAddress: this.signupBaseAddress,
             specAddress: this.signupDetailAddress,
           })
-          .then(({ data }) => console.log(data));
+          .then(() => this.$router.push("/"))
+          .catch(() => alert("회원가입 실패!"));
       }
     },
     reset() {
