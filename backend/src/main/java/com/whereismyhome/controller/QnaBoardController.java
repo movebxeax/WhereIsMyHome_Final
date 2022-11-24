@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.whereismyhome.config.exception.InternalServerErrorException;
+import com.whereismyhome.config.exception.NotFoundErrorException;
 import com.whereismyhome.model.dto.qna.QnaInfo;
 import com.whereismyhome.model.service.qna.QnaService;
 import com.whereismyhome.util.ResponseManager;
@@ -26,9 +29,8 @@ import com.whereismyhome.util.ResponseManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+@Transactional
 @Tag(name = "qna", description = "QnA Board APIs")
 @RequestMapping("/api/qna")
 @RestController
@@ -60,7 +62,7 @@ public class QnaBoardController extends ResponseManager {
 		if(res != null)
 			return createResponse(HttpStatus.OK, res);
 		else
-			return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error occured while fetching article");
+			throw new InternalServerErrorException("QnA 목록 불러오기 실패");
 	}
 
 	@Operation(summary = "Write Post",
@@ -78,7 +80,7 @@ public class QnaBoardController extends ResponseManager {
 		if(res)
 			return createResponse(HttpStatus.OK);
 		else
-			return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error occured while writing article");
+			throw new InternalServerErrorException("QnA 작성 실패");
 	}
 
 	@Operation(summary = "Query Post",
@@ -96,11 +98,11 @@ public class QnaBoardController extends ResponseManager {
 			if(qnaInfo != null)
 				return createResponse(HttpStatus.OK, qnaInfo);
 			else
-				return createResponse(HttpStatus.NOT_FOUND, "Error occured while fetching article detail");
+				throw new NotFoundErrorException("QnA 게시글 불러오기 실패");
 		}
 		else
 		{
-			return createResponse(HttpStatus.NOT_FOUND, "Error occured while fetching article detail");
+			throw new InternalServerErrorException("QnA 게시글 불러오기 실패");
 		}
 	}
 
@@ -126,10 +128,10 @@ public class QnaBoardController extends ResponseManager {
 			if(res)
 				return createResponse(HttpStatus.OK, qnaInfo);
 			else
-				return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error occured while updating article detail");
+				throw new InternalServerErrorException("QnA 게시글 수정 실패");
 		}
 		else
-			return createResponse(HttpStatus.NOT_FOUND, "Error occured while updating article detail - Article doesn't exist");
+			throw new NotFoundErrorException("QnA 게시글 수정 실패 - 수정할 게시글 없음");
 	}
 
 	@Operation(summary = "Delete Post",
@@ -152,10 +154,10 @@ public class QnaBoardController extends ResponseManager {
 			if(res)
 				return createResponse(HttpStatus.OK);
 			else
-				return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error occured while deleting article");
+				throw new InternalServerErrorException("QnA 게시글 삭제 실패");
 		}
 		else
-			return createResponse(HttpStatus.NOT_FOUND, "Error occured while updating article detail - Article doesn't exist");
+			throw new NotFoundErrorException("QnA 게시글 삭제 실패 - 삭제할 게시글 없음");
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_USER')")
@@ -172,9 +174,9 @@ public class QnaBoardController extends ResponseManager {
 			if(res)
 				return createResponse(HttpStatus.OK);
 			else
-				return createResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error occured while writing comment");
+				throw new InternalServerErrorException("QnA 댓글 작성 실패");
 		}
 		else
-			return createResponse(HttpStatus.NOT_FOUND, "Error occured while writing comment - Article doesn't exist");
+			throw new NotFoundErrorException("QnA 댓글 작성 실패 - 대상 게시글 없음");
 	}
 }

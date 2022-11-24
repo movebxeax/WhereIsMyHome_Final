@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.whereismyhome.config.exception.InternalServerErrorException;
+import com.whereismyhome.config.exception.NotFoundErrorException;
+import com.whereismyhome.config.exception.UnauthorizedErrorException;
 import com.whereismyhome.config.security.JwtTokenUtil;
 import com.whereismyhome.model.dto.user.UserInfo;
 import com.whereismyhome.model.dto.user.UserInfoDetail;
@@ -26,6 +30,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+@Transactional
 @RequestMapping("/api/user")
 @RestController
 @RequiredArgsConstructor
@@ -61,34 +66,34 @@ public class UserController extends ResponseManager{
 			return createResponse(HttpStatus.OK, userInfo);
 		}
 		else
-			return createResponse(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new InternalServerErrorException("회원가입 실패");
 	}
 
 	@PostMapping("/refresh")
-	protected ResponseEntity<?> refresh(@RequestBody JwtRefreshRequest requestBody) {
+	protected ResponseEntity<?> refresh(@RequestBody JwtRefreshRequest requestBody) throws Exception {
 		UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(requestBody.getUserid());
 		boolean res = jwtTokenUtil.validateToken(requestBody.getRefreshToken(), userDetails);
 
 		if(res)
 			return createResponse(createJwtResponse(requestBody.getUserid(), userDetails.getUsername()));
 		else
-			return createResponse(HttpStatus.UNAUTHORIZED);
+			throw new UnauthorizedErrorException();
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_USER')")
 	@GetMapping("/info")
-	protected ResponseEntity<?> info(Principal principal) {
+	protected ResponseEntity<?> info(Principal principal) throws UnauthorizedErrorException {
 		UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(principal.getName());
 
 		if(userDetails != null)
 			return createResponse(userService.getUserInfo(principal.getName()));
 		else
-			return createResponse(HttpStatus.UNAUTHORIZED);
+			throw new UnauthorizedErrorException();
 	}
 	
 	@PreAuthorize("hasRole('ROLE_ADMIN') || hasRole('ROLE_USER')")
 	@PostMapping("/modify")
-	protected ResponseEntity<?> modify(@RequestBody UserInfoDetail userInfo, Principal principal) {
+	protected ResponseEntity<?> modify(@RequestBody UserInfoDetail userInfo, Principal principal) throws UnauthorizedErrorException {
 		UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(principal.getName());
 		UserInfoDetail checkExist = userService.getUserInfo(principal.getName());
 		
@@ -97,15 +102,15 @@ public class UserController extends ResponseManager{
 			if(userDetails != null)
 				return createResponse(userService.modifyUserInfo(userInfo));
 			else
-				return createResponse(HttpStatus.UNAUTHORIZED);
+				throw new UnauthorizedErrorException();
 		}
 		else
-			return createResponse(HttpStatus.NOT_FOUND);
+			throw new NotFoundErrorException();
 	}
 	
 	@PreAuthorize("hasRole('ROLE_USER')")
 	@PostMapping("/delete")
-	protected ResponseEntity<?> delete(Principal principal) {
+	protected ResponseEntity<?> delete(Principal principal) throws UnauthorizedErrorException {
 		UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(principal.getName());		
 		UserInfoDetail checkExist = userService.getUserInfo(principal.getName());
 		
@@ -114,10 +119,10 @@ public class UserController extends ResponseManager{
 			if(userDetails != null)
 				return createResponse(userService.deleteUserInfo(principal.getName()));
 			else
-				return createResponse(HttpStatus.UNAUTHORIZED);
+				throw new UnauthorizedErrorException();
 		}
 		else
-			return createResponse(HttpStatus.NOT_FOUND);
+			throw new NotFoundErrorException();
 	}
 
 	private JwtResponse createJwtResponse(String userid, String username) {

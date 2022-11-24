@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NoticeInfo {
 	@NonNull
-	private int no;
+	private Integer no;
 	
 	private String title;
 	private String content;
