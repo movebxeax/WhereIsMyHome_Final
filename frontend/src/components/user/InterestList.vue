@@ -1,9 +1,9 @@
 <template>
   <v-card class="card-main mt-4">
-    <div class="interest-card-root d-flex ma-2">
-      <v-card class="ma-2" v-for="interest in interests" :key="interest.aptName">
+    <div class="interest-card-root d-flex">
+      <v-card class="interest-card ma-2" v-for="interest in interests" :key="interest.aptName">
         <div class="interest-card-content">
-          <trade-side-bar-apt class="interest-card-apt" :apt="interest"></trade-side-bar-apt>
+          <trade-side-bar-apt class="interest-card-apt" :aptProp="interest"></trade-side-bar-apt>
         </div>
       </v-card>
     </div>
@@ -47,17 +47,17 @@ export default {
 
 <style scoped>
 .card-main {
-  max-height: 70vh;
+  max-height: 80vh;
   overflow-y: hidden;
   overflow-x: scroll;
 }
-
-.interest-card-root {
-  max-width: 20%;
+.interest-card {
+  max-width: 25% !important;
+  min-width: 25% !important;
 }
 
 .interest-card-content {
-  max-height: 65vh;
+  max-height: 75vh;
   overflow-y: scroll !important;
 }
 

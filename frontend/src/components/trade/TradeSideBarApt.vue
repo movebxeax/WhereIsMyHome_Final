@@ -7,32 +7,17 @@
             <v-card-title>
               <div class="interest-btn-container">
                 <div v-if="isLogin">
-                  <v-btn
-                    :ripple="false"
-                    icon
-                    class="interest-btn"
-                    id="interest-btn"
-                    v-if="!interested"
-                    @click="markInterested(apt.aptCode)"
-                  >
+                  <v-btn :ripple="false" icon class="interest-btn" id="interest-btn" v-if="!interested" @click="markInterested(aptData.aptCode)">
                     <v-icon>mdi-heart-outline</v-icon>
                   </v-btn>
-                  <v-btn
-                    :ripple="false"
-                    icon
-                    color="red"
-                    class="interest-btn"
-                    id="interest-btn"
-                    v-else
-                    @click="unmarkInterested(apt.aptCode)"
-                  >
+                  <v-btn :ripple="false" icon color="red" class="interest-btn" id="interest-btn" v-else @click="unmarkInterested(aptData.aptCode)">
                     <v-icon>mdi-heart</v-icon>
                   </v-btn>
                 </div>
               </div>
-              {{ this.apt.aptName }}
+              {{ this.aptData.aptName }}
             </v-card-title>
-            <v-card-subtitle class="text-left subtitle-2 pb-0">| {{ this.apt.buildYear }}년 준공</v-card-subtitle>
+            <v-card-subtitle class="text-left subtitle-2 pb-0">| {{ this.aptData.buildYear }}년 준공</v-card-subtitle>
             <v-card-text class="text-left subtitle-2">| {{ this.address }} </v-card-text>
           </v-card>
         </v-col>
@@ -51,12 +36,12 @@
           <v-card color="primary">
             <v-card-title class="white--text"> 면적별 거래 정보 </v-card-title>
             <v-tabs v-model="tab" show-arrows>
-              <v-tab v-for="detail in apt.details" :key="detail.area">
+              <v-tab v-for="detail in aptData.details" :key="detail.area">
                 {{ detail.area }}
               </v-tab>
             </v-tabs>
             <v-tabs-items v-model="tab">
-              <v-tab-item v-for="detail in apt.details" :key="detail.area">
+              <v-tab-item v-for="detail in aptData.details" :key="detail.area">
                 <v-row dense>
                   <v-col>
                     <v-card flat>
@@ -81,8 +66,7 @@
                         }"
                         :headers="priceInfoHeaders"
                         :items="detail.priceInfoList"
-                        class="ml-2 mr-2"
-                      >
+                        class="ml-2 mr-2">
                         <template v-slot:[`item.price`]="{ item }">
                           {{ priceFormatterWrapper(item.price) }}
                         </template>
@@ -116,6 +100,9 @@ export default {
     ...mapGetters(tradeStore, ["apt"]),
     ...mapGetters(userStore, ["isLogin"]),
   },
+  props: {
+    aptProp: Object,
+  },
   data() {
     return {
       roadviewContainer: null,
@@ -131,6 +118,7 @@ export default {
         { text: "금액 (만 원)", value: "price" },
       ],
       interested: false,
+      aptData: {},
     };
   },
   methods: {
@@ -173,7 +161,8 @@ export default {
     isInterested(aptCode) {
       apiInterestFunc
         .get(`/${aptCode}`)
-        .then(({ data }) => (data.addedDate != null ? (this.interested = true) : (this.interested = false)));
+        .then(({ data }) => (data.addedDate != null ? (this.interested = true) : (this.interested = false)))
+        .catch();
     },
     markInterested(aptCode) {
       apiInterestFunc
@@ -192,19 +181,32 @@ export default {
     priceFormatterWrapper(price) {
       return priceFormatter(price);
     },
+    dataInitializer(initParam) {
+      this.aptData = initParam;
+      this.isInterested(this.aptData.aptCode);
+      this.initRoadView(this.aptData.lat, this.aptData.lng);
+      this.setAddress(this.aptData.lat, this.aptData.lng);
+    },
   },
   updated() {
+    console.log("updated");
     if (this.roadview === null && this.apt !== null) {
-      this.initRoadView(this.apt.lat, this.apt.lng);
-      this.setAddress(this.apt.lat, this.apt.lng);
+      this.dataInitializer(this.apt);
+    }
+  },
+  created() {
+    console.log("created");
+    if (this.aptProp != null) {
+      this.dataInitializer(this.aptProp);
+    } else {
+      this.dataInitializer(this.apt);
     }
   },
   watch: {
     apt() {
+      console.log("watcher");
       if (this.apt !== null) {
-        this.setRoadView(this.apt.lat, this.apt.lng);
-        this.setAddress(this.apt.lat, this.apt.lng);
-        this.isInterested(this.apt.aptCode);
+        this.dataInitializer(this.apt);
       }
     },
   },
