@@ -74,10 +74,9 @@ export default {
   },
   watch: {
     searchKeyword() {
-      if (this.searchOptions.length > 0) return;
+      if (!this.searchKeyword) return;
 
       this.isLoading = true;
-
       this.getSearchOptionList(this.searchKeyword).finally(() => (this.isLoading = false));
     },
   },

@@ -53,14 +53,14 @@ export default {
     ]),
   },
   watch: {
-    apts: {
-      deep: true,
-      handler() {
-        if (this.apts.length >= 0) {
-          this.updateMap();
-        }
-      },
-    },
+    // apts: {
+    //   deep: true,
+    //   handler() {
+    //     if (this.apts.length >= 0) {
+    //       this.updateMap();
+    //     }
+    //   },
+    // },
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -174,6 +174,7 @@ export default {
         this.markers.push(marker);
       });
     },
+
     changeCenterMap() {
       if (window.kakao && window.kakao.maps) {
         console.log("change center");
@@ -187,6 +188,31 @@ export default {
         this.map.relayout();
       }, 100);
     },
+
+    addKakaoEvent(type) {
+      kakao.maps.event.addListener(this.map, type, () => {
+        let level = this.map.getLevel();
+        this.clearMarkers();
+
+        if (level >= DEALYEAR_GUGUN_LIMIT) {
+          // this.getGugunMarkers();
+          this.clearApts();
+          this.getMarkers(gugunMarkerInfo, false);
+        } else if (level >= DEALYEAR_DONG_LIMIT) {
+          // this.getDongMarkers();
+          this.clearApts();
+          this.getMarkers(dongMarkerInfo, true);
+        } else {
+          var bounds = this.map.getBounds();
+          var swLatlng = bounds.getSouthWest();
+          var neLatlng = bounds.getNorthEast();
+
+          const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
+          this.getAptListWithCds(params);
+        }
+      });
+    },
+
     getMarkers(getMarkerInfo, isDong) {
       // 마커 데이터 갱신
       let bounds = this.map.getBounds();
@@ -255,29 +281,7 @@ export default {
       });
       this.markers = [];
     },
-    addKakaoEvent(type) {
-      kakao.maps.event.addListener(this.map, type, () => {
-        let level = this.map.getLevel();
-        this.clearMarkers();
 
-        if (level >= DEALYEAR_GUGUN_LIMIT) {
-          // this.getGugunMarkers();
-          this.clearApts();
-          this.getMarkers(gugunMarkerInfo, false);
-        } else if (level >= DEALYEAR_DONG_LIMIT) {
-          // this.getDongMarkers();
-          this.clearApts();
-          this.getMarkers(dongMarkerInfo, true);
-        } else {
-          var bounds = this.map.getBounds();
-          var swLatlng = bounds.getSouthWest();
-          var neLatlng = bounds.getNorthEast();
-
-          const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
-          this.getAptListWithCds(params);
-        }
-      });
-    },
     getDongOverlay(dong) {
       const content =
         `<div class="customoverlay" id="${dong.dongCode}" style="background:white; cursor:pointer;">` +
