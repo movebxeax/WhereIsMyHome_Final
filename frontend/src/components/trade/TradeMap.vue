@@ -123,25 +123,22 @@ export default {
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
       // 드래그 이벤트 등록
-      this.addKakaoEvent("dragend");
+      // this.addKakaoEvent("dragend");
 
       // 확대, 축소 이벤트 등록
-      this.addKakaoEvent("zoom_changed");
+      this.addKakaoEvent("idle");
 
       // 동이 있으면 해당 동 조회 없으면 초기 지역 조회
       if (this.dong && this.dong.dongcode != INITIAL_DONGCODE) {
         this.changeCenterMap();
       } else {
-        this.getAptList(INITIAL_DONGCODE);
+        let moveLatLon = new kakao.maps.LatLng(INITIAL_LAT, INITIAL_LNG + 0.0001);
+        this.map.panTo(moveLatLon);
       }
     },
 
     updateMap() {
-      // 레벨이 6이상이면 아파트 마커 사용 X
       let level = this.map.getLevel();
-
-      // 레벨이 달라지는 경우만 마커 초기화
-      console.log("현재 레벨:" + level);
 
       this.clearMarkers();
 
@@ -182,7 +179,9 @@ export default {
 
     changeCenterMap() {
       if (window.kakao && window.kakao.maps) {
-        console.log("change center");
+        if (this.map.getLevel() >= LEVEL_DONG) {
+          this.map.setLevel(4);
+        }
         let moveLatLon = new kakao.maps.LatLng(this.dong.lat, this.dong.lng);
         this.map.panTo(moveLatLon);
       }
@@ -195,8 +194,10 @@ export default {
     },
 
     addKakaoEvent(type) {
-      kakao.maps.event.addListener(this.map, type, () => {
-        console.log(type);
+      kakao.maps.event.addListener(this.map, type, this.addKakoEventHandler());
+    },
+    addKakoEventHandler() {
+      return () => {
         let level = this.map.getLevel();
 
         if (level >= LEVEL_GUGUN) {
@@ -213,7 +214,7 @@ export default {
           const params = { minLat: swLatlng.Ma, maxLat: neLatlng.Ma, minLng: swLatlng.La, maxLng: neLatlng.La };
           this.getAptListWithCds(params);
         }
-      });
+      };
     },
 
     getMarkers(getMarkerInfo, isDong) {
@@ -227,7 +228,6 @@ export default {
         params,
         ({ data }) => {
           // 커스텀 오버레이 생성
-          console.log(data);
           data.forEach((detail) => {
             let content = "";
             if (isDong) {
@@ -247,22 +247,22 @@ export default {
               yAnchor: 1,
             });
 
-            // 커스텀 오버레이 클릭 이벤트 설정
-            // let close = null;
-            // if (isDong) {
-            //   close = document.getElementById(detail.dongCode);
-            // } else {
-            //   close = document.getElementById(detail.gugunCode);
-            // }
-            // close.onclick = () => {
-            //   let moveLatLon = new kakao.maps.LatLng(detail.lat, detail.lng);
-            //   if (isDong) {
-            //     this.map.setLevel(3);
-            //   } else {
-            //     this.map.setLevel(LEVEL_DONG);
-            //   }
-            //   this.map.panTo(moveLatLon);
-            // };
+            //커스텀 오버레이 클릭 이벤트 설정
+            let close = null;
+            if (isDong) {
+              close = document.getElementById(detail.dongCode);
+            } else {
+              close = document.getElementById(detail.gugunCode);
+            }
+            close.onclick = () => {
+              if (isDong) {
+                this.map.setLevel(LEVEL_DONG - 1);
+              } else {
+                this.map.setLevel(LEVEL_GUGUN - 1);
+              }
+              let moveLatLon = new kakao.maps.LatLng(detail.lat, detail.lng);
+              this.map.panTo(moveLatLon);
+            };
 
             this.markers.push(customOverlay);
           });
@@ -273,7 +273,6 @@ export default {
       );
     },
     clearMarkers() {
-      console.log("마커 초기화");
       this.markers.forEach((marker) => {
         marker.setMap(null);
       });
