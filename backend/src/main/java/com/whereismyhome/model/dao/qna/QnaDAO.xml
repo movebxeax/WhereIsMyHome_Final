@@ -69,7 +69,8 @@
 			<when test="title != null and title != ''">where title like concat('%', #{title}, '%')</when>
 			<when test="author != null and author != ''">where u.username=#{author}</when>
 		</choose>
-		<if test="limit != null">limit #{limit}</if>
+		order by date desc
+		<if test="limit != null">limit #{limit} </if>
 	</select>
 	
 	<select id="selectArticle" parameterType="int" resultMap="com.whereismyhome.resultmaps.QnaInfoMap">		

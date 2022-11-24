@@ -61,7 +61,7 @@ public class NoticeController extends ResponseManager {
 		boolean res = noticeService.writeNotice(noticeInfo);
 
 		if(res)
-			return createResponse(noticeService.writeNotice(noticeInfo));
+			return createResponse("");
 		else
 			throw new InternalServerErrorException("공지사항 등록 실패");
 	}
