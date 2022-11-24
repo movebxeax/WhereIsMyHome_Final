@@ -31,9 +31,12 @@ public class InterestController extends ResponseManager {
 	@Autowired
 	InterestService interestService;
 	
-	@PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
 	@GetMapping("/{aptCode}")
 	protected ResponseEntity<?> getInterestInfoList(@PathVariable String aptCode, Principal principal) throws Exception {
+		if(principal == null)
+			return createResponse(HttpStatus.OK);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("aptCode", aptCode);
 		map.put("userid", principal.getName());
@@ -69,6 +72,9 @@ public class InterestController extends ResponseManager {
 	@PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
 	@GetMapping
 	protected ResponseEntity<?> getInterestInfoList(Principal principal) throws Exception {
+//		if(principal.getName() == null || principal.getName().equals(""))
+//			return createResponse(HttpStatus.OK);
+		
 		List<InterestInfo> interestInfo = interestService.getInterestInfoList(principal.getName());
 		return createResponse(interestInfo);
 	}
