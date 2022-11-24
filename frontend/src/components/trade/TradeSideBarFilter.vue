@@ -71,51 +71,33 @@
                 <v-expansion-panel-content>
                   <!-- 주변 정보  필터 -->
                   <!-- 은행, 마트, 약국, 주유소, 카페, 편의점 -->
-                  <v-card flat class="mb-4">
+                  <v-card flat>
                     <v-card-text>
                       <v-row align="center" justify="center">
                         <v-btn-toggle v-model="selectedCategories" multiple>
                           <v-btn
-                            :color="isSelectedCategories[0] ? 'primary' : 'white'"
-                            @click="toggleCategoryColor(0)"
-                            id="BK9"
+                            v-for="(item, index) in categoryItems"
+                            id="item.id"
+                            :color="setCategoryBtnColor(index)"
+                            :key="index"
+                            @click="toggleCategoryColor(index)"
                           >
-                            <v-icon :color="isSelectedCategories[0] ? 'white' : 'primary'">mdi-bank</v-icon>
-                          </v-btn>
-                          <v-btn
-                            :color="isSelectedCategories[1] ? 'primary' : 'white'"
-                            @click="toggleCategoryColor(1)"
-                            id="MT1"
-                          >
-                            <v-icon :color="isSelectedCategories[1] ? 'white' : 'primary'">mdi-cart</v-icon>
-                          </v-btn>
-                          <v-btn
-                            :color="isSelectedCategories[2] ? 'primary' : 'white'"
-                            @click="toggleCategoryColor(2)"
-                            id="PM9"
-                          >
-                            <v-icon :color="isSelectedCategories[2] ? 'white' : 'primary'">mdi-pill</v-icon>
-                          </v-btn>
-                          <v-btn
-                            :color="isSelectedCategories[3] ? 'primary' : 'white'"
-                            @click="toggleCategoryColor(3)"
-                            id="OL7"
-                          >
-                            <v-icon :color="isSelectedCategories[3] ? 'white' : 'primary'">mdi-barrel</v-icon>
-                          </v-btn>
-                          <v-btn
-                            :color="isSelectedCategories[4] ? 'primary' : 'white'"
-                            @click="toggleCategoryColor(4)"
-                            id="CE7"
-                          >
-                            <v-icon :color="isSelectedCategories[4] ? 'white' : 'primary'">mdi-coffee</v-icon>
-                          </v-btn>
-                          <v-btn
-                            :color="isSelectedCategories[5] ? 'primary' : 'white'"
-                            @click="toggleCategoryColor(5)"
-                            id="CS2"
-                          >
-                            <v-icon :color="isSelectedCategories[5] ? 'white' : 'primary'">mdi-store-24-hour</v-icon>
+                            <v-container>
+                              <v-row class="pa-0 ma-0">
+                                <v-col>
+                                  <v-icon :color="setCategoryIconColor(index)">
+                                    {{ item.icon }}
+                                  </v-icon>
+                                </v-col>
+                              </v-row>
+                              <v-row class="pa-0 ma-0">
+                                <v-col style="font-size: 11px; font-weight: bold">
+                                  <div>
+                                    {{ item.name }}
+                                  </div>
+                                </v-col>
+                              </v-row>
+                            </v-container>
                           </v-btn>
                         </v-btn-toggle>
                       </v-row>
@@ -252,7 +234,6 @@ export default {
         { title: "면적", value: "area" },
         { title: "준공년도", value: "buildYear" },
       ],
-
       buildyearItems: [
         { label: "전체", color: "primary", value: 100 },
         { label: "1년 이내", color: "success", value: 1 },
@@ -260,6 +241,38 @@ export default {
         { label: "10년 이내", color: "warning", value: 10 },
         { label: "20년 이내", color: "secondary", value: 20 },
         { label: "30년 이내", color: "error", value: 30 },
+      ],
+      categoryItems: [
+        {
+          icon: "mdi-bank",
+          id: "BK9",
+          name: "은행",
+        },
+        {
+          icon: "mdi-cart",
+          id: "MT1",
+          name: "마트",
+        },
+        {
+          icon: "mdi-pill",
+          id: "PM9",
+          name: "약국",
+        },
+        {
+          icon: "mdi-barrel",
+          id: "OL7",
+          name: "주유소",
+        },
+        {
+          icon: "mdi-coffee",
+          id: "CE7",
+          name: "카페",
+        },
+        {
+          icon: "mdi-store-24-hour",
+          id: "CS2",
+          name: "편의점",
+        },
       ],
       isLoading: false,
       searchKeyword: null,
@@ -318,6 +331,12 @@ export default {
     },
     toggleCategoryColor(index) {
       this.isSelectedCategories[index] = !this.isSelectedCategories[index];
+    },
+    setCategoryBtnColor(index) {
+      return this.isSelectedCategories[index] ? "primary" : "white";
+    },
+    setCategoryIconColor(index) {
+      return this.isSelectedCategories[index] ? "white" : "primary";
     },
   },
 };

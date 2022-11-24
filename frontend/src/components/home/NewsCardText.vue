@@ -35,7 +35,7 @@ export default {
     };
   },
   created() {
-    axios.get("http://127.0.0.1:8080/api/news").then(({ data }) => (this.newsList = data.items));
+    axios.get("http://localhost:8080/api/news").then(({ data }) => (this.newsList = data.items));
   },
   methods: {
     // loadNoticeArticle(articleno) {

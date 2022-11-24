@@ -3,128 +3,226 @@
    License: none (public domain)
 */
 
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, menu, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-main, menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-	text-decoration: none;
-	color: inherit;
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+menu,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  text-decoration: none;
+  color: inherit;
 }
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, main, menu, nav, section {
-	display: block;
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section {
+  display: block;
 }
 /* HTML5 hidden-attribute fix for newer browsers */
 *[hidden] {
-    display: none;
+  display: none;
 }
 body {
-	line-height: 1;
+  line-height: 1;
 }
-menu, ol, ul {
-	list-style: none;
+menu,
+ol,
+ul {
+  list-style: none;
 }
-blockquote, q {
-	quotes: none;
+blockquote,
+q {
+  quotes: none;
 }
-blockquote:before, blockquote:after,
-q:before, q:after {
-	content: '';
-	content: none;
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 .v-input__prepend-outer {
-	margin-left:10px;
+  margin-left: 10px;
 }
 
 .customoverlay {
-	min-width: 70px;
-	background-color: transparent !important;
+  min-width: 70px;
+  background-color: transparent !important;
 }
 
 .customoverlay-dong {
-	background-color: #3083D6 !important;
-	border-radius: 20px;
-	color: white;
-	padding-left: 3px;
-	padding-right: 8px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	font-weight: bolder;
+  background-color: #3083d6 !important;
+  border-radius: 20px;
+  color: white;
+  padding-left: 3px;
+  padding-right: 8px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-weight: bolder;
 }
 
 .customoverlay-dong-count {
-	background-color: white !important;
-	color: #112D4E;
-	border-radius: 30px;
-	padding-left: 7px;
-	padding-right: 8px;
-	padding-top: 3px;
-	padding-bottom: 3px;
+  background-color: white !important;
+  color: #112d4e;
+  border-radius: 30px;
+  padding-left: 7px;
+  padding-right: 8px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 .customoverlay-dong:hover {
-	.customoverlay-dong-count {
-		background-color: #112D4E !important;
-		color: white;
-		border-radius: 30px;
-		padding-left: 7px;
-		padding-right: 8px;
-		padding-top: 3px;
-		padding-bottom: 3px;
-	}
+  .customoverlay-dong-count {
+    background-color: #112d4e !important;
+    color: white;
+    border-radius: 30px;
+    padding-left: 7px;
+    padding-right: 8px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
 }
 
 .customoverlay-gugun {
-	background-color: #3083D6 !important;
-	border-radius: 20px;
-	color: white;
-	padding-left: 3px;
-	padding-right: 3px;
-	padding-top: 3px;
-	padding-bottom: 3px;
+  background-color: #3083d6 !important;
+  border-radius: 20px;
+  color: white;
+  padding-left: 3px;
+  padding-right: 3px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 .customoverlay-gugun:hover {
-	.customoverlay-gugun-name {
-			background-color: white !important;
-			color: #3083D6;
-			border-radius: 30px;
-			padding-left: 5px;
-			padding-right: 4px;
-			padding-top: 3px;
-			padding-bottom: 3px;
-			font-weight: bolder;
-		}
+  .customoverlay-gugun-name {
+    background-color: white !important;
+    color: #3083d6;
+    border-radius: 30px;
+    padding-left: 5px;
+    padding-right: 4px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    font-weight: bolder;
+  }
 }
 
 .customoverlay-gugun-name {
-	border-radius: 30px;
-	padding-left: 5px;
-	padding-right: 4px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	font-weight: bolder;
+  border-radius: 30px;
+  padding-left: 5px;
+  padding-right: 4px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-weight: bolder;
+}
+
+.categoryIcon {
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  background-color: brown !important;
+  border-radius: 35px;
+  color: white;
+  padding-left: 3px;
+  padding-right: 3px;
+  padding-top: 3px;
+  padding-bottom: 3px;
 }
 
 ::-webkit-scrollbar {
