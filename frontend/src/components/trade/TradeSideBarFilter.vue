@@ -1,7 +1,7 @@
 <template>
   <div>
-    <!-- 검색 창 -->
     <v-container>
+      <!-- 검색 창 -->
       <v-row dense>
         <v-col>
           <v-row align="center">
@@ -69,7 +69,59 @@
                   <div class="filter-text">필터</div>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <!-- 필터 -->
+                  <!-- 주변 정보  필터 -->
+                  <!-- 은행, 마트, 약국, 주유소, 카페, 편의점 -->
+                  <v-card flat class="mb-4">
+                    <v-card-text>
+                      <v-row align="center" justify="center">
+                        <v-btn-toggle v-model="selectedCategories" multiple>
+                          <v-btn
+                            :color="isSelectedCategories[0] ? 'primary' : 'white'"
+                            @click="toggleCategoryColor(0)"
+                            id="BK9"
+                          >
+                            <v-icon :color="isSelectedCategories[0] ? 'white' : 'primary'">mdi-bank</v-icon>
+                          </v-btn>
+                          <v-btn
+                            :color="isSelectedCategories[1] ? 'primary' : 'white'"
+                            @click="toggleCategoryColor(1)"
+                            id="MT1"
+                          >
+                            <v-icon :color="isSelectedCategories[1] ? 'white' : 'primary'">mdi-cart</v-icon>
+                          </v-btn>
+                          <v-btn
+                            :color="isSelectedCategories[2] ? 'primary' : 'white'"
+                            @click="toggleCategoryColor(2)"
+                            id="PM9"
+                          >
+                            <v-icon :color="isSelectedCategories[2] ? 'white' : 'primary'">mdi-pill</v-icon>
+                          </v-btn>
+                          <v-btn
+                            :color="isSelectedCategories[3] ? 'primary' : 'white'"
+                            @click="toggleCategoryColor(3)"
+                            id="OL7"
+                          >
+                            <v-icon :color="isSelectedCategories[3] ? 'white' : 'primary'">mdi-barrel</v-icon>
+                          </v-btn>
+                          <v-btn
+                            :color="isSelectedCategories[4] ? 'primary' : 'white'"
+                            @click="toggleCategoryColor(4)"
+                            id="CE7"
+                          >
+                            <v-icon :color="isSelectedCategories[4] ? 'white' : 'primary'">mdi-coffee</v-icon>
+                          </v-btn>
+                          <v-btn
+                            :color="isSelectedCategories[5] ? 'primary' : 'white'"
+                            @click="toggleCategoryColor(5)"
+                            id="CS2"
+                          >
+                            <v-icon :color="isSelectedCategories[5] ? 'white' : 'primary'">mdi-store-24-hour</v-icon>
+                          </v-btn>
+                        </v-btn-toggle>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                  <!-- 필터 탭-->
                   <v-tabs fixed-tabs v-model="filterTab">
                     <v-tabs-slider color="primary"></v-tabs-slider>
                     <!-- <v-tab v-for="(item, index) in filterTabItems" :key="index">{{ item.title }}</v-tab> -->
@@ -216,6 +268,8 @@ export default {
         price: { min: 0, max: 5000000000, range: [0, 5000000000] },
         buildYear: 100,
       },
+      selectedCategories: [],
+      isSelectedCategories: [false, false, false, false, false, false],
     };
   },
   computed: {
@@ -240,6 +294,9 @@ export default {
         this.setFilterOptions(this.curFilterOptions);
       },
     },
+    selectedCategories() {
+      this.$emit("changeCategories", this.selectedCategories);
+    },
   },
   methods: {
     ...mapActions(tradeStore, [
@@ -258,6 +315,9 @@ export default {
       // 좌표 이동으로 리스트 조회하도록 함
       this.setDong(this.searchOptions.find((dong) => dong.dongcode == this.inputDongcode));
       this.$emit("changeCenterBySearch");
+    },
+    toggleCategoryColor(index) {
+      this.isSelectedCategories[index] = !this.isSelectedCategories[index];
     },
   },
 };

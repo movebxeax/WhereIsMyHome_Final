@@ -7,6 +7,7 @@
             class="sideBar"
             @mapRelayout="mapRelayout"
             @changeCenterBySearch="changeCenterMap"
+            @changeCategories="onChangeCategories"
           ></trade-side-bar>
         </v-col>
         <v-col>
@@ -36,6 +37,9 @@ export default {
       map: null,
       markers: [],
       imgHouse: require("@/assets/img/house.png"),
+      ps: null,
+      categories: [false, false, false, false, false, false],
+      rcvdCategories: [],
     };
   },
   components: { TradeSideBar },
@@ -122,6 +126,8 @@ export default {
       let zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
+      // 장소 검색 객체 생성
+      this.ps = new kakao.maps.services.Places(this.map);
       // 드래그 이벤트 등록
       // this.addKakaoEvent("dragend");
 
@@ -194,9 +200,9 @@ export default {
     },
 
     addKakaoEvent(type) {
-      kakao.maps.event.addListener(this.map, type, this.addKakoEventHandler());
+      kakao.maps.event.addListener(this.map, type, this.addKakaoEventHandler());
     },
-    addKakoEventHandler() {
+    addKakaoEventHandler() {
       return () => {
         let level = this.map.getLevel();
 
@@ -298,6 +304,43 @@ export default {
         "</div>";
       return content;
     },
+
+    onChangeCategories(selectedCategories) {
+      this.rcvdCategories = selectedCategories;
+
+      // TODO
+      for (let i = 0; i < 6; i++) {
+        if (this.rcvdCategories.includes(i)) {
+          if (!this.categories[i]) {
+            console.log(i, "미선택 -> 선택");
+            // this.onClickCategory(i, true);
+          } else {
+            console.log(i, "선택 -> 선택");
+          }
+          this.categories[i] = true;
+        } else {
+          if (this.categories[i]) {
+            console.log(i, "선택 -> 미선택");
+            // this.onClickCategory(i, false);
+          } else {
+            console.log(i, "미선택 -> 미선택");
+          }
+          this.categories[i] = false;
+        }
+      }
+    },
+    // 카테고리를 클릭했을 때 호출되는 함수입니다
+    // onClickCategory(index, isOn) {
+    // if (className === "on") {
+    //   currCategory = "";
+    //   changeCategoryClass();
+    //   removeMarker();
+    // } else {
+    //   currCategory = id;
+    //   changeCategoryClass(this);
+    //   searchPlaces();
+    // }
+    // },
   },
 };
 </script>

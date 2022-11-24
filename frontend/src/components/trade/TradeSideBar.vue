@@ -4,6 +4,7 @@
       <div class="side-bar">
         <trade-side-bar-filter
           @changeCenterBySearch="changeCenterBySearch"
+          @changeCategories="sendCategories"
           class="ml-2 mr-2 mt-2"
         ></trade-side-bar-filter>
         <trade-side-bar-apt v-if="apt" :rvIndexProp="0"></trade-side-bar-apt>
@@ -46,8 +47,12 @@ export default {
       this.isShow = true;
       this.$emit("mapRelayout");
     },
-    changeCenterBySearch() {
-      this.$emit("changeCenterBySearch");
+    changeCenterBySearch(selectedCategories) {
+      console.log(selectedCategories);
+      this.$emit("changeCenterBySearch", selectedCategories);
+    },
+    sendCategories(selectedCategories) {
+      this.$emit("changeCategories", selectedCategories);
     },
   },
   watch: {
