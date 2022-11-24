@@ -7,10 +7,25 @@
             <v-card-title>
               <div class="interest-btn-container">
                 <div v-if="isLogin">
-                  <v-btn :ripple="false" icon class="interest-btn" id="interest-btn" v-if="!interested" @click="markInterested(aptData.aptCode)">
+                  <v-btn
+                    :ripple="false"
+                    icon
+                    class="interest-btn"
+                    id="interest-btn"
+                    v-if="!interested"
+                    @click="markInterested(aptData.aptCode)"
+                  >
                     <v-icon>mdi-heart-outline</v-icon>
                   </v-btn>
-                  <v-btn :ripple="false" icon color="red" class="interest-btn" id="interest-btn" v-else @click="unmarkInterested(aptData.aptCode)">
+                  <v-btn
+                    :ripple="false"
+                    icon
+                    color="red"
+                    class="interest-btn"
+                    id="interest-btn"
+                    v-else
+                    @click="unmarkInterested(aptData.aptCode)"
+                  >
                     <v-icon>mdi-heart</v-icon>
                   </v-btn>
                 </div>
@@ -26,7 +41,7 @@
         <v-col>
           <v-card color="primary" dark>
             <v-card-title> 로드뷰 </v-card-title>
-            <v-container style="height: 200px" id="roadview"></v-container>
+            <v-container style="height: 200px" :id="`roadview${this.rvIndexProp}`"></v-container>
           </v-card>
         </v-col>
       </v-row>
@@ -66,7 +81,8 @@
                         }"
                         :headers="priceInfoHeaders"
                         :items="detail.priceInfoList"
-                        class="ml-2 mr-2">
+                        class="ml-2 mr-2"
+                      >
                         <template v-slot:[`item.price`]="{ item }">
                           {{ priceFormatterWrapper(item.price) }}
                         </template>
@@ -102,6 +118,7 @@ export default {
   },
   props: {
     aptProp: Object,
+    rvIndexProp: Number,
   },
   data() {
     return {
@@ -118,28 +135,44 @@ export default {
         { text: "금액 (만 원)", value: "price" },
       ],
       interested: false,
-      aptData: {},
+      aptData: null,
     };
   },
   methods: {
-    initRoadView(lat, lng) {
+    initRoadView() {
       if (window.kakao && window.kakao.maps) {
-        this.roadviewContainer = document.getElementById("roadview"); //로드뷰를 표시할 div
-        this.roadview = new window.kakao.maps.Roadview(this.roadviewContainer); //로드뷰 객체
-        this.roadviewClient = new window.kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
-        if (this.apt.lng != null && this.apt.lat) {
-          this.position = new window.kakao.maps.LatLng(lat, lng);
-        } else {
-          this.position = new window.kakao.maps.LatLng(37.501929614341925, 127.03899430413212);
+        console.log("initRoadView1");
+        this.roadviewContainer = document.getElementById("roadview" + this.rvIndexProp); //로드뷰를 표시할 div
+        console.log(kakao.maps);
+        this.roadview = new kakao.maps.Roadview(this.roadviewContainer); //로드뷰 객체
+        this.roadviewClient = new kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
+        if (this.aptData) {
+          this.setRoadView(this.aptData.lat, this.aptData.lng);
         }
-        // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
-        this.roadviewClient.getNearestPanoId(this.position, 200, (panoId) => {
-          this.roadview.setPanoId(panoId, this.position);
-          this.roadview.setViewpoint({ pan: 90, tilt: -15, zoom: -3 }); //panoId와 중심좌표를 통해 로드뷰 실행
-        });
+      } else {
+        console.log("initRoadView2");
+      }
+
+      // if (this.apt.lng != null && this.apt.lat) {
+      //   this.position = new window.kakao.maps.LatLng(lat, lng);
+      // } else {
+      //   this.position = new window.kakao.maps.LatLng(37.501929614341925, 127.03899430413212);
+      // }
+      // // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
+      // this.roadviewClient.getNearestPanoId(this.position, 200, (panoId) => {
+      //   this.roadview.setPanoId(panoId, this.position);
+      //   this.roadview.setViewpoint({ pan: 90, tilt: -15, zoom: -3 }); //panoId와 중심좌표를 통해 로드뷰 실행
+      // });
+    },
+    initGeoCoder() {
+      if (window.kakao && window.kakao.maps) {
+        this.geocoder = new window.kakao.maps.services.Geocoder();
+      } else {
+        console.log("initRoadView2");
       }
     },
     setRoadView(lat, lng) {
+      console.log("setRoadView");
       this.position = new window.kakao.maps.LatLng(lat, lng);
       // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
       this.roadviewClient.getNearestPanoId(this.position, 200, (panoId) => {
@@ -149,12 +182,17 @@ export default {
     },
     setAddress(lat, lng) {
       if (this.geocoder == null) {
+        console.log("geocoder X");
         this.geocoder = new window.kakao.maps.services.Geocoder();
       }
       this.geocoder.coord2Address(lng, lat, (result, status) => {
         if (status == window.kakao.maps.services.Status.OK) {
           const temp = result[0].road_address;
-          this.address = temp.address_name;
+          if (temp) {
+            this.address = temp.address_name;
+          } else {
+            this.address = "X";
+          }
         }
       });
     },
@@ -184,15 +222,38 @@ export default {
     dataInitializer(initParam) {
       this.aptData = initParam;
       this.isInterested(this.aptData.aptCode);
-      this.initRoadView(this.aptData.lat, this.aptData.lng);
+      if (this.roadview) {
+        this.setRoadView(this.aptData.lat, this.aptData.lng);
+      }
       this.setAddress(this.aptData.lat, this.aptData.lng);
     },
   },
-  updated() {
-    console.log("updated");
-    if (this.roadview === null && this.apt !== null) {
-      this.dataInitializer(this.apt);
+  mounted() {
+    console.log("mounted");
+    if (!window.kakao || !window.kakao.maps) {
+      console.log("mounted 생성");
+      const script = document.createElement("script");
+      //   script.src = "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=" + process.env.VUE_APP_KAKAO_MAP_KEY +"&libraries=services,clusterer";
+      script.src =
+        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=980bea8bcd07009e77637df27e1433d7&libraries=services,clusterer";
+      /* global kakao */
+      script.addEventListener("load", () => {
+        console.log("loaded", window.kakao);
+        kakao.maps.load(this.initMap);
+        this.initRoadView();
+      });
+      document.head.appendChild(script);
+    } else {
+      console.log("mounted 객체 이미 존재");
+      this.initRoadView();
+      this.initGeoCoder();
     }
+  },
+  updated() {
+    // console.log("updated");
+    // if (this.roadview === null && this.apt !== null) {
+    //   this.dataInitializer(this.apt);
+    // }
   },
   created() {
     console.log("created");
@@ -204,8 +265,8 @@ export default {
   },
   watch: {
     apt() {
-      console.log("watcher");
       if (this.apt !== null) {
+        console.log("apt");
         this.dataInitializer(this.apt);
       }
     },

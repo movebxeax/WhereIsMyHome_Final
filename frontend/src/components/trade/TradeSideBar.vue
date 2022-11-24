@@ -6,7 +6,7 @@
           @changeCenterBySearch="changeCenterBySearch"
           class="ml-2 mr-2 mt-2"
         ></trade-side-bar-filter>
-        <trade-side-bar-apt v-if="apt"></trade-side-bar-apt>
+        <trade-side-bar-apt v-if="apt" :rvIndexProp="0"></trade-side-bar-apt>
       </div>
     </template>
     <button id="trade-side-bar-active-btn" @click="toggleSide">

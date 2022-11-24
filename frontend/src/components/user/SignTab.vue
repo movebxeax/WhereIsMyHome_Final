@@ -20,10 +20,26 @@
                 <v-form ref="loginForm" v-model="valid" lazy-validation>
                   <v-row>
                     <v-col cols="12">
-                      <v-text-field v-model.lazy="loginId" :rules="loginIdRules" label="User ID" color="#112D4E" required></v-text-field>
+                      <v-text-field
+                        v-model.lazy="loginId"
+                        :rules="loginIdRules"
+                        label="User ID"
+                        color="#112D4E"
+                        required
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <v-text-field v-model.lazy="loginPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.requiredPassword, rules.min]" :type="showPassword ? 'text' : 'password'" name="input-10-1" label="Password" hint="At least 8 characters" color="#112D4E" @click:append="showPassword = !showPassword"></v-text-field>
+                      <v-text-field
+                        v-model.lazy="loginPassword"
+                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                        :rules="[rules.requiredPassword, rules.min]"
+                        :type="showPassword ? 'text' : 'password'"
+                        name="input-10-1"
+                        label="Password"
+                        hint="At least 8 characters"
+                        color="#112D4E"
+                        @click:append="showPassword = !showPassword"
+                      ></v-text-field>
                     </v-col>
                     <v-col class="d-flex" cols="12" sm="6" xsm="12"> </v-col>
                     <v-spacer></v-spacer>
@@ -41,16 +57,36 @@
                 <v-form ref="registerForm" v-model="valid" lazy-validation>
                   <v-row>
                     <v-col cols="12" sm="6" md="6">
-                      <v-text-field v-model="signupId" :rules="[rules.required]" label="아이디" maxlength="20" required> </v-text-field>
+                      <v-text-field v-model="signupId" :rules="[rules.required]" label="아이디" maxlength="20" required>
+                      </v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
-                      <v-text-field v-model="signupName" :rules="[rules.required]" label="이름" maxlength="20" required> </v-text-field>
+                      <v-text-field v-model="signupName" :rules="[rules.required]" label="이름" maxlength="20" required>
+                      </v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
-                      <v-text-field v-model.lazy="signupPassword" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.requiredPassword, rules.min]" :type="showPassword ? 'text' : 'password'" name="input-10-1" label="비밀번호" hint="비밀번호는 8글자 이상이여야 합니다." @click:append="showPassword = !showPassword"></v-text-field>
+                      <v-text-field
+                        v-model.lazy="signupPassword"
+                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                        :rules="[rules.requiredPassword, rules.min]"
+                        :type="showPassword ? 'text' : 'password'"
+                        name="input-10-1"
+                        label="비밀번호"
+                        hint="비밀번호는 8글자 이상이여야 합니다."
+                        @click:append="showPassword = !showPassword"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
-                      <v-text-field block v-model.lazy="signupPasswordVerify" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.requiredPassword, passwordMatch]" :type="showPassword ? 'text' : 'password'" name="input-10-1" label="비밀번호 확인" @click:append="showPassword = !showPassword"></v-text-field>
+                      <v-text-field
+                        block
+                        v-model.lazy="signupPasswordVerify"
+                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                        :rules="[rules.requiredPassword, passwordMatch]"
+                        :type="showPassword ? 'text' : 'password'"
+                        name="input-10-1"
+                        label="비밀번호 확인"
+                        @click:append="showPassword = !showPassword"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="6">
                       <v-text-field v-model.lazy="signupEmailId" label="E-mail" required></v-text-field>
@@ -61,8 +97,17 @@
                     </v-col>
                     <v-col cols="12">
                       <v-text-field v-model="signupBaseAddress" name="input-10-1" label="기본 주소 입력"></v-text-field>
-                      <v-text-field v-model="signupDetailAddress" name="input-10-1" label="상세 주소 입력"></v-text-field>
-                      <v-text-field v-model="signupContact" name="input-10-1" :rules="[conatctPatternMatch]" label="연락처"></v-text-field>
+                      <v-text-field
+                        v-model="signupDetailAddress"
+                        name="input-10-1"
+                        label="상세 주소 입력"
+                      ></v-text-field>
+                      <v-text-field
+                        v-model="signupContact"
+                        name="input-10-1"
+                        :rules="[conatctPatternMatch]"
+                        label="연락처"
+                      ></v-text-field>
                     </v-col>
                     <v-col>
                       <v-checkbox v-model="checkbox">
@@ -81,7 +126,15 @@
                     </v-col>
                     <!-- <v-spacer></v-spacer> -->
                     <v-col class="mt-1 mr-6" cols="12" sm="3" xsm="12">
-                      <v-btn class="d-flex align-center" x-large block :disabled="!valid" @click="signup" color="#DBE2EF">Register</v-btn>
+                      <v-btn
+                        class="d-flex align-center"
+                        x-large
+                        block
+                        :disabled="!valid"
+                        @click="signup"
+                        color="#DBE2EF"
+                        >Register</v-btn
+                      >
                     </v-col>
                   </v-row>
                 </v-form>
@@ -95,8 +148,10 @@
 </template>
 
 <script>
-import { httpUser } from "@/utils/api.js";
+import { apiUser } from "@/api/index.js";
 import Constant from "@/utils/constant.js";
+
+const httpUser = apiUser();
 
 export default {
   computed: {

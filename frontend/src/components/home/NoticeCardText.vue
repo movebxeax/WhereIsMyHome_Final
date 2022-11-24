@@ -36,7 +36,10 @@
 </template>
 
 <script>
-import { httpNotice } from "@/utils/api.js";
+import { apiNotice } from "@/api/index";
+
+const httpNotice = apiNotice();
+
 export default {
   name: "NoticeCardText",
   data() {

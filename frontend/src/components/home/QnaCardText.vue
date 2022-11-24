@@ -36,7 +36,10 @@
 </template>
 
 <script>
-import { httpQna } from "@/utils/api.js";
+import { apiQna } from "@/api/index.js";
+
+const httpQna = apiQna();
+
 export default {
   name: "QnaCardText",
   data() {
