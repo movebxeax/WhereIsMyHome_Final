@@ -95,6 +95,7 @@ const tradeStore = {
       state.inputDongcode = dongcode;
     },
     CLEAR_APT(state) {
+      console.log("CLEAR APT");
       state.apt = null;
     },
     CLEAR_INPUT_DONGCODE(state) {
@@ -103,7 +104,8 @@ const tradeStore = {
     CLEAR_DONG(state) {
       state.dong = null;
     },
-    CLEART_APTS(state) {
+    CLEAR_APTS(state) {
+      console.log("CLEART APTS");
       state.apts = [];
     },
   },

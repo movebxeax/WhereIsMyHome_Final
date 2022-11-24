@@ -23,8 +23,8 @@ import { mapActions, mapGetters } from "vuex";
 import { dongMarkerInfo, gugunMarkerInfo } from "@/api/trade";
 const tradeStore = "tradeStore";
 
-const DEALYEAR_DONG_LIMIT = 5;
-const DEALYEAR_GUGUN_LIMIT = 7;
+const LEVEL_DONG = 5;
+const LEVEL_GUGUN = 7;
 const INITIAL_DONGCODE = 1171010500;
 const INITIAL_LAT = 37.503517;
 const INITIAL_LNG = 127.1035697;
@@ -35,7 +35,6 @@ export default {
     return {
       map: null,
       markers: [],
-      clusterer: null,
       imgHouse: require("@/assets/img/house.png"),
     };
   },
@@ -53,14 +52,21 @@ export default {
     ]),
   },
   watch: {
-    // apts: {
+    apts: {
+      handler() {
+        if (this.apts.length > 0) {
+          this.updateMap();
+        }
+      },
+    },
+    // markers: {
     //   deep: true,
     //   handler() {
-    //     if (this.apts.length >= 0) {
+    //     if (this.markers.length >= 0) {
     //       this.updateMap();
     //     }
-    //   },
-    // },
+    //   }
+    // }
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -120,7 +126,7 @@ export default {
       this.addKakaoEvent("dragend");
 
       // 확대, 축소 이벤트 등록
-      this.addKakaoEvent("idle");
+      this.addKakaoEvent("zoom_changed");
 
       // 동이 있으면 해당 동 조회 없으면 초기 지역 조회
       if (this.dong && this.dong.dongcode != INITIAL_DONGCODE) {
@@ -134,45 +140,44 @@ export default {
       // 레벨이 6이상이면 아파트 마커 사용 X
       let level = this.map.getLevel();
 
-      // 초기화
+      // 레벨이 달라지는 경우만 마커 초기화
+      console.log("현재 레벨:" + level);
+
       this.clearMarkers();
 
-      if (level >= DEALYEAR_GUGUN_LIMIT) {
+      if (level >= LEVEL_GUGUN) {
         if (this.apts.length > 0) {
           this.clearApts();
         }
-        // this.getGugunMarkers();
         this.getMarkers(gugunMarkerInfo, false);
         return;
-      } else if (level >= DEALYEAR_DONG_LIMIT) {
+      } else if (level >= LEVEL_DONG) {
         if (this.apts.length > 0) {
           this.clearApts();
         }
-        // this.getDongMarkers();
         this.getMarkers(dongMarkerInfo, true);
         return;
+      } else {
+        var imageSize = new kakao.maps.Size(25, 29);
+        // 마커 이미지를 생성합니다
+
+        this.apts.forEach((apt) => {
+          var markerImage = new kakao.maps.MarkerImage(this.imgHouse, imageSize);
+          var marker = new kakao.maps.Marker({
+            map: this.map, // 마커를 표시할 지도
+            position: new kakao.maps.LatLng(apt.lat, apt.lng), // 마커를 표시할 위치
+            title: apt.aptName, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+            image: markerImage, // 마커 이미지
+          });
+
+          // 클릭 이벤트
+          kakao.maps.event.addListener(marker, "click", () => {
+            this.setApt(apt);
+          });
+
+          this.markers.push(marker);
+        });
       }
-
-      var imageSize = new kakao.maps.Size(25, 29);
-      // 마커 이미지를 생성합니다
-
-      this.apts.forEach((apt) => {
-        var markerImage = new kakao.maps.MarkerImage(this.imgHouse, imageSize);
-        var marker = new kakao.maps.Marker({
-          map: this.map, // 마커를 표시할 지도
-          position: new kakao.maps.LatLng(apt.lat, apt.lng), // 마커를 표시할 위치
-          title: apt.aptName, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-          image: markerImage, // 마커 이미지
-        });
-
-        // 클릭 이벤트
-        kakao.maps.event.addListener(marker, "click", () => {
-          // this.getApt(apt.aptCode);
-          this.setApt(apt);
-        });
-
-        this.markers.push(marker);
-      });
     },
 
     changeCenterMap() {
@@ -191,17 +196,15 @@ export default {
 
     addKakaoEvent(type) {
       kakao.maps.event.addListener(this.map, type, () => {
+        console.log(type);
         let level = this.map.getLevel();
-        this.clearMarkers();
 
-        if (level >= DEALYEAR_GUGUN_LIMIT) {
-          // this.getGugunMarkers();
-          this.clearApts();
-          this.getMarkers(gugunMarkerInfo, false);
-        } else if (level >= DEALYEAR_DONG_LIMIT) {
-          // this.getDongMarkers();
-          this.clearApts();
-          this.getMarkers(dongMarkerInfo, true);
+        if (level >= LEVEL_GUGUN) {
+          // this.getMarkers(gugunMarkerInfo, false);
+          this.updateMap();
+        } else if (level >= LEVEL_DONG) {
+          // this.getMarkers(dongMarkerInfo, true);
+          this.updateMap();
         } else {
           var bounds = this.map.getBounds();
           var swLatlng = bounds.getSouthWest();
@@ -245,27 +248,21 @@ export default {
             });
 
             // 커스텀 오버레이 클릭 이벤트 설정
-            let close = null;
-            if (isDong) {
-              close = document.getElementById(detail.dongCode);
-            } else {
-              close = document.getElementById(detail.gugunCode);
-            }
-            close.onclick = () => {
-              let moveLatLon = new kakao.maps.LatLng(detail.lat, detail.lng);
-              if (isDong) {
-                if (this.map.getLevel > DEALYEAR_DONG_LIMIT) {
-                  this.clearMarkers();
-                }
-                this.map.setLevel(3);
-              } else {
-                if (this.map.getLevel > DEALYEAR_GUGUN_LIMIT) {
-                  this.clearMarkers();
-                }
-                this.map.setLevel(DEALYEAR_DONG_LIMIT);
-              }
-              this.map.panTo(moveLatLon);
-            };
+            // let close = null;
+            // if (isDong) {
+            //   close = document.getElementById(detail.dongCode);
+            // } else {
+            //   close = document.getElementById(detail.gugunCode);
+            // }
+            // close.onclick = () => {
+            //   let moveLatLon = new kakao.maps.LatLng(detail.lat, detail.lng);
+            //   if (isDong) {
+            //     this.map.setLevel(3);
+            //   } else {
+            //     this.map.setLevel(LEVEL_DONG);
+            //   }
+            //   this.map.panTo(moveLatLon);
+            // };
 
             this.markers.push(customOverlay);
           });
@@ -276,6 +273,7 @@ export default {
       );
     },
     clearMarkers() {
+      console.log("마커 초기화");
       this.markers.forEach((marker) => {
         marker.setMap(null);
       });
