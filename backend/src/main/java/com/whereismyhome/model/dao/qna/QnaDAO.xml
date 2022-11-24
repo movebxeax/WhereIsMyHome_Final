@@ -75,6 +75,7 @@
 	<select id="selectArticle" parameterType="int" resultMap="com.whereismyhome.resultmaps.QnaInfoMap">		
 		<include refid="qnaDetailSelectBase" />
 		where q.no=#{articleNo}
+		order by comment_date
 	</select>
 	
 	<update id="increaseViewCount" parameterType="int">

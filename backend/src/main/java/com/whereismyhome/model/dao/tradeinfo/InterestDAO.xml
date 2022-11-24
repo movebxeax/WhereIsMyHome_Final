@@ -8,7 +8,7 @@
 			interest (userid, aptcode)
 			select * from (select #{userid}, #{aptCode}) as tmp
 				where not exists (
-					select aptcode from interest where aptcode = #{aptCode}
+					select aptcode from interest where userid=#{userid} and aptcode = #{aptCode}
 				) limit 1;
 	</insert>
 	
