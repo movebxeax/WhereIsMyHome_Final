@@ -9,34 +9,67 @@
 		<result column="lng" property="lng"/>
 		<result column="lat" property="lat"/>		
 	</resultMap>
-	
-	<resultMap type="InterestInfo" id="InterestInfoResultMap" >
-		<id column="userid" property="userid"/>
+		
+	<resultMap type="QnaInfo" id="QnaInfoMap">
+		<id column="no" property="no"/>
+		<result column="title" property="title"/>
+		<result column="author" property="author"/>
+		<result column="content" property="content"/>
+		<result column="date" property="date"/>
+		<result column="viewcount" property="viewCount"/>
+		<result column="uuid" property="uuid"/>
+		<result column="likecount" property="likeCount"/>
+		<collection property="comments" resultMap="QnaCommentMap"/>
 	</resultMap>
 	
-	<!-- <resultMap type="NoticeInfo" id="NoticeInfoResultMap" autoMapping="true">
-		<id column="no" property="no"/>
-	</resultMap> -->
+	<resultMap type="QnaComment" id="QnaCommentMap">
+		<result column="comment_author" property="author"/>
+		<result column="comment_content" property="content"/>
+		<result column="comment_date" property="date"/>
+		<result column="comment_likecount" property="likeCount"/>
+	</resultMap>
 	
 	<resultMap type="TradeInfo" id="TradeInfoResultMap" >
-		<id column="no" property="no"/>
-		<result column="sidoName" property="sidoName"/>
-		<result column="gugunName" property="gugunName"/>
-		<result column="dongName" property="dongName"/>
-		<result column="jibun" property="jibun"/>
+		<id column="aptCode" property="aptCode"/>
 		<result column="aptName" property="aptName"/>
 		<result column="dongCode" property="dongCode"/>
-		<result column="floor" property="floor"/>
+		<result column="buildYear" property="buildYear"/>
+		<result column="lat" property="lat"/>
+		<result column="lng" property="lng"/>
+		<collection property="details" resultMap="PriceInfoWithAreaMap"></collection>
+	</resultMap>
+	
+	<resultMap type="PriceInfoWithArea" id="PriceInfoWithAreaMap">
+		<result column="area" property="area"/>
+		<result column="price" property="price"/>
 		<result column="dealYear" property="dealYear"/>
 		<result column="dealMonth" property="dealMonth"/>
-		<result column="dealAmount" property="dealAmount"/>
-		<result column="lng" property="lng"/>
-		<result column="lat" property="lat"/>
 	</resultMap>
 	
 	<resultMap type="UserInfo" id="UserInfoResultMap">
 		<id column="userid" property="userid"/>
 		<result column="username" property="username"/>
 		<result column="password" property="password"/>
+	</resultMap>
+	
+	<resultMap type="TradeInfoSpec" id="TradeInfoSpecMap">
+		<id column="aptCode" property="aptCode"/>
+		<result column="buildYear" property="buildYear"/>
+		<result column="aptName" property="aptName"/>
+		<result column="dongCode" property="dongCode"/>
+		<result column="lat" property="lat"/>
+		<result column="lng" property="lng"/>
+		<collection property="details" resultMap="DetailInfoMap" />
+	</resultMap>
+	
+	<resultMap type="DetailInfo" id="DetailInfoMap">
+		<id column="area" property="area"/>
+		<collection property="priceInfoList" resultMap="PriceInfoMap" />
+	</resultMap>
+	
+	<resultMap type="PriceInfo" id="PriceInfoMap">
+		<result column="price" property="price"/>
+		<result column="dealYear" property="dealYear"/>
+		<result column="dealMonth" property="dealMonth"/>
 	</resultMap>
 </mapper>

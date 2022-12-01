@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 
 import vuetify from "./plugins/vuetify";
+import VueApexCharts from "vue-apexcharts";
 
 Vue.config.productionTip = false;
 
@@ -11,5 +12,6 @@ new Vue({
   router,
   store,
   vuetify,
+  VueApexCharts,
   render: (h) => h(App),
 }).$mount("#app");

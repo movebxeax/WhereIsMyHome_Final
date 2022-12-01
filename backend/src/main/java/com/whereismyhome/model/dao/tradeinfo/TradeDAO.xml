@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whereismyhome.model.dao.tradeinfo.TradeDAO">
+	
+	<!-- <select id="getTradeInfoList" parameterType="map" resultType="TradeInfo">
+		select dc.sidoName, dc.gugunName, dc.dongName, hi.jibun, hi.aptName,
+		hd.floor, hd.dealYear, hd.dealMonth, trim(hd.dealAmount), hi.lng, hi.lat
+		from houseinfo as hi
+		join housedeal hd on hi.aptCode=hd.aptCode join dongcode dc on hi.dongcode = dc.dongcode
+		<where>
+			hi.dongCode = #{dongCode} and dealYear >= #{dealYear}
+			<if test="aptName != null and aptName != ''">
+				and hi.aptName like concat('%',#{aptName},'%') 
+			</if>
+		</where>
+		order by hd.dealYear asc, hd.dealMonth asc;
+	</select> -->
+	
+	<select id="selectTradeListWithDongCode" parameterType="map" resultMap="com.whereismyhome.resultmaps.TradeInfoSpecMap">
+		select
+			hd.aptcode, hi.aptname, hi.dongcode, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth, hi.buildyear, hi.lat, hi.lng
+		from housedeal as hd
+		join houseinfo as hi on hd.aptcode = hi.aptcode
+		<where>
+			hi.dongcode=#{dongcode}
+			<if test="params.startYear != null">and dealyear >= #{params.startYear}</if>
+			<if test="params.endYear != null"><![CDATA[and dealyear <= #{params.endYear}]]></if>
+			<if test="params.startArea != null">and area >= #{params.startArea}</if>
+			<if test="params.endArea != null"><![CDATA[and area <= #{params.endArea}]]></if>
+			<if test="params.startPrice != null">and dealamount >= #{params.startPrice}</if>
+			<if test="params.endPrice != null"><![CDATA[and dealamount <= #{params.endPrice}]]></if>
+			<if test="params.buildYear != null">and buildyear >= #{params.buildYear}</if>
+		</where>
+		order by aptcode, area, dealyear, dealmonth;
+	</select>
+	
+	<select id="selectAptListWithCoord" parameterType="map" resultType="AptInfo">
+		select
+			aptCode, aptName, dongCode, lat, lng
+		from houseinfo
+		where
+			lat between #{minLat} and #{maxLat}
+			and
+			lng between #{minLng} and #{maxLng}
+	</select>
+	
+	<select id="selectTradeListWithAptCode" parameterType="string" resultMap="com.whereismyhome.resultmaps.TradeInfoSpecMap">
+		select
+			hi.buildyear, hi.aptcode, hi.dongcode, hi.aptname, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth, hi.lat, hi.lng
+		from housedeal as hd
+		join houseinfo as hi on hd.aptcode=hi.aptcode
+		where hd.aptcode=#{aptcode}
+		order by area, dealyear, dealmonth; 
+	</select>
+	
+	<select id="selectDongInfoListWithCoord" parameterType="map" resultType="DongInfo">
+		select
+			ba.dongName, ba.dongCode, ba.lat, ba.lng, count(hi.dongcode) as aptCount
+		from baseaddress as ba
+		join houseinfo as hi on hi.dongcode=ba.dongcode
+		where
+			ba.lat between #{minLat} and #{maxLat}
+    		and
+    		ba.lng between #{minLng} and #{maxLng} 
+		group by ba.dongName, ba.dongCode, ba.lat, ba.lng;
+	</select>
+	
+	<select id="selectGugunInfoListWithCoord" parameterType="map" resultType="GugunInfo">
+		select gc.gugunCode, ba.sidoName, gc.gugunName, gc.lat, gc.lng
+		from guguninfo as gc
+		join
+			baseaddress as ba
+		    on ba.dongCode like concat(gc.gugunCode, '%')
+		where
+		    gc.lat between #{minLat} and #{maxLat}
+		    and
+		    gc.lng between #{minLng} and #{maxLng}
+		group by gc.gugunCode, ba.sidoName, gc.gugunName, gc.lat, gc.lng;
+	</select>
+	
+	<select id="selectTradeListWithCoord" parameterType="map" resultMap="com.whereismyhome.resultmaps.TradeInfoSpecMap">
+		select
+			hd.aptcode, hi.aptname, hi.dongcode, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth, hi.buildyear, hi.lat, hi.lng
+		from housedeal as hd
+		join houseinfo as hi on hd.aptcode = hi.aptcode
+		where
+		    hi.lat between #{minLat} and #{maxLat}
+		    and
+		    hi.lng between #{minLng} and #{maxLng}
+		order by aptcode, area, dealyear, dealmonth;
+	</select>
+</mapper>

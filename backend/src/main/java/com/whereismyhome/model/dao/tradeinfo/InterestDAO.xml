@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.whereismyhome.model.dao.tradeinfo.InterestDAO">
+	
+	<insert id="insertInterestInfo" parameterType="map">
+		insert into
+			interest (userid, aptcode)
+			select * from (select #{userid}, #{aptCode}) as tmp
+				where not exists (
+					select aptcode from interest where userid=#{userid} and aptcode = #{aptCode}
+				) limit 1;
+	</insert>
+	
+	<select id="selectInterestInfos" parameterType="string" resultMap="com.whereismyhome.resultmaps.TradeInfoSpecMap">
+		select
+			hi.buildyear, hi.aptcode, hi.dongcode, hi.aptname, hd.area, hd.dealamount as price, hd.dealyear, hd.dealmonth, hi.lat, hi.lng
+		from housedeal as hd
+		join houseinfo as hi on hd.aptcode=hi.aptcode
+        join interest as i on i.aptcode = hi.aptcode
+		where i.userid=#{userid}
+		order by area, dealyear, dealmonth; 
+	</select>
+	
+	<delete id="deleteInterestInfo" parameterType="map">
+		delete from
+			interest
+		where
+			userid=#{userid} and aptcode=#{aptCode}
+	</delete>
+	
+	<select id="selectInterestInfo" parameterType="map" resultType="InterestInfo">
+		select
+			aptCode, added_date as addedDate
+		from interest
+		where userid = #{userid} and aptcode=#{aptCode}
+	</select>
+</mapper>

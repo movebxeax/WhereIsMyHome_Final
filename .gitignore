@@ -13,7 +13,6 @@ local.properties
 .settings/
 .loadpath
 .recommenders
-
 # External tool builders
 .externalToolBuilders/
 
@@ -440,5 +439,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+Servers/
+
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,eclipse,vue,vuejs,node,java,intellij,git,tortoisegit
