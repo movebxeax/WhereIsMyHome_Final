@@ -23,4 +23,15 @@
 <img src="https://img.shields.io/badge/API-Kakao_Map-red?style=flat">
 </p>
 
+## ⚙ 상세 정보
+
+![](https://github.com/movebxeax/WhereIsMyHome_Final/blob/master/docs_img/1.png)
+![](https://github.com/movebxeax/WhereIsMyHome_Final/blob/master/docs_img/2.png)
+![](https://github.com/movebxeax/WhereIsMyHome_Final/blob/master/docs_img/3.png)
+![](https://github.com/movebxeax/WhereIsMyHome_Final/blob/master/docs_img/4.png)
+![](https://github.com/movebxeax/WhereIsMyHome_Final/blob/master/docs_img/5.png)
+![](https://github.com/movebxeax/WhereIsMyHome_Final/blob/master/docs_img/6.png)
+![](https://github.com/movebxeax/WhereIsMyHome_Final/blob/master/docs_img/7.png)
+![](https://github.com/movebxeax/WhereIsMyHome_Final/blob/master/docs_img/8.png)
+
 [시연 영상(YouTube)](https://youtu.be/AVhA-5150Mk)
