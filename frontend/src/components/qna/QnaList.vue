@@ -127,14 +127,4 @@ export default {
   overflow: scroll;
   overflow-x: hidden
 }
-
-.qna-item::-webkit-scrollbar {
-  width: 3px;
-  height: 8px;
-  /*background-color: #aaa*/
-}
-
-.qna-item::-webkit-scrollbar-thumb {
-  background: #aaa
-}
 </style>

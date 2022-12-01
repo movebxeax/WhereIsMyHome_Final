@@ -84,14 +84,4 @@ export default {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
-
-.side-bar-wrapper::-webkit-scrollbar {
-  width: 3px;
-  height: 8px;
-  /*background-color: #aaa*/
-}
-
-.side-bar-wrapper::-webkit-scrollbar-thumb {
-  background: #aaa;
-}
 </style>

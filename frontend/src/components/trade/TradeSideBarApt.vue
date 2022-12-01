@@ -204,6 +204,7 @@ export default {
       if (this.apt !== null) {
         this.setRoadView(this.apt.lat, this.apt.lng);
         this.setAddress(this.apt.lat, this.apt.lng);
+        this.isInterested(this.apt.aptCode);
       }
     },
   },

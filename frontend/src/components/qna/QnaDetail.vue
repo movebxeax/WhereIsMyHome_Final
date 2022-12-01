@@ -141,15 +141,6 @@ export default {
   overflow-x: hidden;
 }
 
-.detail-container::-webkit-scrollbar {
-  width: 3px;
-  height: 8px;
-  /*background-color: #aaa*/
-}
-
-.detail-container::-webkit-scrollbar-thumb {
-  background: #aaa;
-}
 
 .article-content {
   color: #2a2a2a !important;
