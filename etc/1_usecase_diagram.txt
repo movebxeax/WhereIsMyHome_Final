@@ -1,0 +1,53 @@
+@startuml
+left to right direction
+actor "사용자" as user
+rectangle HappyHouse {
+usecase "로그인" as signin
+usecase "회원가입" as signup
+usecase "회원정보" as userinfo
+usecase "회원정보 수정" as modify_user
+usecase "마이페이지" as mypage
+
+usecase "거래정보 확인" as dealinfo
+usecase "지도 불러오기" as loadmap
+usecase "로드뷰 불러오기" as roadview
+usecase "관심매물" as interest
+usecase "관심매물 설정" as set_interest
+usecase "관심매물 목록" as list_interest
+
+
+usecase "공지사항" as notice
+usecase "공지사항 목록" as list_notice
+
+
+usecase "QNA" as qna
+usecase "QNA 목록" as qnalist
+usecase "QNA 등록" as qnasubmit
+usecase "QNA 답변" as qnaanswer
+
+usecase "관련 뉴스" as news
+usecase "기사목록 불러오기" as load_newslist
+}
+
+user -- signin
+user -- signup
+user -- userinfo
+userinfo <.. mypage : include
+mypage <.. list_interest :include
+userinfo <.. modify_user : include
+dealinfo <.. loadmap : include
+dealinfo <.. roadview : include
+notice <.. list_notice : include
+user -- qna
+qna <.. qnalist : include 
+qna <.. qnasubmit : include 
+qna <.. qnaanswer : include 
+user -- notice
+user -- news
+news <.. load_newslist : include
+user -- dealinfo
+dealinfo <.. interest : include
+interest <.. list_interest : include
+interest <.. set_interest : include 
+list_interest <.. roadview : include
+@enduml
